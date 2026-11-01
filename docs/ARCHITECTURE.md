@@ -106,7 +106,7 @@ finding is shown.
 |---|---|---|
 | a | `GET /v1/attestation/report?model=...&nonce=...&signing_algo=ecdsa&signing_address=...` returns a model attestation for the signer | `no_attestation` |
 | b | Intel TDX quote valid (`dcap-qvl`), TCB status in allowlist, debug bit off | `quote_invalid` |
-| c | `report_data` = signing address right-padded to 32 bytes ‖ nonce; `request_nonce` echoes the nonce | `nonce_mismatch` |
+| c | `report_data` = signing address right-padded to 32 bytes ‖ nonce; `request_nonce` echoes the nonce | `signer_not_bound` or `nonce_mismatch` |
 | d | MRCONFIGID matches `app_compose`; RTMR3 replays from the event log | `measurement_mismatch` |
 | e | NVIDIA GPU evidence carries our nonce; NRAS verdict true; NRAS JWT signature valid | `gpu_evidence_invalid` |
 | f | `GET /v1/signature/{chat_id}`: `text == "{model}:{sha256(req)}:{sha256(resp)}"`, EIP-191 signer equals the attested `signing_address`, `signature_kind == "provider_tee"` | `signature_mismatch` |
