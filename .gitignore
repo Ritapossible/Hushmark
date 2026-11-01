@@ -1,0 +1,33 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+.coverage
+htmlcov/
+dist/
+build/
+*.egg-info/
+
+# Rust contract
+contract/target/
+
+# Local state
+*.sqlite
+*.sqlite3
+*.db
+
+# Secrets: never commit these
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+near-credentials/
+
+# Editors and OS
+.idea/
+.vscode/
+.DS_Store
