@@ -66,7 +66,7 @@ Each hit becomes a candidate `{id, source, file, line, span, detector}`, where `
 | `zero_width` | U+200B–U+200D, U+2060, U+FEFF, anywhere |
 | `bidi` | U+202A–U+202E, U+2066–U+2069 (Trojan Source), anywhere |
 | `tag_chars` | U+E0000–U+E007F (invisible "tag" characters), anywhere |
-| `hidden_html` | `<details>`, `alt=`, link titles, `style="display:none"` |
+| `hidden_html` | `<details>`, the `hidden` attribute, `display:none`, `visibility:hidden`, `font-size:0`, and alt text or link titles of 40+ characters |
 | `agent_rules_file` | every added line in `AGENTS.md`, `CLAUDE.md`, `.cursorrules`, `.cursor/rules/**`, `.github/copilot-instructions.md`, `.windsurfrules`, `GEMINI.md` |
 | `agent_phrase` | weak signal only, inside the above: `ignore previous`, `you are`, `curl ... \| sh` |
 

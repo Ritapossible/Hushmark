@@ -67,26 +67,31 @@ An agent may prepare the submission payload, but must print it and wait.
 - NEAR contract in Rust (`near-sdk`), deployed to **testnet**
 - Tooling: ruff, `mypy --strict`, pytest with recorded HTTP (respx)
 
-## Commands (planned, not yet working)
+## Commands
 
 ```sh
-make lint          # ruff + mypy --strict
-make test          # unit tests
-make verify        # all fixtures, offline
-make verify-live   # re-verify recorded evidence online
+make install       # uv sync --locked
+make lint          # ruff + format check + mypy --strict
+make test          # all tests
+make verify        # all offline fixtures, no key, no network
+make verify-live   # (planned) re-verify recorded evidence online
 ```
 
 ## Current state
 
 - **Phase:** building v0.1. Design settled by ADR-0007 (2026-11-01). No more design docs.
-- **Next:** day-one check: run `scripts/day1_check.py` with a real key. The attestation
-  half already passes without a key; only the completion signature is unproven.
-  Nothing else starts until it passes.
+- **Built (branch `build/foundation`):** tooling and CI; attestation checks a–e (offline part)
+  tested on two real recorded reports; scanner (all detectors, title, body, rules files);
+  `.hushmark.yml` parser. 44 tests, lint and `mypy --strict` clean.
+- **Blocked on the API key:** `scripts/day1_check.py` (completion signature, check f), then
+  recordings R1–R3. Still the go/no-go for the end of 2 November.
 
 ## Decision log
 
 Newest first. One line each, with a link when there is an ADR.
 
+- 2026-11-01: Built key-independent parts while waiting for NEAR AI credit. New reason code
+  `signer_not_bound` (check c) and `config_invalid`.
 - 2026-11-01: Redesigned for team adoption: automatic check on every PR, excerpts only to
   the model, one Check Run output with warn/block, PR title/body and rules files scanned,
   config from base. Drops `/advisory` and draft advisories. HACKATHON.md rules added.
