@@ -24,7 +24,7 @@ Recording first, web app last.
 | 4 | 4 Nov | Demo repository with the three PRs (R1–R3). `excerpt.py` and `infer.py` with raw-bytes capture. | Request holds excerpts only, no `tools`, exact bytes saved |
 | 5 | 5 Nov | **Record R1, R2, R3, A1, A2** (`docs/FIXTURES.md`) | Evidence committed under `fixtures/` |
 | 6 | 6 Nov | `verify/signature.py` (check f) and report-data and nonce binding (check c) | Fixtures 05, 06 pass |
-| 7 | 7 Nov | `verify/attestation.py` wrapping NEAR's verifier (checks a, b, d, e) | Fixture 04 passes; verifier failure maps to a reason code |
+| 7 | 7 Nov | `verify/attestation.py` on `dcap-qvl` and NRAS, NEAR's checks ported to raise (checks a, b, d, e; ADR-0006) | Fixture 04 passes; every failure maps to a reason code |
 | 8 | 8 Nov | `verify/grounding.py` (check g) and output schema | Fixture 08 passes |
 | 9 | 9 Nov | `receipt.py`, idempotency, `trigger.py`, budget | Fixtures 01, 02, 03, 07, 10 pass. Audit-hook test passes. |
 | 10 | 10 Nov | `report.py`: one Check Run per head SHA, annotations, warn/block | End-to-end on the demo repository |
