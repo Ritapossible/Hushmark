@@ -39,6 +39,13 @@ anchor, offline fixtures.
 
 **Gate:** first paying customer.
 
+## Distribution (from v0.1 onward)
+
+- Post write-ups of real hidden-instruction attacks with the fixture and the receipt.
+- NEAR community: NEAR Legion, NEAR developer channels.
+- Product Hunt after v0.2, when the server runs in a TEE and the claim covers the host.
+- Wallet connectors (e.g. Aurora Intent Connect) do not apply: Hushmark has no wallet flow.
+
 ## Not on the roadmap
 
 General code-quality review, general vulnerability finding, running or sandboxing code.

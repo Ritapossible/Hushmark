@@ -11,8 +11,10 @@ A GitHub App that catches hidden instructions aimed at AI agents in pull request
 the diff with a model on NEAR AI Cloud, verifies the TEE attestation and response signature,
 and publishes only when every check passes. Full design: `docs/ARCHITECTURE.md`.
 
-**The claim:** nobody can make this reviewer run your code. It has no shell, and its output
-is only published if a NEAR AI Cloud TEE signed it.
+**The claim:** the review code has no shell, so nothing in a pull request can make it run
+code. A finding is published only if it was signed inside a NEAR AI Cloud TEE for that exact
+commit. This is about our code, not the host (see `THREAT_MODEL.md`). Never word it more
+strongly than that.
 
 ## Hard rules
 
@@ -58,14 +60,18 @@ make verify-live   # re-verify recorded evidence online
 
 ## Current state
 
-- **Phase:** design review. No application code.
-- **Next:** day-one check from `docs/PLAN.md`: one NEAR AI Cloud test completion and
-  its signature.
+- **Phase:** building v0.1. Design review done (Grok, 2026-11-01). No more design docs.
+- **Next:** day-one check: run `scripts/day1_check.py` with a real key. Nothing else
+  starts until it passes.
 
 ## Decision log
 
 Newest first. One line each, with a link when there is an ADR.
 
+- 2026-11-01: Design review applied. Claim narrowed to the code, not the host. Privacy is
+  the primary track, security second. The NEAR anchor is never cut; the live app is cut
+  first, then the public-advisory path. The private path stays: NEAR's own idea list asks
+  for private PR review. The 200-line cap is stated in the demo, not designed around.
 - 2026-11-01: Repository created. Design docs written for review.
 - 2026-11-01: Name chosen: Hushmark. Rejected Undertow (Red Hat's Java web server already
   uses it) and Sealwatch (taken on PyPI).

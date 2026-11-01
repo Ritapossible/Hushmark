@@ -1,19 +1,22 @@
 # Hushmark
 
-**Catches hidden instructions aimed at AI agents in pull requests, and proves it never ran your code.**
+**Catches hidden instructions aimed at AI agents in pull requests, privately. The review code has no shell, and every
+published finding is signed inside a NEAR AI Cloud TEE for that exact commit.**
 
-> **Status: design review.** No application code yet. This repository holds the plan,
-> architecture, threat model and receipt format for review before the build starts on
-> 1 November 2026. Built for the NEAR Hackathon (tracks: *Privacy & Private AI*,
-> *AI Security & Defense*).
+> **Status: building v0.1.** Design reviewed; application code starts now. Built for the
+> NEAR Hackathon. Primary track: *Privacy & Private AI*. Second track: *AI Security & Defense*.
 
 ## The claim
 
-> Nobody can make this reviewer run your code. It has no shell, and its output is only
-> published if a NEAR AI Cloud TEE signed it.
+> The review code has no shell, so nothing in a pull request can make it run code. A
+> finding is published only if it was signed inside a NEAR AI Cloud TEE for that exact
+> commit.
 
-Every component exists to make one half of that sentence true and checkable.
-`THREAT_MODEL.md` states exactly what is proved and what is not.
+This is a claim about Hushmark's code, not the machine it runs on. In v0.1 the server sits
+outside a TEE; `THREAT_MODEL.md` states exactly what is proved and what is not.
+
+**Private by design:** the model runs in a TEE, receipts hold hashes and never the diff, and
+on a private repository the finding goes only to people who already have access.
 
 ## What it does
 
