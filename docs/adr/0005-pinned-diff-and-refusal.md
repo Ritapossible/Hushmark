@@ -1,6 +1,6 @@
 # ADR-0005: Review a pinned diff, refuse rather than truncate
 
-- Status: accepted
+- Status: partly superseded by [ADR-0007](0007-automatic-check-with-excerpts.md) (the cap now applies to excerpts)
 - Date: 2026-11-01
 
 ## Context

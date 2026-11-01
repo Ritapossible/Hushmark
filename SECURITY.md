@@ -13,8 +13,10 @@ Include what you found, how to reproduce it, and what an attacker could do with 
 
 - Any way to make Hushmark execute code from a pull request
 - Publishing a finding without a valid attestation and signature
-- Diff content appearing in a receipt, log, or on chain
-- Triggering a review without `admin` or `maintain` permission
+- Code or excerpts appearing in a receipt, log, or on chain
+- Forcing a `/hushmark` re-run without `admin` or `maintain` permission
+- Making Hushmark call the model on a pull request with no hidden regions
+- Changing a repository's mode from inside a pull request
 
 ## Scope
 

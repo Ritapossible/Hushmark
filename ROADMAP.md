@@ -5,8 +5,9 @@ Features without gates are how products get built that nobody uses.
 
 ## v0.1: hackathon (1–14 November 2026)
 
-See `docs/PLAN.md`. One finding kind, pull requests only, diffs up to 200 lines, NEAR testnet
-anchor, offline fixtures.
+See `docs/PLAN.md`. Automatic required check on every pull request; diff, title, body and
+agent rules files scanned; excerpts only to the model; warn or block mode; NEAR testnet
+anchor; offline fixtures.
 
 ## v0.2: complete the trust claim (December 2026 – January 2027)
 
@@ -14,19 +15,19 @@ anchor, offline fixtures.
   outside a TEE. **This is the most important item on this roadmap.**
 - Public verifier: a CLI and a web page where anyone pastes a receipt and sees each check.
 - Anchors on NEAR mainnet.
-- Diffs over 200 lines: split into chunks, one receipt per chunk, plus a receipt over all of
-  them.
+- **Free open-source CLI and pre-commit hook** with the same detectors, offline, no account.
+  This is the adoption funnel: developers meet Hushmark locally, teams add the app for
+  attested review.
+- GitHub Marketplace listing with a free tier for public repositories.
 - Look at GitHub's own hidden-text warnings and drop any detector they make redundant.
 
 **Gate:** three repositories we do not own have installed it and run it more than once.
 
 ## v0.3: from pull request reviewer to agent input firewall (Q1 2027)
 
-- Scan more of what agents read: PR descriptions, issues, linked docs, dependency READMEs,
-  agent rules files (`.cursorrules`, `CLAUDE.md`, `AGENTS.md`).
+- Scan more of what agents read: issues and issue comments, linked docs, dependency READMEs.
 - API and middleware that check MCP tool results before an agent reads them.
-- `.hushmark.yml` policy file: block, warn or log, per path.
-- Results as a GitHub Check that shows the same output whatever the result.
+- `.hushmark.yml`: path ignores and per-path modes.
 
 **Gate:** one design partner, a company with an internal AI agent rollout, using it weekly.
 
@@ -34,7 +35,9 @@ anchor, offline fixtures.
 
 - GitLab support. Self-hosted or customer-cloud deployment.
 - Organization view: receipts, findings over time, audit export for compliance.
-- Pricing: free for public repositories, paid for private ones.
+- Pricing: free for public repositories, paid for private ones. Option to explore: prepaid
+  scan credits held in the NEAR contract and debited per anchored receipt, so teams and their
+  agents can pay in NEAR or stablecoins.
 - SOC 2 readiness checklist (not yet the audit).
 
 **Gate:** first paying customer.

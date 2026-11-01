@@ -7,13 +7,15 @@ copying them.
 
 ## What Hushmark is
 
-A GitHub App that catches hidden instructions aimed at AI agents in pull requests. It reviews
-the diff with a model on NEAR AI Cloud, verifies the TEE attestation and response signature,
-and publishes only when every check passes. Full design: `docs/ARCHITECTURE.md`.
+A GitHub check that stops hidden instructions aimed at AI agents from being merged. It runs
+on every pull request, scans the whole diff, title, body and agent rules files with
+deterministic detectors, and sends only the suspicious excerpts to a model in a NEAR AI Cloud
+TEE. It shows a model finding only when the attestation and signature verify. Full design:
+`docs/ARCHITECTURE.md`. Goal: a product teams adopt, not a demo.
 
 **The claim:** the review code has no shell, so nothing in a pull request can make it run
-code. A finding is published only if it was signed inside a NEAR AI Cloud TEE for that exact
-commit. This is about our code, not the host (see `THREAT_MODEL.md`). Never word it more
+code. A finding is shown only if it was signed inside a NEAR AI Cloud TEE for that exact
+input. This is about our code, not the host (see `THREAT_MODEL.md`). Never word it more
 strongly than that.
 
 ## Hard rules
@@ -26,7 +28,9 @@ These are not up for debate during the hackathon. Changing one needs an ADR in `
 2. **Never send `tools` to the model.** No tool use, no function calling.
 3. **Never store or log the diff, or the text of findings.** Receipts and logs hold hashes only.
 4. **Fail closed.** If any verification check fails, nothing is published.
-5. **Refuse, never truncate.** A diff over 200 lines is refused with a reason.
+5. **Refuse, never truncate.** Detectors scan everything. Over 20 candidates or 200 excerpt
+   lines, refuse with `too_many_candidates`. If GitHub cannot return the full diff, refuse
+   with `diff_unavailable`.
 6. **Never mock a signature or attestation in a fixture that claims to be real.** Fixtures
    built from recorded evidence say so. Tampered fixtures say exactly what was changed.
 7. **Do not write a quote parser.** Quote parsing and verification go through `dcap-qvl`,
@@ -39,11 +43,23 @@ These are not up for debate during the hackathon. Changing one needs an ADR in `
 10. **Scope is fixed.** One finding kind (`injection`, covering hidden instructions). No
     dashboard, no second finding kind, no deployment during the hackathon. New ideas go
     to `ROADMAP.md`.
+11. **Excerpts only leave the service.** The full diff, title and body never go to the model
+    or anywhere else; only candidate excerpts go to the attested TEE.
+12. **Config comes from the base commit.** Never read `.hushmark.yml` from the PR head.
+13. **No model call without candidates.** A PR with no hidden regions costs nothing.
+
+## Hackathon rules for agents (from HACKATHON.md)
+
+Never do any of these without Rita's explicit confirmation in the conversation:
+submit the hackathon form, post on X or elsewhere, change the repository's visibility,
+force-push, sign transactions, spend tokens, deploy to mainnet, or commit secrets.
+An agent may prepare the submission payload, but must print it and wait.
 
 ## Stack (planned)
 
 - Python 3.12, managed with `uv`, dependencies pinned in `uv.lock`
 - FastAPI and httpx, pydantic v2 in strict mode at every boundary
+- GitHub Checks API for all output (no comments, no advisories)
 - SQLite for state
 - `dcap-qvl` (pinned `0.7.0`) for TDX quotes; NVIDIA NRAS for GPU evidence
 - Model: `Qwen/Qwen3.8-27B` (model TEE attestation confirmed); fallback `z-ai/glm-5.3-flash`
@@ -62,7 +78,7 @@ make verify-live   # re-verify recorded evidence online
 
 ## Current state
 
-- **Phase:** building v0.1. Design review done (Grok, 2026-11-01). No more design docs.
+- **Phase:** building v0.1. Design settled by ADR-0007 (2026-11-01). No more design docs.
 - **Next:** day-one check: run `scripts/day1_check.py` with a real key. The attestation
   half already passes without a key; only the completion signature is unproven.
   Nothing else starts until it passes.
@@ -71,6 +87,11 @@ make verify-live   # re-verify recorded evidence online
 
 Newest first. One line each, with a link when there is an ADR.
 
+- 2026-11-01: Redesigned for team adoption: automatic check on every PR, excerpts only to
+  the model, one Check Run output with warn/block, PR title/body and rules files scanned,
+  config from base. Drops `/advisory` and draft advisories. HACKATHON.md rules added.
+  See [ADR-0007](docs/adr/0007-automatic-check-with-excerpts.md).
+- 2026-11-01: Commits are authored by Rita (repository owner); Claude is co-author.
 - 2026-11-01: Attestation verified for real, no key needed: Qwen3.8-27B and GLM-5.3-flash
   quotes `UpToDate` from saved collateral, report data binds signer and nonce, GPU nonce
   matches. NEAR's verifier prints instead of failing, so we wrap `dcap-qvl` directly.
@@ -95,8 +116,9 @@ Newest first. One line each, with a link when there is an ADR.
 ## Style
 
 - Match the surrounding code. Small modules, one job each.
-- Every refusal has a stable reason code (`not_maintainer`, `diff_too_large`,
-  `no_attestation`, `signature_mismatch`, `nonce_mismatch`, ...). Tests assert on codes,
+- Every refusal has a stable reason code (`not_maintainer`, `too_many_candidates`,
+  `diff_unavailable`, `budget_exceeded`, `no_attestation`, `signature_mismatch`,
+  `nonce_mismatch`, ...). Tests assert on codes,
   never on message text.
 - Logs are structured JSON with `delivery_id` and `receipt_id`. Never log diff content.
 - Commits: imperative mood, one change per commit.

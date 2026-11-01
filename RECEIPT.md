@@ -2,8 +2,9 @@
 
 Status: draft. Becomes stable at the `v0.1.0` tag. After that, changes bump `v`.
 
-A receipt records one review run. It lets anyone check, without the diff, that a finding was
-produced by an attested NEAR AI Cloud TEE for one exact commit.
+A receipt records one review run that called the model. It lets anyone check, without the
+code, that the findings were produced by an attested NEAR AI Cloud TEE for one exact input.
+Runs with no hidden regions make no model call and have no receipt.
 
 ## Encoding
 
@@ -22,6 +23,7 @@ produced by an attested NEAR AI Cloud TEE for one exact commit.
     "pr": 7,
     "base_sha": "<40 hex>",
     "head_sha": "<40 hex>",
+    "input_sha256": "<hash of diff bytes || 0x00 || title || 0x00 || body>",
     "model": "<canonical model id>",
     "prompt_hash": "<sha256 of prompts/vN.txt>"
   },
@@ -42,8 +44,10 @@ produced by an attested NEAR AI Cloud TEE for one exact commit.
     "checks": ["a", "b", "c", "d", "e", "f", "g"],
     "verified_at": "<RFC 3339 UTC>"
   },
+  "scan": {"detectors_version": "1", "candidates": 3},
   "findings_sha256": "<hash of canonical findings array>",
   "findings_count": 1,
+  "rejected_ungrounded": 0,
   "created_at": "<RFC 3339 UTC>"
 }
 ```
@@ -58,7 +62,8 @@ key_hash      = SHA-256(key_canonical)          # what goes on chain
 
 ## Never in a receipt
 
-The diff, file contents, finding text, rationale, repository name, or any username.
+The diff, excerpts, file contents, PR title or body, finding text, rationale, repository
+name, or any username.
 
 ## Verifying a receipt
 

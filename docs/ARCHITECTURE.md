@@ -1,158 +1,195 @@
 # Architecture
 
-Status: design, v0.1 scope. Facts about NEAR AI Cloud come from its verification docs
-(links at the end). Anything not confirmed is marked **unverified** and listed in
-`OPEN_QUESTIONS.md`.
+Status: design, v0.1 scope (ADR-0007). Facts about NEAR AI Cloud come from its verification
+docs and from checks run on 2026-11-01 (links at the end). Anything not confirmed is marked
+**unverified** and listed in `OPEN_QUESTIONS.md`.
 
 ## 1. Trust boundaries
 
 ```
- GitHub (untrusted input)            Hushmark service (our code)               NEAR AI Cloud (TEE)
- ┌──────────────────────┐   webhook  ┌─────────────────────────────────────┐   HTTPS  ┌──────────────────┐
- │ PR diff, comments,   │──(HMAC)──▶│ 1 Gate      maintainer? key unused?   │          │ Gateway (TDX)    │
- │ fork authors         │            │ 2 Fetch     diff pinned to base..head │          │ Model TEE (GPU)  │
- └──────────────────────┘            │ 3 Scan      deterministic detectors   │          │                  │
-            ▲                        │ 4 Infer     fixed prompt, diff = data │────────▶│ completion       │
-            │ publish only if        │ 5 Verify    quote+nonce+sig+grounding │◀────────│ signature        │
-            │ step 5 passes          │ 6 Receipt   canonical JSON, no diff   │          │ attestation      │
-            └────────────────────────│ 7 Publish   advisory OR review comment│          └──────────────────┘
-                                     └───────────────┬─────────────────────┘
-                                                     │ receipt hash (best effort)
-                                                     ▼
-                                       NEAR testnet contract: anchor(key_hash, receipt_hash)
-                                       called with a function-call access key
+ GitHub (untrusted input)             Hushmark service (our code)                NEAR AI Cloud (TEE)
+ ┌───────────────────────┐  webhook  ┌──────────────────────────────────────┐  HTTPS  ┌──────────────────┐
+ │ PR diff, title, body, │──(HMAC)─▶│ 1 Trigger   PR event or /hushmark      │         │ Gateway (TDX)    │
+ │ comments, fork authors│           │ 2 Fetch     pinned diff + config(base) │         │ Model TEE (GPU)  │
+ └───────────────────────┘           │ 3 Scan      detectors on ALL input     │         │                  │
+            ▲                        │   └─ no candidates → success, no model │         │                  │
+            │                        │ 4 Infer     excerpts only, diff = data │───────▶│ completion       │
+            │ Check Run              │ 5 Verify    quote+nonce+sig+grounding  │◀───────│ signature        │
+            │ (annotations)          │ 6 Receipt   canonical JSON, hashes only│         │ attestation      │
+            └────────────────────────│ 7 Report    one Check Run per head SHA │         └──────────────────┘
+                                     └────────────────┬─────────────────────┘
+                                                      │ receipt hash
+                                                      ▼
+                                        NEAR testnet contract: anchor(key_hash, receipt_hash)
+                                        called with a function-call access key
 ```
 
-- **Everything from GitHub is untrusted.** That includes the diff, titles, comment bodies
-  and usernames.
+- **Everything from GitHub is untrusted.** The diff, title, body, comments, usernames, and
+  anything in the pull request's head branch, including a changed `.hushmark.yml`.
 - **The model's output is untrusted until step 5 passes.** The signature proves where it
   came from, not that it is right. Step 5 checks both.
-- **Our service is trusted for the gate logic and it sees the diff.** It is not inside a
-  TEE in v0.1. `THREAT_MODEL.md` says so, and `ROADMAP.md` v0.2 fixes it.
+- **Our service is trusted for the pipeline logic and it sees the full diff.** It is not
+  inside a TEE in v0.1. `THREAT_MODEL.md` says so; `ROADMAP.md` v0.2 fixes it. Only
+  excerpts ever leave our service, and only to an attested TEE.
 
 ## 2. Pipeline
 
-### Step 1: Gate (`hushmark/gate.py`)
-- Trigger: an `issue_comment` webhook whose body is exactly `/advisory`, on an issue that is
-  a pull request. Never runs on `pull_request` events.
+### Step 1: Trigger (`hushmark/trigger.py`)
+- **Automatic:** `pull_request` events `opened`, `synchronize`, `reopened`, `edited`
+  (`edited` because the title and body are scanned). Also `check_run` `rerequested`.
+- **Manual re-run:** an `issue_comment` on a pull request whose body is exactly `/hushmark`.
+  Only `role_name ∈ {admin, maintain}` from
+  `GET /repos/{owner}/{repo}/collaborators/{login}/permission`; bots rejected.
+  Refusal: `not_maintainer`, no model call.
 - Verify `X-Hub-Signature-256` with a constant-time compare. Reject a reused
   `X-GitHub-Delivery` ID.
-- `GET /repos/{owner}/{repo}/collaborators/{login}/permission`. Accept only
-  `role_name ∈ {admin, maintain}`. Reject `user.type == "Bot"`. Refusal: `not_maintainer`.
-- Idempotency key: `(repo_id, pr_number, head_sha, model_id, prompt_hash)`.
-  `repo_id` because names change; `prompt_hash` because a new prompt is a different review.
-- Claim the key with `INSERT ... ON CONFLICT DO NOTHING`. If it exists, return the existing
-  receipt and do nothing else.
+- Immediately create the Check Run `Hushmark` on the head SHA with status `in_progress`.
 
 ### Step 2: Fetch (`hushmark/fetch.py`)
-- Read `base.sha` and `head.sha` from the pull request.
-- `GET /repos/{owner}/{repo}/compare/{base_sha}...{head_sha}` with
-  `Accept: application/vnd.github.diff`. Pinning both SHAs means a push mid-run cannot
-  swap the diff.
-- More than 200 lines: refuse with `diff_too_large`. Never truncate.
+- Read `base.sha`, `head.sha`, `title` and `body` from the pull request.
+- Diff: `GET /repos/{owner}/{repo}/compare/{base_sha}...{head_sha}` with
+  `Accept: application/vnd.github.diff`. Both SHAs pinned at trigger time.
+- If GitHub cannot return the full diff (too large, or truncated), refuse with
+  `diff_unavailable`. Never scan part of a diff silently.
+- **Config from the base branch only:** `GET /repos/{owner}/{repo}/contents/.hushmark.yml?ref={base_sha}`.
+  A pull request cannot change how it is judged. Missing file means defaults.
+- `input_sha256 = SHA-256(diff bytes ‖ 0x00 ‖ title ‖ 0x00 ‖ body)`, all UTF-8.
 
 ### Step 3: Scan (`hushmark/scan.py`)
-Deterministic detectors. Each hit becomes a candidate `{id, file, line, span, detector}`.
+Deterministic detectors over the **whole** diff, the title and the body. No size cap here.
+Each hit becomes a candidate `{id, source, file, line, span, detector}`, where `source` is
+`diff`, `pr_title` or `pr_body`.
 
 | Detector | Matches |
 |---|---|
-| `html_comment` | `<!-- ... -->` in `.md`, `.mdx`, `.rst`, `.html` |
-| `zero_width` | U+200B–U+200D, U+2060, U+FEFF |
-| `bidi` | U+202A–U+202E, U+2066–U+2069 (Trojan Source) |
+| `html_comment` | `<!-- ... -->` in `.md`, `.mdx`, `.rst`, `.html`, and in the PR body |
+| `zero_width` | U+200B–U+200D, U+2060, U+FEFF, anywhere |
+| `bidi` | U+202A–U+202E, U+2066–U+2069 (Trojan Source), anywhere |
+| `tag_chars` | U+E0000–U+E007F (invisible "tag" characters), anywhere |
 | `hidden_html` | `<details>`, `alt=`, link titles, `style="display:none"` |
-| `agent_phrase` | weak signal only: `ignore previous`, `you are`, `curl ... \| sh` inside the above |
+| `agent_rules_file` | every added line in `AGENTS.md`, `CLAUDE.md`, `.cursorrules`, `.cursor/rules/**`, `.github/copilot-instructions.md`, `.windsurfrules`, `GEMINI.md` |
+| `agent_phrase` | weak signal only, inside the above: `ignore previous`, `you are`, `curl ... \| sh` |
 
-No candidates: finish with zero findings and **no model call**. The model never searches the
-diff for hiding places. It only decides whether a candidate is an instruction aimed at an
-agent.
+- **No candidates:** Check Run `success`, "No hidden regions found." **No model call, no
+  cost, no receipt.** This is the common case.
+- **Over the cap** (more than 20 candidates, or more than 200 excerpt lines): refuse with
+  `too_many_candidates`. Check Run `neutral`, with the scanner's hits as annotations marked
+  *unconfirmed*. No model call.
 
 ### Step 4: Infer (`hushmark/infer.py`)
+- **Excerpts only.** Each candidate plus up to 10 lines of context on each side, taken from
+  the diff hunk (or from the title or body). The rest of the diff never leaves our service.
 - Model: `Qwen/Qwen3.8-27B` (model TEE attestation confirmed 2026-11-01; fallback
   `z-ai/glm-5.3-flash`). It must return `signature_kind: provider_tee`.
-  Send the canonical model ID with header `x-no-aliasing: true`.
-- Fixed system prompt, versioned in `prompts/v1.txt`; its SHA-256 is `prompt_hash`.
-- The diff and candidates go inside a random boundary (`<<<DIFF-{16 random hex}>>>`). The
-  prompt says everything inside it is data written by an adversary.
+  Canonical model ID, header `x-no-aliasing: true`.
+- Fixed system prompt in `prompts/v1.txt`; its SHA-256 is `prompt_hash`.
+- Excerpts go inside a random boundary (`<<<EXCERPTS-{16 random hex}>>>`). The prompt says
+  everything inside it is data written by an adversary.
 - `temperature: 0`, no `tools`, no streaming, `Accept-Encoding: identity`.
-- Keep the **exact** request and response bytes. They are hashed for the signature check.
+- Keep the **exact** request and response bytes for the signature check.
+- **Budget:** at most N model calls per installation per day (default 200). Over budget:
+  refuse with `budget_exceeded`, Check Run `neutral` with unconfirmed annotations.
 
 Required output (validated in step 5g):
 ```json
-{"findings":[{"candidate_id":"c3","kind":"injection","file":"docs/setup.md","line":42,
+{"findings":[{"candidate_id":"c3","kind":"injection",
               "rationale":"Instructs an AI agent to run a remote script.","severity":"high"}]}
 ```
+The model returns only `candidate_id`. File and line come from our own candidate record, so
+the model cannot point anywhere else.
 
 ### Step 5: Verify (`hushmark/verify/`)
-Every check passes, or the run is refused with that check's reason code.
+Every check passes, or the run is refused with that check's reason code and no model
+finding is shown.
 
 | # | Check | Reason code |
 |---|---|---|
-| a | Fetch `GET /v1/attestation/report?model=...&nonce=...&signing_algo=ecdsa`; a report is present | `no_attestation` |
+| a | `GET /v1/attestation/report?model=...&nonce=...&signing_algo=ecdsa&signing_address=...` returns a model attestation for the signer | `no_attestation` |
 | b | Intel TDX quote valid (`dcap-qvl`), TCB status in allowlist, debug bit off | `quote_invalid` |
 | c | `report_data` = signing address right-padded to 32 bytes ‖ nonce; `request_nonce` echoes the nonce | `nonce_mismatch` |
 | d | MRCONFIGID matches `app_compose`; RTMR3 replays from the event log | `measurement_mismatch` |
-| e | NVIDIA GPU evidence passes NRAS and carries our nonce | `gpu_evidence_invalid` |
+| e | NVIDIA GPU evidence carries our nonce; NRAS verdict true; NRAS JWT signature valid | `gpu_evidence_invalid` |
 | f | `GET /v1/signature/{chat_id}`: `text == "{model}:{sha256(req)}:{sha256(resp)}"`, EIP-191 signer equals the attested `signing_address`, `signature_kind == "provider_tee"` | `signature_mismatch` |
-| g | Output parses against the schema; every finding's `candidate_id` exists and its `file:line` is in the diff | `ungrounded` (whole run) or finding dropped and counted |
+| g | Output parses against the schema; every `candidate_id` exists in this run | finding dropped and counted as `rejected_ungrounded` |
 
-Checks b–e use `dcap-qvl` for the quote and NVIDIA NRAS for GPU evidence, with NEAR's
-reference checks ported so each one raises (ADR-0006). We do not parse quotes ourselves.
-The attestation report is fetched **after** the completion, with `signing_address` set to
-the signer, as NEAR's reference does. It needs no API key.
-
-**Nonce** (ADR-0003): `nonce = SHA-256(canonical(idempotency_key) ‖ salt)`, where `salt` is
-16 fresh random bytes per run, stored in the receipt.
+- The attestation report is fetched **after** the completion, for the signer that signed
+  it. It needs no API key (confirmed 2026-11-01).
+- Checks b–e use `dcap-qvl` and NVIDIA NRAS, with NEAR's reference checks ported so each one
+  raises (ADR-0006). We do not parse quotes ourselves.
+- **Nonce** (ADR-0003): `nonce = SHA-256(JCS(idempotency_key) ‖ salt)`, `salt` 16 fresh
+  random bytes per run, stored in the receipt.
 
 ### Step 6: Receipt (`hushmark/receipt.py`)
-Defined in `RECEIPT.md`. Canonical JSON (RFC 8785), `receipt_id = SHA-256(bytes)`.
-Holds hashes of the request, response, attestation and findings. Never the diff.
-The full attestation report is stored next to it, addressed by its hash.
+Only for runs that called the model. Defined in `RECEIPT.md`. Canonical JSON (RFC 8785),
+`receipt_id = SHA-256(bytes)`. Holds hashes of the input, request, response, attestation
+and findings. Never the diff, excerpts or finding text.
 
-### Step 7: Publish (`hushmark/publish.py`)
-| Repository | Action | Permission |
+Idempotency key: `(repo_id, pr_number, head_sha, input_sha256, model_id, prompt_hash)`.
+The same key twice returns the existing receipt and updates the existing Check Run.
+
+### Step 7: Report (`hushmark/report.py`)
+One Check Run named `Hushmark` per head SHA, updated in place (its ID is stored).
+
+| Outcome | Conclusion (`mode: warn`, default) | Conclusion (`mode: block`) |
 |---|---|---|
-| Public | `POST /repos/{owner}/{repo}/security-advisories`, ecosystem `other`, left as a draft, body ends with `receipt: <id>` | Repository security advisories: write |
-| Private | One pull request review with inline comments at the validated lines, ending `receipt: <id>` | Pull requests: write |
-| Refusal or zero findings | Log only | none |
+| No candidates | `success` | `success` |
+| Candidates, no verified findings | `success`, summary "N hidden regions reviewed in a NEAR TEE, none aimed at agents", receipt ID | same |
+| Verified findings | `neutral`, one annotation per finding at its file and line | `failure` |
+| Refused (`too_many_candidates`, `budget_exceeded`, verification failure, ...) | `neutral`, reason code, scanner hits as *unconfirmed* annotations | `neutral` |
 
-- Before publishing, search for the `receipt: <id>` marker so a retry never posts twice.
-- Public repositories get the same public output whatever the result (currently: none),
-  so the outcome does not leak.
-- **Unverified:** whether repository security advisories work on private repositories.
-  Test on day 2.
+- Findings in the PR title or body cannot be line annotations; they go in the summary.
+- Summary always ends with `receipt: <id>` when there is a receipt.
+- Teams make the check required in branch protection, **restricted to the Hushmark app** as
+  the source, so another app cannot post a passing check with the same name.
+- On a public repository the Check Run is public. That is accepted: an injection is the
+  attacker's own text, already public in their pull request (ADR-0007).
 
-### Step 8: Anchor (`hushmark/anchor.py`, `contract/`), best effort
-- Contract method `anchor(key_hash, receipt_hash)` panics if `key_hash` already exists.
-- Called with a **function-call access key** limited to `anchor`, zero deposit. A stolen
-  server key can only add anchors; it cannot move funds.
-- `key_hash = SHA-256(canonical(idempotency_key))`. No repository names on chain.
-- A failed anchor never blocks publishing. It is retried and recorded (ADR-0004).
+### Step 8: Anchor (`hushmark/anchor.py`, `contract/`)
+- For every receipt. Contract method `anchor(key_hash, receipt_hash)` panics if `key_hash`
+  already exists.
+- Contract on a NEAR sub-account (`anchor.<owner>.testnet`), called with a **function-call
+  access key** limited to `anchor`, zero deposit. A stolen server key can only add anchors.
+- `key_hash = SHA-256(JCS(idempotency_key))`. No repository names on chain.
+- A failed anchor never blocks the report. It is retried and recorded (ADR-0004).
 
 ## 3. GitHub App permissions
 
 | Permission | Level | Why |
 |---|---|---|
 | Metadata | read | required by GitHub |
-| Contents | read | compare endpoint for the pinned diff |
-| Pull requests | write | read PR, post review (private repositories) |
-| Issues | read | receive `issue_comment` events |
-| Repository security advisories | write | draft advisory (public repositories) |
+| Contents | read | compare endpoint for the diff; `.hushmark.yml` at base |
+| Pull requests | read | PR title, body, SHAs; `pull_request` and PR `issue_comment` events |
+| Checks | write | the `Hushmark` Check Run |
 
-Webhook events: `issue_comment` only.
+Webhook events: `pull_request`, `issue_comment`, `check_run`.
+**Unverified:** that `pull_requests: read` is enough to receive `issue_comment` on pull
+requests (Q4).
 
-## 4. Run state machine
+## 4. Configuration
+
+`.hushmark.yml` on the default branch, read at `base_sha`:
+
+```yaml
+mode: warn   # warn (default) | block
+```
+
+That is the only setting in v0.1. Path ignores and per-path modes are ROADMAP v0.3.
+
+## 5. Run state machine
 
 Each run is a row in SQLite that moves forward only:
 
 ```
-received → authorized → fetched → scanned → inferred → verified → receipted → published
-     └──────────── any step can go to → refused(reason) ─────────────┘
+received → checked_in → fetched → scanned ─┬─▶ reported (no candidates)
+                                           └─▶ inferred → verified → receipted → reported
+        any step can go to → refused(reason) → reported
 anchored is tracked separately: pending → done | failed(retries)
 ```
 
-On restart, a run resumes from its last state. Publishing is idempotent through the marker.
+On restart, a run resumes from its last state. The Check Run ID is stored, so reporting is
+always an update, never a duplicate.
 
-## 5. Proving "no shell"
+## 6. Proving "no shell"
 
 1. ruff banned-API rule: the `hushmark` package cannot import `subprocess`, `os.system`,
    `os.exec*`, `os.spawn*`, `pty`, `multiprocessing`.
@@ -163,36 +200,32 @@ On restart, a run resumes from its last state. Publishing is idempotent through 
 This proves the review code has no path that runs the diff. It does not prove the host
 cannot be compromised. See `THREAT_MODEL.md`.
 
-## 6. Offline and live verification
+## 7. Offline and live verification
 
-- **Recorded once:** with a real key, against a demo repository we control. Saved per
-  fixture: raw request bytes, raw response bytes, signature JSON, attestation report,
-  Intel collateral, NVIDIA result.
-- `make verify` (offline): signature (f), report data and nonce (c), quote against saved
-  collateral at a pinned verification time (b), grounding (g), and all refusal fixtures.
-- `make verify-live` (network, no key): re-runs NEAR's full verifier against the recorded
-  report, including NVIDIA NRAS.
-- **Confirmed 2026-11-01:** `dcap_qvl.verify(quote, collateral, now)` verifies a saved
-  NEAR quote offline from saved collateral. Check e's NRAS call is online; its signed JWT
-  is saved and its signature checked offline against NVIDIA's pinned keys.
+- **Recorded once** with a real key, against a demo repository we control: raw request and
+  response bytes, signature JSON, attestation report, Intel collateral, NRAS response.
+- `make verify` (offline): every fixture, including the quote checked against saved collateral
+  at a pinned time with `dcap_qvl.verify` (confirmed to work 2026-11-01).
+- `make verify-live` (network, no key): fetches a fresh attestation for the same model and
+  re-checks Intel and NVIDIA online.
 
-## 7. Repository layout (planned)
+## 8. Repository layout (planned)
 
 ```
 hushmark/
-  gate.py  fetch.py  scan.py  infer.py  receipt.py  publish.py  anchor.py  app.py
+  trigger.py  fetch.py  scan.py  excerpt.py  infer.py  receipt.py  report.py  anchor.py
+  config.py  app.py
   verify/  attestation.py  signature.py  grounding.py
 prompts/v1.txt
 contract/            near-sdk Rust contract
-fixtures/01-injection/ ... 09-oversize/
+fixtures/
 tests/
-docs/  ARCHITECTURE.md  PLAN.md  FIXTURES.md  OPEN_QUESTIONS.md  adr/
-README.md  AGENTS.md  THREAT_MODEL.md  RECEIPT.md  ROADMAP.md  SECURITY.md  CHANGELOG.md
+scripts/day1_check.py
 ```
 
 ## References
 
 - NEAR AI Cloud response signatures: https://docs.near.ai/cloud/verification/cloud-api/response-signatures.md
 - Quote, nonce and signer bindings: https://docs.near.ai/cloud/verification/reference/quote-nonce-signer.md
-- NEAR AI Cloud verifier: https://github.com/nearai/nearai-cloud-verifier
-- GitHub repository security advisories API: https://docs.github.com/en/rest/security-advisories/repository-advisories
+- NEAR AI Cloud verifier (reference, MIT): https://github.com/nearai/nearai-cloud-verifier
+- GitHub Checks API: https://docs.github.com/en/rest/checks/runs
