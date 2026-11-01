@@ -1,6 +1,6 @@
 # ADR-0002: Verify attestation with NEAR's verifier code, never our own parser
 
-- Status: accepted
+- Status: partly superseded by [ADR-0006](0006-wrap-dcap-qvl-directly.md)
 - Date: 2026-11-01
 
 ## Context

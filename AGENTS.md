@@ -29,8 +29,9 @@ These are not up for debate during the hackathon. Changing one needs an ADR in `
 5. **Refuse, never truncate.** A diff over 200 lines is refused with a reason.
 6. **Never mock a signature or attestation in a fixture that claims to be real.** Fixtures
    built from recorded evidence say so. Tampered fixtures say exactly what was changed.
-7. **Do not write a quote parser.** TDX, RTMR3 and NVIDIA checks go through NEAR's
-   verifier code. A verifier failure is a refusal.
+7. **Do not write a quote parser.** Quote parsing and verification go through `dcap-qvl`,
+   GPU evidence through NVIDIA NRAS with its JWT signature verified. We port NEAR's
+   reference checks so that each one raises; a failure is a refusal. See ADR-0006.
 8. **Keep the diff's exact bytes.** Do not re-serialize request or response JSON before
    hashing.
 9. **Never commit secrets.** No GitHub App private key, webhook secret, NEAR key or
@@ -44,7 +45,8 @@ These are not up for debate during the hackathon. Changing one needs an ADR in `
 - Python 3.12, managed with `uv`, dependencies pinned in `uv.lock`
 - FastAPI and httpx, pydantic v2 in strict mode at every boundary
 - SQLite for state
-- `dcap-qvl` and NEAR's verifier reference code for attestation
+- `dcap-qvl` (pinned `0.7.0`) for TDX quotes; NVIDIA NRAS for GPU evidence
+- Model: `Qwen/Qwen3.8-27B` (model TEE attestation confirmed); fallback `z-ai/glm-5.3-flash`
 - `eth-account` for EIP-191 signature recovery
 - NEAR contract in Rust (`near-sdk`), deployed to **testnet**
 - Tooling: ruff, `mypy --strict`, pytest with recorded HTTP (respx)
@@ -61,13 +63,18 @@ make verify-live   # re-verify recorded evidence online
 ## Current state
 
 - **Phase:** building v0.1. Design review done (Grok, 2026-11-01). No more design docs.
-- **Next:** day-one check: run `scripts/day1_check.py` with a real key. Nothing else
-  starts until it passes.
+- **Next:** day-one check: run `scripts/day1_check.py` with a real key. The attestation
+  half already passes without a key; only the completion signature is unproven.
+  Nothing else starts until it passes.
 
 ## Decision log
 
 Newest first. One line each, with a link when there is an ADR.
 
+- 2026-11-01: Attestation verified for real, no key needed: Qwen3.8-27B and GLM-5.3-flash
+  quotes `UpToDate` from saved collateral, report data binds signer and nonce, GPU nonce
+  matches. NEAR's verifier prints instead of failing, so we wrap `dcap-qvl` directly.
+  See [ADR-0006](docs/adr/0006-wrap-dcap-qvl-directly.md).
 - 2026-11-01: Design review applied. Claim narrowed to the code, not the host. Privacy is
   the primary track, security second. The NEAR anchor is never cut; the live app is cut
   first, then the public-advisory path. The private path stays: NEAR's own idea list asks

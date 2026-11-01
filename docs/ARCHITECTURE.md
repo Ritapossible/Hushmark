@@ -67,7 +67,8 @@ diff for hiding places. It only decides whether a candidate is an instruction ai
 agent.
 
 ### Step 4: Infer (`hushmark/infer.py`)
-- Choose a model listed by NEAR AI Cloud that returns `signature_kind: provider_tee`.
+- Model: `Qwen/Qwen3.8-27B` (model TEE attestation confirmed 2026-11-01; fallback
+  `z-ai/glm-5.3-flash`). It must return `signature_kind: provider_tee`.
   Send the canonical model ID with header `x-no-aliasing: true`.
 - Fixed system prompt, versioned in `prompts/v1.txt`; its SHA-256 is `prompt_hash`.
 - The diff and candidates go inside a random boundary (`<<<DIFF-{16 random hex}>>>`). The
@@ -94,7 +95,10 @@ Every check passes, or the run is refused with that check's reason code.
 | f | `GET /v1/signature/{chat_id}`: `text == "{model}:{sha256(req)}:{sha256(resp)}"`, EIP-191 signer equals the attested `signing_address`, `signature_kind == "provider_tee"` | `signature_mismatch` |
 | g | Output parses against the schema; every finding's `candidate_id` exists and its `file:line` is in the diff | `ungrounded` (whole run) or finding dropped and counted |
 
-Checks b–e use NEAR's verifier code (ADR-0002). We do not parse quotes ourselves.
+Checks b–e use `dcap-qvl` for the quote and NVIDIA NRAS for GPU evidence, with NEAR's
+reference checks ported so each one raises (ADR-0006). We do not parse quotes ourselves.
+The attestation report is fetched **after** the completion, with `signing_address` set to
+the signer, as NEAR's reference does. It needs no API key.
 
 **Nonce** (ADR-0003): `nonce = SHA-256(canonical(idempotency_key) ‖ salt)`, where `salt` is
 16 fresh random bytes per run, stored in the receipt.
@@ -168,8 +172,9 @@ cannot be compromised. See `THREAT_MODEL.md`.
   collateral at a pinned verification time (b), grounding (g), and all refusal fixtures.
 - `make verify-live` (network, no key): re-runs NEAR's full verifier against the recorded
   report, including NVIDIA NRAS.
-- **Unverified:** whether NEAR's verifier can run offline with saved collateral. If not,
-  checks b, d and e move to `verify-live` only. Settle on day 1.
+- **Confirmed 2026-11-01:** `dcap_qvl.verify(quote, collateral, now)` verifies a saved
+  NEAR quote offline from saved collateral. Check e's NRAS call is online; its signed JWT
+  is saved and its signature checked offline against NVIDIA's pinned keys.
 
 ## 7. Repository layout (planned)
 
