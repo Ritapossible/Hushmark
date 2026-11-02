@@ -14,13 +14,15 @@ import json
 import os
 import sys
 import time
-from collections.abc import Mapping
+from collections.abc import Callable, Mapping
 from pathlib import Path
 from typing import Any
 
+from hushmark.anchor import TESTNET_RPC, NearAnchor
 from hushmark.github import GitHubClient
 from hushmark.infer import Completion
 from hushmark.near import LiveEvidence, NearAiCloud
+from hushmark.nonce import key_hash
 from hushmark.pipeline import EvidenceSources, Reviewed, Tee
 from hushmark.refusal import Refused
 from hushmark.service import CheckResult, run_check
@@ -39,6 +41,22 @@ class NoKeyTee:
 
     def attestation(self, nonce: str, signing_address: str) -> bytes:
         raise Refused("tee_unavailable", "NEARAI_API_KEY is not set")
+
+
+def near_anchor(env: Mapping[str, str]) -> Callable[[Reviewed], str] | None:
+    """Anchor on NEAR when NEAR_ANCHOR_ACCOUNT and NEAR_ANCHOR_KEY are configured."""
+    account, secret = env.get("NEAR_ANCHOR_ACCOUNT"), env.get("NEAR_ANCHOR_KEY")
+    if not account or not secret:
+        return None
+    client = NearAnchor(account, secret, rpc=env.get("NEAR_RPC_URL") or TESTNET_RPC)
+
+    def anchor(outcome: Reviewed) -> str:
+        result = client.anchor(key_hash(outcome.key), outcome.receipt.receipt_id)
+        if result.status == "already_anchored":
+            return "NEAR anchor: this review was already anchored; the contract refused a second."
+        return f"Anchored on NEAR testnet: [{result.tx_hash[:12]}…]({result.url})"
+
+    return anchor
 
 
 def run(
@@ -62,6 +80,7 @@ def run(
         tee=tee or (NearAiCloud(key, model) if key else NoKeyTee()),
         sources=sources or LiveEvidence(),
         now=lambda: int(time.time()),
+        anchor=near_anchor(env),
     )
     out_dir = env.get("RUNNER_TEMP")
     if out_dir and isinstance(result.outcome, Reviewed):

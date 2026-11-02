@@ -37,6 +37,10 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ github.token }}
           NEARAI_API_KEY: ${{ secrets.NEARAI_API_KEY }}
+          # Optional: anchor receipts on NEAR testnet (ADR-0004). NEAR_ANCHOR_KEY is a
+          # function-call access key that can only call `anchor`, with no deposit.
+          NEAR_ANCHOR_ACCOUNT: ${{ vars.NEAR_ANCHOR_ACCOUNT }}
+          NEAR_ANCHOR_KEY: ${{ secrets.NEAR_ANCHOR_KEY }}
         run: uv run --no-sync python -m hushmark.action
       - name: Keep the receipt
         if: always()

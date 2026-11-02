@@ -140,3 +140,37 @@ def test_full_check_run_for_r1_in_block_mode() -> None:
     sent = json.loads(finish.calls.last.request.content)
     assert sent["status"] == "completed" and sent["conclusion"] == "failure"
     assert [a["path"] for a in sent["output"]["annotations"]] == ["docs/setup.md"]
+
+
+@respx.mock
+@pytest.mark.parametrize(
+    ("anchor_result", "expected"),
+    [
+        (lambda o: "Anchored on NEAR testnet: [abc…](https://x)", "Anchored on NEAR testnet"),
+        (lambda o: (_ for _ in ()).throw(RuntimeError("rpc down")), "not recorded this time"),
+    ],
+)
+def test_anchor_note_is_added_and_never_blocks(anchor_result: object, expected: str) -> None:
+    rec = Recording("r2")
+    pr = rec.pr()
+    respx.get(f"{BASE}/pulls/2").respond(
+        200,
+        json={
+            "base": {"sha": pr.base_sha},
+            "head": {"sha": pr.head_sha},
+            "title": pr.title,
+            "body": pr.body,
+        },
+    )
+    respx.post(f"{BASE}/check-runs").respond(201, json={"id": 5})
+    respx.get(f"{BASE}/contents/.hushmark.yml").respond(404)
+    respx.get(f"{BASE}/compare/{pr.base_sha}...{pr.head_sha}").respond(200, text=pr.diff)
+    finish = respx.patch(f"{BASE}/check-runs/5").respond(200, json={})
+    out = run_check(
+        client(), owner=OWNER, repo=REPO, repo_id=pr.repo_id, number=2,
+        model="z-ai/glm-5.3-flash", tee=RecordedTee(rec), sources=RecordedEvidence(rec),
+        now=lambda: rec.meta["fetched_at"], salt=rec.salt(), boundary=rec.boundary(),
+        anchor=anchor_result,  # type: ignore[arg-type]
+    ).output  # fmt: skip
+    assert out.conclusion == "success"
+    assert expected in json.loads(finish.calls.last.request.content)["output"]["summary"]
