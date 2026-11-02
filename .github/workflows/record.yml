@@ -1,4 +1,4 @@
-# Record real NEAR AI Cloud evidence for fixtures R1–R3 (docs/FIXTURES.md), run by hand.
+# Record real NEAR AI Cloud evidence for fixture inputs (R1–R4) (docs/FIXTURES.md), run by hand.
 # Uses the NEARAI_API_KEY repository secret; the evidence (no key) is kept as an artifact and
 # committed under fixtures/recordings/ after review.
 name: record
@@ -9,6 +9,9 @@ on:
       model:
         description: NEAR AI Cloud model
         default: z-ai/glm-5.3-flash
+      inputs:
+        description: Fixture inputs to record, space-separated (e.g. "r4")
+        default: r1 r2 r3
 
 permissions:
   contents: read
@@ -23,13 +26,18 @@ jobs:
         with:
           python-version: "3.12"
       - run: uv sync --locked
-      - name: Record R1–R3
+      - name: Record the chosen inputs
         env:
           NEARAI_API_KEY: ${{ secrets.NEARAI_API_KEY }}
           MODEL: ${{ inputs.model }}
+          NAMES: ${{ inputs.inputs }}
         run: |
-          uv run python scripts/record_completion.py --model "$MODEL" --out recordings \
-            fixtures/inputs/r1 fixtures/inputs/r2 fixtures/inputs/r3
+          paths=()
+          for name in $NAMES; do
+            [[ "$name" =~ ^r[0-9]+$ ]] || { echo "bad input name: $name"; exit 1; }
+            paths+=("fixtures/inputs/$name")
+          done
+          uv run python scripts/record_completion.py --model "$MODEL" --out recordings "${paths[@]}"
       - uses: actions/upload-artifact@v4
         with:
           name: recordings
