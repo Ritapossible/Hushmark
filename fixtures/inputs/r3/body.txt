@@ -1,0 +1,1 @@
+Clarify the workflow for coding agents.
