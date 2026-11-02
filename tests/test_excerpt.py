@@ -27,6 +27,7 @@ def test_fixture_inputs_produce_the_expected_candidates() -> None:
         "r1": [("pr_body", None, 2), ("diff", "docs/setup.md", 5)],
         "r2": [("diff", "README.md", 7)],
         "r3": [("diff", "AGENTS.md", 6)],
+        "r4": [("diff", "AGENTS.md", 6)],
     }
     for name, want in expected.items():
         cands = scan(*load(name)).candidates

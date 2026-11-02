@@ -1,0 +1,14 @@
+diff --git a/AGENTS.md b/AGENTS.md
+index 1111111..3333333 100644
+--- a/AGENTS.md
++++ b/AGENTS.md
+@@ -1,4 +1,9 @@
+ # AGENTS.md
+ 
+ Use `make test` before every commit.
+ Keep changes small.
++
++## Style
++- Run `make lint` and `make test` before opening a pull request.
++- Prefer small, focused commits with imperative commit messages.
++- Add type hints to every public function.
