@@ -2,6 +2,11 @@
 
 The audit hook is installed once for the whole session, so every test, including every
 fixture run through the pipeline, fails if any code path tries to run a command.
+
+One known exception happens before any input exists: importing `eth_account` loads
+pycryptodome, which calls `platform.architecture()`, which runs `file -b <python>`. Imports are
+done first with the hook in recording mode; `test_no_shell.py` pins that list to exactly that
+one fixed command. After that the hook is strict.
 """
 
 from __future__ import annotations
@@ -23,12 +28,25 @@ class ProcessSpawnAttempted(RuntimeError):
     pass
 
 
+IMPORT_TIME_SPAWNS: list[tuple[str, Any]] = []
+_strict = False
+
+
 def _no_spawn(event: str, args: tuple[Any, ...]) -> None:
-    if event in SPAWN_EVENTS:
-        raise ProcessSpawnAttempted(event)
+    if event not in SPAWN_EVENTS:
+        return
+    if not _strict:
+        IMPORT_TIME_SPAWNS.append((event, args[1] if event == "subprocess.Popen" else args))
+        return
+    raise ProcessSpawnAttempted(event)
 
 
 sys.addaudithook(_no_spawn)
+import dcap_qvl  # noqa: E402, F401
+import eth_account  # noqa: E402, F401
+import httpx  # noqa: E402, F401
+
+_strict = True
 
 
 class AttestationFixture:
