@@ -91,7 +91,9 @@ def main() -> int:
     out.mkdir(parents=True, exist_ok=True)
 
     headers = {"Authorization": f"Bearer {api_key}", "Accept-Encoding": "identity"}
-    with httpx.Client(base_url=BASE_URL, headers=headers, timeout=120) as http:
+    # Model TEEs can take minutes on a cold start; a slow answer is not a failed check.
+    timeout = httpx.Timeout(300, connect=30)
+    with httpx.Client(base_url=BASE_URL, headers=headers, timeout=timeout) as http:
         # 1. One completion. Serialize once and keep the exact bytes we sent.
         request_bytes = json.dumps(
             {
