@@ -109,9 +109,9 @@ finding is shown.
 | b | Intel TDX quote valid (`dcap-qvl`), TCB status in allowlist, debug bit off | `quote_invalid` |
 | c | `report_data` = signing address right-padded to 32 bytes ‖ nonce; `request_nonce` echoes the nonce | `signer_not_bound` or `nonce_mismatch` |
 | d | MRCONFIGID matches `app_compose`; RTMR3 replays from the event log | `measurement_mismatch` |
-| e | NVIDIA GPU evidence carries our nonce; NRAS verdict true; NRAS JWT signature valid | `gpu_evidence_invalid` |
+| e | NVIDIA GPU evidence carries our nonce; NRAS verdict true; every NRAS JWT (overall and per GPU) ES384-verified against NVIDIA's keys (pinned in `fixtures/nvidia/jwks.json` offline), nonce matches, overall token commits to each GPU token by SHA-256 | `gpu_evidence_invalid` |
 | f | `GET /v1/signature/{chat_id}`: `text == "{model}:{sha256(req)}:{sha256(resp)}"`, EIP-191 signer equals the attested `signing_address`, `signature_kind == "provider_tee"` | `signature_mismatch` |
-| g | Output parses against the schema; every `candidate_id` exists in this run | finding dropped and counted as `rejected_ungrounded` |
+| g | Output parses against the schema (else the run is refused: `model_output_invalid`); every `candidate_id` exists in this run | unknown or repeated ids dropped and counted as `rejected_ungrounded` |
 
 - The attestation report is fetched **after** the completion, for the signer that signed
   it. It needs no API key (confirmed 2026-11-01).

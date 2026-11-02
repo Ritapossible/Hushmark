@@ -3,11 +3,10 @@
 from __future__ import annotations
 
 import os
-import sys
 
 import pytest
 
-from tests.conftest import IMPORT_TIME_SPAWNS, ProcessSpawnAttempted
+from tests.conftest import ProcessSpawnAttempted
 
 
 def test_audit_hook_blocks_shell_commands() -> None:
@@ -22,8 +21,9 @@ def test_audit_hook_blocks_subprocess() -> None:
         subprocess.run(["true"], check=False)  # noqa: S603, S607
 
 
-def test_only_the_known_import_time_spawn_happened() -> None:
-    # pycryptodome (via eth_account) asks `file` whether Python is 32- or 64-bit, once, at
-    # import, with fixed arguments. Anything else here means a dependency changed.
-    python = os.path.realpath(sys.executable)  # platform resolves the venv symlink
-    assert IMPORT_TIME_SPAWNS == [("subprocess.Popen", ["file", "-b", python])]
+def test_pycryptodome_loads_through_cffi() -> None:
+    # Without cffi, pycryptodome calls platform.architecture(), which runs `file -b <python>`
+    # at import. With cffi it starts no process; conftest.py imports it under the strict hook.
+    from Crypto.Util import _raw_api
+
+    assert _raw_api.backend == "cffi"

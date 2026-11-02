@@ -7,10 +7,14 @@ requires-python = ">=3.12"
 license = "Apache-2.0"
 authors = [{ name = "Rita" }]
 dependencies = [
+    # With cffi present, pycryptodome (via eth-account) loads without running `file`, so no
+    # process ever starts. tests/test_no_shell.py checks this.
+    "cffi>=1.17",
     "dcap-qvl==0.7.0",
     "eth-account>=0.13",
     "httpx>=0.27",
     "pydantic>=2.7",
+    "pyjwt[crypto]>=2.9",
     "pyyaml>=6.0",
 ]
 
