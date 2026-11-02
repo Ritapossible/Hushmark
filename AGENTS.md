@@ -104,12 +104,20 @@ make verify-live   # (planned) re-verify recorded evidence online
   fails on drift. Live at https://tryhushmark.vercel.app (Vercel, root `site`, security
   headers in `site/vercel.json`). Docs page: `site/docs.html`; keep it in step with the code
   and mark unbuilt features as planned.
-- **Next:** pipeline orchestration and the GitHub Check Run (`report.py`).
+- **Branch `build/pipeline` (2026-11-02):** `pipeline.py` (one review, checks a–g, receipt),
+  `report.py` (Check Run output, warn/block), `github.py` (App JWT, webhook HMAC, pinned diff,
+  config at base, permissions, Check Run calls), `service.py` (one PR end to end), `near.py`
+  (live adapters). Tests replay R1–R4 byte for byte (`tests/replay.py`) and mock GitHub with
+  respx. Fixtures 02 and 12 covered. 127 tests. New codes `tee_unavailable`, `webhook_invalid`.
+- **Next:** register the GitHub App (Rita), webhook server (FastAPI) with delivery-ID dedupe
+  and idempotency in SQLite, then the NEAR contract.
 
 ## Decision log
 
 Newest first. One line each, with a link when there is an ADR.
 
+- 2026-11-02: Check Run pipeline built and tested offline before the GitHub App exists, so
+  going live is configuration. Docs page updated: built vs planned.
 - 2026-11-02: PR #2 merged; site live on Vercel. Docs page added.
 - 2026-11-02: Static landing page in the style Rita chose; own branding and content only.
   See [ADR-0008](docs/adr/0008-static-landing-page.md).

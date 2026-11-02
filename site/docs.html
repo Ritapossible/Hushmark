@@ -96,7 +96,8 @@
             <tr><td>Verification checks a–g</td><td><span class="tag tag-live">built</span></td></tr>
             <tr><td>Receipts</td><td><span class="tag tag-live">built</span></td></tr>
             <tr><td>Real recorded evidence, verified offline</td><td><span class="tag tag-live">built</span></td></tr>
-            <tr><td>GitHub App and Check Run output</td><td><span class="tag tag-planned">planned</span></td></tr>
+            <tr><td>Pipeline, Check Run output and GitHub client (tested against a mocked GitHub API)</td><td><span class="tag tag-live">built</span></td></tr>
+            <tr><td>GitHub App registration and webhook server (going live on real pull requests)</td><td><span class="tag tag-planned">planned</span></td></tr>
             <tr><td>NEAR testnet anchor contract</td><td><span class="tag tag-planned">planned</span></td></tr>
           </tbody>
         </table>
@@ -124,13 +125,14 @@ cd Hushmark</code></pre></li>
         <p>Each pull request moves through the same pipeline. Any step can stop the run with a <a href="#refusals">refusal code</a>; a refusal never shows a model finding.</p>
         <ol class="pipeline">
           <li><strong>Trigger.</strong> Every pull request event: opened, updated, reopened or edited. A maintainer can re-run with <code>/hushmark</code>. <span class="tag tag-planned">planned</span></li>
-          <li><strong>Fetch.</strong> The diff between the pinned base and head commits, the title and the body. <code>.hushmark.yml</code> is read from the base commit only. <span class="tag tag-planned">planned</span></li>
+          <li><strong>Fetch.</strong> The diff between the pinned base and head commits, the title and the body. <code>.hushmark.yml</code> is read from the base commit only. <span class="tag tag-live">built</span></li>
           <li><strong>Scan.</strong> Deterministic <a href="#detectors">detectors</a> read every added line, the title and the body. No size limit, nothing executed. <span class="tag tag-live">built</span></li>
           <li><strong>Excerpt.</strong> Each flagged region plus up to ten lines of context. Invisible characters are written as tags such as <code>⟦U+200B⟧</code>. Only excerpts leave the service. <span class="tag tag-live">built</span></li>
           <li><strong>Infer.</strong> One completion on NEAR AI Cloud with a fixed prompt and no tools. The exact request and response bytes are kept. <span class="tag tag-live">built</span></li>
           <li><strong>Verify.</strong> <a href="#verification">Checks a–g</a>: attestation, signature and grounding. <span class="tag tag-live">built</span></li>
           <li><strong>Receipt.</strong> A canonical JSON <a href="#receipts">receipt</a> with hashes only. <span class="tag tag-live">built</span></li>
-          <li><strong>Report and anchor.</strong> One <code>Hushmark</code> Check Run with line annotations, and the receipt hash anchored on NEAR. <span class="tag tag-planned">planned</span></li>
+          <li><strong>Report.</strong> One <code>Hushmark</code> Check Run with line annotations. <span class="tag tag-live">built</span></li>
+          <li><strong>Anchor.</strong> The receipt hash anchored on NEAR. <span class="tag tag-planned">planned</span></li>
         </ol>
         <p>A pull request with no hidden regions finishes after step 3: no model call, no cost, no receipt. That is the common case.</p>
       </section>
@@ -241,7 +243,8 @@ mode: warn   # warn (default) | block</code></pre>
       </section>
 
       <section id="results" class="doc">
-        <h2>Check results <span class="tag tag-planned">planned</span></h2>
+        <h2>Check results <span class="tag tag-live">built</span></h2>
+        <p>Built and tested on the recorded evidence; it appears on real pull requests once the GitHub App is live.</p>
         <table>
           <thead><tr><th>Outcome</th><th><code>mode: warn</code></th><th><code>mode: block</code></th></tr></thead>
           <tbody>
@@ -270,8 +273,10 @@ mode: warn   # warn (default) | block</code></pre>
             <tr><td><code>gpu_evidence_invalid</code></td><td>NVIDIA's evidence or signed verdict failed</td></tr>
             <tr><td><code>signature_mismatch</code></td><td>The response signature does not cover our exact bytes from the attested signer</td></tr>
             <tr><td><code>model_output_invalid</code></td><td>The model's answer does not match the schema</td></tr>
-            <tr><td><code>not_maintainer</code> <span class="tag tag-planned">planned</span></td><td><code>/hushmark</code> from someone without admin or maintain permission</td></tr>
-            <tr><td><code>diff_unavailable</code> <span class="tag tag-planned">planned</span></td><td>GitHub could not return the full diff</td></tr>
+            <tr><td><code>tee_unavailable</code></td><td>NEAR AI Cloud, Intel or NVIDIA could not be reached</td></tr>
+            <tr><td><code>not_maintainer</code></td><td><code>/hushmark</code> from someone without admin or maintain permission</td></tr>
+            <tr><td><code>diff_unavailable</code></td><td>GitHub could not return the full diff</td></tr>
+            <tr><td><code>webhook_invalid</code></td><td>A webhook whose signature is not GitHub's</td></tr>
             <tr><td><code>budget_exceeded</code> <span class="tag tag-planned">planned</span></td><td>The installation's daily model-call budget is spent</td></tr>
           </tbody>
         </table>
@@ -340,7 +345,8 @@ mode: warn   # warn (default) | block</code></pre>
         <h3>Stack</h3>
         <p>Python 3.12 with <code>uv</code>; httpx; pydantic v2 in strict mode; <code>dcap-qvl</code> for Intel quotes; PyJWT for NVIDIA tokens; <code>eth-account</code> for EIP-191; ruff, <code>mypy --strict</code> and pytest. The NEAR contract will be Rust with <code>near-sdk</code>.</p>
         <h3>Repository layout</h3>
-<pre><code>hushmark/        scan, excerpt, infer, nonce, receipt, config
+<pre><code>hushmark/        scan, excerpt, infer, nonce, receipt, config,
+                 pipeline, report, github, service, near
 hushmark/verify/ attestation, nras, signature, grounding
 prompts/         the versioned system prompt
 fixtures/        inputs, recordings, attestation reports, NVIDIA keys

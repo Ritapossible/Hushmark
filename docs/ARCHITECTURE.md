@@ -210,19 +210,27 @@ cannot be compromised. See `THREAT_MODEL.md`.
 - `make verify-live` (network, no key): fetches a fresh attestation for the same model and
   re-checks Intel and NVIDIA online.
 
-## 8. Repository layout (planned)
+## 8. Repository layout
 
 ```
 hushmark/
-  trigger.py  fetch.py  scan.py  excerpt.py  infer.py  receipt.py  report.py  anchor.py
-  config.py  app.py
-  verify/  attestation.py  signature.py  grounding.py
+  scan.py  excerpt.py  infer.py  nonce.py  receipt.py  config.py
+  pipeline.py    one review: scan → excerpt → infer → checks a–g → receipt
+  report.py      outcome → Check Run conclusion, summary, annotations
+  github.py      GitHub App auth, webhook HMAC, diff, config at base, Check Run calls
+  service.py     one pull request from Check Run start to finish
+  near.py        live NEAR AI Cloud, Intel PCS and NVIDIA NRAS adapters
+  verify/  attestation.py  nras.py  signature.py  grounding.py
 prompts/v1.txt
-contract/            near-sdk Rust contract
-fixtures/
-tests/
-scripts/day1_check.py
+fixtures/   inputs/ recordings/ attestation/ nvidia/
+tests/      replay.py replays recorded evidence byte for byte
+scripts/    day1_check.py record_completion.py record_attestation.py build_site_data.py
+site/       landing page and docs
+contract/   (planned) near-sdk Rust contract
 ```
+
+Refusal codes added while building: `tee_unavailable` (NEAR AI Cloud, Intel or NVIDIA
+unreachable) and `webhook_invalid` (bad `X-Hub-Signature-256`).
 
 ## References
 
