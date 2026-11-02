@@ -52,6 +52,12 @@ Runs with no hidden regions make no model call and have no receipt.
 }
 ```
 
+## Findings digest
+
+`findings_sha256` = SHA-256 of `JCS([{candidate_id, severity, rationale_sha256}, ...])`, sorted
+by `candidate_id`. The rationale is hashed, never stored, so a published finding can be matched
+to its receipt without the receipt holding its text.
+
 ## Derived values
 
 ```
