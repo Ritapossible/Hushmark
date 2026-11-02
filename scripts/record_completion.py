@@ -32,8 +32,10 @@ from hushmark.infer import BASE_URL, build_request, complete, load_prompt
 from hushmark.nonce import IdempotencyKey, derive_nonce, input_sha256, key_hash
 from hushmark.scan import ensure_within_cap, scan
 from hushmark.verify.attestation import select_model_attestation, verify_attestation
+from hushmark.verify.nras import verify_nras
 
 NRAS_URL = "https://nras.attestation.nvidia.com/v3/attest/gpu"
+JWKS_URL = "https://nras.attestation.nvidia.com/.well-known/jwks.json"
 
 
 def sha256_hex(data: bytes) -> str:
@@ -99,6 +101,9 @@ def record(http: httpx.Client, model: str, src: Path, out: Path) -> None:
     fetched_at = int(time.time())
     verify_attestation(report, nonce, collateral_json, fetched_at, sig["signing_address"])
     nras = httpx.post(NRAS_URL, json=json.loads(attestation["nvidia_payload"]), timeout=60)
+    nras.raise_for_status()
+    jwks = httpx.get(JWKS_URL, timeout=60).json()
+    verify_nras(nras.json(), nonce, jwks, int(time.time()))
 
     out.mkdir(parents=True, exist_ok=True)
     (out / "request.json").write_bytes(completion.request_bytes)
