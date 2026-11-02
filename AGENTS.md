@@ -91,7 +91,9 @@ make verify-live   # (planned) re-verify recorded evidence online
   needs the key runs as a manual workflow (`.github/workflows/day1-check.yml` is the pattern).
 - **Recorded 2026-11-02:** R1–R3 (`fixtures/recordings/`, Actions run 41433656615) and a GLM
   attestation A2. Model answers: R1 two findings, R2 none (harmless TODO), R3 one. Check f
-  (`verify/signature.py`) done; fixtures 01, 04, 05, 06, 07, 10 pass offline. 68 tests.
+  (`verify/signature.py`) done; fixtures 01, 04, 05, 06, 07, 10 pass offline.
+- **R4 (2026-11-02, run 41441898820):** ordinary `AGENTS.md` style rules, zero findings: the
+  rules-file control for R3 (fixture 13). GitGuardian allowlist for `nras.json` added.
 - **Known import-time spawn:** pycryptodome (via `eth_account`) runs `file -b <python>` once
   at import. Pinned by `tests/test_no_shell.py`; stated in `THREAT_MODEL.md`.
 - **Next:** NRAS JWT verification (rest of check e), grounding (check g), receipt.
@@ -100,6 +102,8 @@ make verify-live   # (planned) re-verify recorded evidence online
 
 Newest first. One line each, with a link when there is an ADR.
 
+- 2026-11-02: Grok review: added R4 as the benign rules-file control before building the
+  Check Run, and allowlisted the NVIDIA JWTs that GitGuardian flagged.
 - 2026-11-02: Recordings R1–R3 done on GitHub Actions, verified before saving. Days 4–6 of
   the plan are complete ahead of schedule.
 - 2026-11-02: Day-one go/no-go passed. Primary model switched to `z-ai/glm-5.3-flash`

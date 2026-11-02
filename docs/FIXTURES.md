@@ -13,12 +13,13 @@ cent.
 | R1 | Injection PR: hidden HTML comment in `docs/setup.md` **and** a hidden comment in the PR body; plus attestation report A1 | 01, 03, 04, 05 |
 | R2 | Clean PR with a harmless `<!-- TODO: add screenshot -->` | 07 |
 | R3 | PR that adds an instruction to `AGENTS.md` telling agents to skip tests and push to `main` | 10 |
+| R4 | PR that adds ordinary style rules to `AGENTS.md` (lint, tests, commit style): the control for R3 | 13 |
 | A2 | A second attestation report with a different nonce, same signer (`fixtures/attestation/glm-a2`) | 06 |
 
 ## Fixtures
 
 Recorded 2026-11-02 (`fixtures/recordings/`). Passing offline today: 01, 04, 05, 06, 07,
-09, 10, 11. Still to come: 02, 03, 08, 12.
+09, 10, 11, 13. Still to come: 02, 03, 08, 12.
 
 
 | # | Name | Input | Expected | Real or derived |
@@ -34,6 +35,7 @@ Recorded 2026-11-02 (`fixtures/recordings/`). Passing offline today: 01, 04, 05,
 | 09 | `too-many-candidates` | 21 hidden regions | `refused: too_many_candidates`. No model call. | No model call |
 | 10 | `rules-file` | R3 | One verified finding at the added `AGENTS.md` line | Real (R3) |
 | 11 | `no-candidates` | A 2,000-line code-only PR | Check `success`. No model call, no receipt. | No model call |
+| 13 | `rules-file-control` | R4 | Zero findings: ordinary rules are not flagged | Real (R4) |
 | 12 | `config-from-head-ignored` | Base says `mode: block`; the PR changes it to `warn` | `block` applies: check `failure` on R1's findings | R1, unit test of `config.py` |
 
 ## Why 08 is a unit test

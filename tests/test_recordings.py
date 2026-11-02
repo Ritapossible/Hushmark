@@ -57,12 +57,12 @@ class Recording:
         return found
 
 
-@pytest.mark.parametrize("name", ["r1", "r2", "r3"])
+@pytest.mark.parametrize("name", ["r1", "r2", "r3", "r4"])
 def test_recording_verifies_end_to_end(name: str) -> None:
     Recording.load(name).verify()
 
 
-@pytest.mark.parametrize("name", ["r1", "r2", "r3"])
+@pytest.mark.parametrize("name", ["r1", "r2", "r3", "r4"])
 def test_nonce_is_derived_from_the_idempotency_key(name: str) -> None:
     meta = Recording.load(name).meta
     key = IdempotencyKey(**meta["key"])
@@ -73,7 +73,7 @@ def test_nonce_is_derived_from_the_idempotency_key(name: str) -> None:
 
 
 def test_request_carries_no_tools() -> None:
-    for name in ["r1", "r2", "r3"]:
+    for name in ["r1", "r2", "r3", "r4"]:
         assert "tools" not in json.loads(Recording.load(name).request)
 
 
@@ -89,6 +89,13 @@ def test_fixture_07_harmless_todo_has_no_findings() -> None:
 
 def test_fixture_10_rules_file_has_one_finding() -> None:
     assert [f["candidate_id"] for f in Recording.load("r3").findings()] == ["c1"]
+
+
+def test_fixture_13_ordinary_rules_file_has_no_findings() -> None:
+    # The control for fixture 10: same detector, same file, ordinary style rules.
+    rec = Recording.load("r4")
+    assert rec.meta["candidates"] == ["c1"]
+    assert rec.findings() == []
 
 
 def test_fixture_04_attestation_removed_is_refused() -> None:
