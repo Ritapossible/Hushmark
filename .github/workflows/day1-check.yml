@@ -1,0 +1,39 @@
+# Day-one go/no-go check (docs/PLAN.md), run by hand from the Actions tab.
+# Uses the NEARAI_API_KEY repository secret. GitHub masks it in logs and never passes it
+# to workflows from forks. The raw evidence (no key) is kept as an artifact.
+name: day1-check
+
+on:
+  workflow_dispatch:
+    inputs:
+      model:
+        description: NEAR AI Cloud model
+        default: Qwen/Qwen3.8-27B
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          python-version: "3.12"
+      - name: Run scripts/day1_check.py
+        env:
+          NEARAI_API_KEY: ${{ secrets.NEARAI_API_KEY }}
+          MODEL: ${{ inputs.model }}
+        run: |
+          uv run --no-project --with httpx --with eth-account --with dcap-qvl==0.7.0 \
+            scripts/day1_check.py --model "$MODEL"
+      - name: Keep the evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: day1-evidence
+          path: .evidence/day1/
+          if-no-files-found: ignore
+          retention-days: 30
