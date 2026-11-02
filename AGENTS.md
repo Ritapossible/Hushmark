@@ -112,13 +112,20 @@ make verify-live   # (planned) re-verify recorded evidence online
 - **GitHub Action (ADR-0009):** `.github/workflows/hushmark.yml` on `pull_request_target`
   runs `python -m hushmark.action` from the base branch; it never checks out the PR. Receipts
   are kept as workflow artifacts. `tests/test_action.py` guards the workflow. 131 tests.
-- **Next:** merge, demo PR with a hidden instruction on this repo, then the NEAR contract.
-  GitHub App and webhook server stay planned.
+- **Live 2026-11-02:** demo PR #6 (do not merge) got a real `Hushmark` check: 2 verified
+  findings, receipt artifact checked (hashes only).
+- **Branch `build/near-anchor`:** `contract/` (Rust, near-sdk 5.30, 5 unit tests, 106 KB wasm
+  via `cargo-near`), `hushmark/anchor.py` (Borsh tx, Ed25519 signing, RPC), Action wiring
+  (`NEAR_ANCHOR_ACCOUNT` variable, `NEAR_ANCHOR_KEY` secret). 142 tests.
+- **Next:** with Rita's OK (signs transactions): create `hushmark.testnet`, deploy to
+  `anchor.hushmark.testnet`, add the function-call key. See `contract/README.md`.
 
 ## Decision log
 
 Newest first. One line each, with a link when there is an ADR.
 
+- 2026-11-02: Anchor contract on its own sub-account; only the contract account may write;
+  the service key is a function-call key limited to `anchor`.
 - 2026-11-02: v0.1 ships as a GitHub Action on `pull_request_target` (no server; rule 10
   stands). See [ADR-0009](docs/adr/0009-github-action-pull-request-target.md).
 - 2026-11-02: Check Run pipeline built and tested offline before the GitHub App exists, so

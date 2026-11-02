@@ -99,7 +99,7 @@
             <tr><td>Pipeline, Check Run output and GitHub client (tested against a mocked GitHub API)</td><td><span class="tag tag-live">built</span></td></tr>
             <tr><td>GitHub Action on every pull request (<code>pull_request_target</code>)</td><td><span class="tag tag-live">built</span></td></tr>
             <tr><td>GitHub App and webhook server (one-click installs, <code>/hushmark</code> re-runs)</td><td><span class="tag tag-planned">planned</span></td></tr>
-            <tr><td>NEAR testnet anchor contract</td><td><span class="tag tag-planned">planned</span></td></tr>
+            <tr><td>NEAR anchor contract and the Action's anchor call</td><td><span class="tag tag-live">built</span></td></tr>
           </tbody>
         </table>
       </section>
@@ -133,7 +133,7 @@ cd Hushmark</code></pre></li>
           <li><strong>Verify.</strong> <a href="#verification">Checks a–g</a>: attestation, signature and grounding. <span class="tag tag-live">built</span></li>
           <li><strong>Receipt.</strong> A canonical JSON <a href="#receipts">receipt</a> with hashes only. <span class="tag tag-live">built</span></li>
           <li><strong>Report.</strong> One <code>Hushmark</code> Check Run with line annotations. <span class="tag tag-live">built</span></li>
-          <li><strong>Anchor.</strong> The receipt hash anchored on NEAR. <span class="tag tag-planned">planned</span></li>
+          <li><strong>Anchor.</strong> The receipt hash anchored on NEAR testnet, with the transaction linked from the check. <span class="tag tag-live">built</span></li>
         </ol>
         <p>A pull request with no hidden regions finishes after step 3: no model call, no cost, no receipt. That is the common case.</p>
       </section>
@@ -204,8 +204,8 @@ cd Hushmark</code></pre></li>
       </section>
 
       <section id="near" class="doc">
-        <h2>NEAR anchor <span class="tag tag-planned">planned</span></h2>
-        <p>A NEAR smart contract on testnet stores one receipt hash per review with <code>anchor(key_hash, receipt_hash)</code>, and refuses a second anchor for the same key, so one input is reviewed once.</p>
+        <h2>NEAR anchor <span class="tag tag-live">built</span></h2>
+        <p>A NEAR smart contract on testnet (<code>anchor.hushmark.testnet</code>) stores one receipt hash per review with <code>anchor(key_hash, receipt_hash)</code>, and refuses a second anchor for the same key, so one input is reviewed once. Anyone can look an anchor up with <code>get(key_hash)</code>. Source: <a href="https://github.com/Ritapossible/Hushmark/tree/main/contract"><code>contract/</code></a>. <strong>Testnet deployment pending.</strong></p>
         <ul>
           <li>The contract lives on its own sub-account.</li>
           <li>The service calls it with a function-call access key limited to <code>anchor</code>, with zero deposit. A stolen server key can add anchors but cannot move funds.</li>
@@ -349,10 +349,11 @@ mode: warn   # warn (default) | block</code></pre>
       <section id="development" class="doc">
         <h2>Development</h2>
         <h3>Stack</h3>
-        <p>Python 3.12 with <code>uv</code>; httpx; pydantic v2 in strict mode; <code>dcap-qvl</code> for Intel quotes; PyJWT for NVIDIA tokens; <code>eth-account</code> for EIP-191; ruff, <code>mypy --strict</code> and pytest. The NEAR contract will be Rust with <code>near-sdk</code>.</p>
+        <p>Python 3.12 with <code>uv</code>; httpx; pydantic v2 in strict mode; <code>dcap-qvl</code> for Intel quotes; PyJWT for NVIDIA tokens; <code>eth-account</code> for EIP-191; ruff, <code>mypy --strict</code> and pytest. The NEAR contract is Rust with <code>near-sdk</code>, built with <code>cargo-near</code>.</p>
         <h3>Repository layout</h3>
 <pre><code>hushmark/        scan, excerpt, infer, nonce, receipt, config,
-                 pipeline, report, github, service, near
+                 pipeline, report, github, service, near, anchor, action
+contract/        the NEAR anchor contract (Rust, near-sdk)
 hushmark/verify/ attestation, nras, signature, grounding
 prompts/         the versioned system prompt
 fixtures/        inputs, recordings, attestation reports, NVIDIA keys
