@@ -17,6 +17,7 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versions follo
 - Recording R4 (benign rules-file control) and a GitGuardian allowlist for NRAS tokens.
 - NVIDIA NRAS JWT verification with pinned keys (rest of check e), grounding (check g),
   receipts.
+- Landing page (`site/`), live on Vercel, and a documentation page (`site/docs.html`).
 
 ### Changed
 - Applied design review: claim narrowed to the code, privacy as primary track, NEAR anchor

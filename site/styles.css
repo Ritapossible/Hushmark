@@ -185,3 +185,54 @@ section[id] { scroll-margin-top: 76px; }
   html { scroll-behavior: auto; }
   .btn { transition: none; }
 }
+
+/* Docs page */
+.docs-layout { display: grid; grid-template-columns: 240px minmax(0, 1fr); gap: 56px; padding: 56px 0 40px; }
+.docs-side { position: relative; }
+.docs-toc { position: sticky; top: 100px; max-height: calc(100vh - 120px); overflow: auto; }
+.docs-toc summary { font: 500 0.85rem var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); cursor: pointer; list-style: none; margin-bottom: 8px; }
+.docs-toc summary::-webkit-details-marker { display: none; }
+.docs-toc nav a { display: block; padding: 5px 0 5px 12px; border-left: 1px solid var(--line); text-decoration: none; color: var(--muted); font-size: 0.94rem; }
+.docs-toc nav a:hover { color: var(--navy); border-left-color: var(--navy); }
+.toc-head { font: 500 0.75rem var(--sans); letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink); margin: 20px 0 6px; }
+.docs-main { min-width: 0; font-feature-settings: "calt" 0; }
+.docs-hero { padding-bottom: 12px; border-bottom: 1px solid var(--line); margin-bottom: 8px; }
+.docs-hero h1 { font-size: clamp(2.4rem, 4.6vw, 3.6rem); }
+.doc { padding: 40px 0 8px; scroll-margin-top: 90px; }
+.doc h2 { font-size: clamp(1.9rem, 3vw, 2.4rem); margin-bottom: 16px; display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+.doc h3 { font-size: 1.4rem; margin: 28px 0 8px; }
+.doc p, .doc li { color: #3d3a36; }
+.doc a { color: var(--navy); }
+.doc ul, .doc ol { padding-left: 22px; }
+.doc li { margin: 6px 0; }
+.doc table { width: 100%; border-collapse: collapse; margin: 18px 0; font-size: 0.95rem; background: var(--card); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; display: block; overflow-x: auto; }
+.doc thead th { text-align: left; font: 500 0.78rem var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); background: #faf8f4; }
+.doc th, .doc td { padding: 12px 16px; border-bottom: 1px solid var(--line); vertical-align: top; }
+.doc tbody tr:last-child td { border-bottom: 0; }
+pre { background: #1f1d24; color: #ece9f2; border-radius: 14px; padding: 18px 20px; overflow-x: auto; font: 0.88rem/1.6 var(--mono); font-variant-ligatures: none; margin: 14px 0; }
+pre code { background: none; padding: 0; color: inherit; font-size: inherit; }
+.callout { background: var(--navy-soft); border: 1px solid #cfd8ea; border-radius: 16px; padding: 18px 22px; margin: 22px 0; }
+.callout-title { font: 500 0.8rem var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--navy) !important; margin: 0 0 6px; }
+.callout p:last-child { margin-bottom: 0; }
+.tag { display: inline-block; font: 500 0.72rem var(--mono); letter-spacing: 0.04em; padding: 3px 9px; border-radius: 999px; vertical-align: middle; white-space: nowrap; }
+.tag-live { background: #e5efe8; color: var(--ok); }
+.tag-planned { background: #f3ece0; color: #8a5a20; }
+.pipeline li, .steps-list > li { margin: 12px 0; }
+.grid.compact { margin-top: 18px; }
+.roadmap { list-style: none; padding-left: 0 !important; border-left: 2px solid var(--line); margin: 22px 0; }
+.roadmap > li { position: relative; padding: 4px 0 18px 26px; margin: 0; }
+.roadmap > li::before { content: ""; position: absolute; left: -7px; top: 10px; width: 12px; height: 12px; border-radius: 50%; background: var(--bg); border: 2px solid var(--navy); }
+.roadmap > li:first-child::before { background: var(--navy); }
+.rm-phase { font: 500 0.92rem var(--mono); color: var(--navy) !important; margin: 0 0 6px; }
+.rm-gate { font-style: italic; }
+.faq { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 14px 20px; margin: 10px 0; }
+.faq summary { cursor: pointer; font-weight: 500; }
+.faq p { margin: 10px 0 2px; }
+.nav a[aria-current="page"] { color: var(--ink); }
+
+@media (max-width: 900px) {
+  .docs-layout { grid-template-columns: 1fr; gap: 8px; padding-top: 24px; }
+  .docs-toc { position: static; max-height: none; background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 14px 18px; }
+  .docs-toc summary { margin: 0; }
+  .docs-toc:not([open]) nav { display: none; }
+}
