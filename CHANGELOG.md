@@ -7,7 +7,6 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versions follo
 ### Added
 - Design documents for review: architecture, threat model, receipt format v1, fixtures,
   build plan, roadmap, ADRs 0001–0005, open questions, agent memory (`AGENTS.md`).
-
 - Project tooling: uv, ruff with banned process APIs, mypy --strict, pytest audit hook, CI.
 - Offline attestation verification (checks a–e, NRAS pending) with two real NEAR fixtures.
 - Scanner for hidden content in the diff, PR title, PR body and agent rules files.
