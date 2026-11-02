@@ -14,6 +14,9 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versions follo
 - Manual `day1-check` workflow; day-one go/no-go passed with `z-ai/glm-5.3-flash`.
 - Excerpts, nonce derivation, prompt v1, inference call, signature check (check f).
 - Real recordings R1–R3 and a GLM attestation A2, verified offline in tests.
+- Recording R4 (benign rules-file control) and a GitGuardian allowlist for NRAS tokens.
+- NVIDIA NRAS JWT verification with pinned keys (rest of check e), grounding (check g),
+  receipts.
 
 ### Changed
 - Applied design review: claim narrowed to the code, privacy as primary track, NEAR anchor
