@@ -14,6 +14,7 @@ permissions:
   contents: read
   pull-requests: read
   checks: write
+  actions: read  # count today's receipts for the daily review budget
 
 concurrency:
   group: hushmark-${{ github.event.pull_request.number }}
@@ -41,6 +42,8 @@ jobs:
           # function-call access key that can only call `anchor`, with no deposit.
           NEAR_ANCHOR_ACCOUNT: ${{ vars.NEAR_ANCHOR_ACCOUNT }}
           NEAR_ANCHOR_KEY: ${{ secrets.NEAR_ANCHOR_KEY }}
+          # Optional: model-calling reviews per day for this repository (default 50).
+          HUSHMARK_DAILY_REVIEWS: ${{ vars.HUSHMARK_DAILY_REVIEWS }}
         run: uv run --no-sync python -m hushmark.action
       - name: Keep the receipt
         if: always()

@@ -100,6 +100,27 @@ class GitHubClient:
         r.raise_for_status()
         return str(r.json().get("role_name", "none"))
 
+    def reviews_since(self, owner: str, repo: str, since_iso: str, prefix: str) -> int:
+        """Count this repository's workflow artifacts named `prefix*` created since `since_iso`.
+
+        Artifacts are listed newest first, so paging stops at the first older one.
+        """
+        count = 0
+        for page in range(1, 11):
+            r = self._get(
+                f"/repos/{owner}/{repo}/actions/artifacts", per_page="100", page=str(page)
+            )
+            r.raise_for_status()
+            artifacts = r.json().get("artifacts", [])
+            for a in artifacts:
+                if str(a.get("created_at", "")) < since_iso:
+                    return count
+                if str(a.get("name", "")).startswith(prefix):
+                    count += 1
+            if len(artifacts) < 100:
+                break
+        return count
+
     def start_check(self, owner: str, repo: str, head_sha: str) -> int:
         r = self.http.post(
             f"/repos/{owner}/{repo}/check-runs",

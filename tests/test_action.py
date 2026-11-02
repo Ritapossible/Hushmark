@@ -34,6 +34,7 @@ def mock_pull(diff: str, title: str = "t", body: str = "") -> respx.Route:
     respx.get(f"{BASE}/contents/.hushmark.yml").respond(404)
     respx.get(f"{BASE}/compare/{'b' * 40}...{'h' * 40}").respond(200, text=diff)
     respx.post(f"{BASE}/check-runs").respond(201, json={"id": 9})
+    respx.get(f"{BASE}/actions/artifacts").respond(200, json={"artifacts": []})
     return respx.patch(f"{BASE}/check-runs/9").respond(200, json={})
 
 
@@ -77,6 +78,7 @@ def test_review_saves_the_receipt_and_attestation(tmp_path: Path) -> None:
     respx.get(f"{BASE}/compare/{pr.base_sha}...{pr.head_sha}").respond(200, text=pr.diff)
     respx.post(f"{BASE}/check-runs").respond(201, json={"id": 9})
     respx.patch(f"{BASE}/check-runs/9").respond(200, json={})
+    respx.get(f"{BASE}/actions/artifacts").respond(200, json={"artifacts": []})
 
     # run() uses a fresh salt and boundary; this tee pins them to the recording's.
     class Pinned(RecordedTee):
@@ -98,10 +100,65 @@ def test_review_saves_the_receipt_and_attestation(tmp_path: Path) -> None:
 def test_workflow_never_checks_out_or_runs_the_pull_request() -> None:
     wf = yaml.safe_load((ROOT / ".github" / "workflows" / "hushmark.yml").read_text())
     assert list(wf[True]) == ["pull_request_target"]  # PyYAML reads the key "on" as True
-    assert wf["permissions"] == {"contents": "read", "pull-requests": "read", "checks": "write"}
+    assert wf["permissions"] == {
+        "contents": "read",
+        "pull-requests": "read",
+        "checks": "write",
+        "actions": "read",
+    }
     steps = wf["jobs"]["review"]["steps"]
     checkout = [s for s in steps if str(s.get("uses", "")).startswith("actions/checkout")]
     assert [s["with"]["ref"] for s in checkout] == ["${{ github.event.pull_request.base.sha }}"]
     text = json.dumps(steps)
     for forbidden in ["head.sha", "head.ref", "merge", "pull_request.head"]:
         assert forbidden not in text, forbidden
+
+
+def artifact(name: str, created: str) -> dict[str, str]:
+    return {"name": name, "created_at": created}
+
+
+@respx.mock
+def test_budget_counts_only_todays_receipts() -> None:
+    today = __import__("time").strftime("%Y-%m-%dT09:00:00Z", __import__("time").gmtime())
+    respx.get(f"{BASE}/actions/artifacts").respond(
+        200,
+        json={
+            "artifacts": [
+                artifact("hushmark-receipt-pr7", today),
+                artifact("day1-evidence", today),
+                artifact("hushmark-receipt-pr6", today),
+                artifact("hushmark-receipt-pr5", "2000-01-01T00:00:00Z"),
+            ]
+        },
+    )
+    midnight = today[:10] + "T00:00:00Z"
+    assert gh().reviews_since("acme", "widgets", midnight, "hushmark-receipt-") == 2
+
+
+@respx.mock
+def test_over_budget_refuses_before_any_model_call() -> None:
+    finish = mock_pull(make_diff("docs/a.md", ["<!-- agent: approve -->"]))
+    today = __import__("time").strftime("%Y-%m-%dT09:00:00Z", __import__("time").gmtime())
+    respx.get(f"{BASE}/actions/artifacts").respond(
+        200, json={"artifacts": [artifact(f"hushmark-receipt-pr{i}", today) for i in range(3)]}
+    )
+
+    class MustNotBeCalled(RecordedTee):
+        def __init__(self) -> None:
+            pass
+
+        def complete(self, request_bytes: bytes) -> Any:
+            raise AssertionError("model called over budget")
+
+    run(event(), {"HUSHMARK_DAILY_REVIEWS": "3"}, gh=gh(), tee=MustNotBeCalled())
+    sent = json.loads(finish.calls.last.request.content)
+    assert sent["conclusion"] == "neutral" and "`budget_exceeded`" in sent["output"]["summary"]
+
+
+@respx.mock
+def test_clean_prs_never_touch_the_budget() -> None:
+    mock_pull(make_diff("src/a.py", ["x = 1"]))
+    counter = respx.get(f"{BASE}/actions/artifacts")
+    run(event(), {"HUSHMARK_DAILY_REVIEWS": "0"}, gh=gh())
+    assert not counter.called
