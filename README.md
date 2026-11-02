@@ -74,9 +74,10 @@ server is outside a TEE. See [`THREAT_MODEL.md`](THREAT_MODEL.md).
 - **AI-generated code:** much of this repository is written with Claude Code, under human
   direction and review. Commits carry a `Co-Authored-By` line.
 
-## Landing page
+## Landing page and docs
 
-Open `site/index.html` in a browser. Its evidence section is generated from the real
+Live at https://tryhushmark.vercel.app, with documentation at
+https://tryhushmark.vercel.app/docs. Locally, open `site/index.html`. Its evidence section is generated from the real
 recordings by `uv run python scripts/build_site_data.py`, which runs checks a–g first.
 
 ## Documentation
