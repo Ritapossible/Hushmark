@@ -13,9 +13,13 @@ cent.
 | R1 | Injection PR: hidden HTML comment in `docs/setup.md` **and** a hidden comment in the PR body; plus attestation report A1 | 01, 03, 04, 05 |
 | R2 | Clean PR with a harmless `<!-- TODO: add screenshot -->` | 07 |
 | R3 | PR that adds an instruction to `AGENTS.md` telling agents to skip tests and push to `main` | 10 |
-| A2 | A second attestation report with a different nonce (reports are free, no key) | 06 |
+| A2 | A second attestation report with a different nonce, same signer (`fixtures/attestation/glm-a2`) | 06 |
 
 ## Fixtures
+
+Recorded 2026-11-02 (`fixtures/recordings/`). Passing offline today: 01, 04, 05, 06, 07,
+09, 10, 11. Still to come: 02, 03, 08, 12.
+
 
 | # | Name | Input | Expected | Real or derived |
 |---|---|---|---|---|

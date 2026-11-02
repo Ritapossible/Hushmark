@@ -89,12 +89,19 @@ make verify-live   # (planned) re-verify recorded evidence online
   Evidence: artifact `day1-evidence` on Actions run 41432789466.
 - **Key handling:** `NEARAI_API_KEY` is a GitHub Actions repository secret. Anything that
   needs the key runs as a manual workflow (`.github/workflows/day1-check.yml` is the pattern).
-- **Next:** recordings R1–R3 (day 4–5 work), then check f in `verify/signature.py`.
+- **Recorded 2026-11-02:** R1–R3 (`fixtures/recordings/`, Actions run 41433656615) and a GLM
+  attestation A2. Model answers: R1 two findings, R2 none (harmless TODO), R3 one. Check f
+  (`verify/signature.py`) done; fixtures 01, 04, 05, 06, 07, 10 pass offline. 68 tests.
+- **Known import-time spawn:** pycryptodome (via `eth_account`) runs `file -b <python>` once
+  at import. Pinned by `tests/test_no_shell.py`; stated in `THREAT_MODEL.md`.
+- **Next:** NRAS JWT verification (rest of check e), grounding (check g), receipt.
 
 ## Decision log
 
 Newest first. One line each, with a link when there is an ADR.
 
+- 2026-11-02: Recordings R1–R3 done on GitHub Actions, verified before saving. Days 4–6 of
+  the plan are complete ahead of schedule.
 - 2026-11-02: Day-one go/no-go passed. Primary model switched to `z-ai/glm-5.3-flash`
   (answered in under 5 s; Qwen3.8-27B gave no answer within 2 or 5 minutes). $1 of credit
   bought with NEAR via PingPay; the NEAR Builders $10 credit is still pending.

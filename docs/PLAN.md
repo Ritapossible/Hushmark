@@ -21,9 +21,9 @@ Recording first, web app last.
 | 1 | 1 Nov | NEAR AI Cloud key works. `scripts/day1_check.py` passes. Read `nearai-cloud-verifier`. **Nothing else today.** | **Done 2 Nov: GO** with `z-ai/glm-5.3-flash` (Actions run 41432789466) |
 | 2 | 2 Nov | Repo tooling: `uv`, ruff, mypy, pytest, CI, Makefile. GitHub App registered with the ADR-0007 permissions. A Check Run with one annotation posted by hand from the app. | CI green on an empty package. Q4 answered. |
 | 3 | 3 Nov | `scan.py`: every detector over diff, title and body, including `agent_rules_file`; `config.py` (base branch only) | Unit tests per detector, including the harmless TODO; fixtures 09, 11, 12 |
-| 4 | 4 Nov | Demo repository with the three PRs (R1–R3). `excerpt.py` and `infer.py` with raw-bytes capture. | Request holds excerpts only, no `tools`, exact bytes saved |
-| 5 | 5 Nov | **Record R1, R2, R3, A1, A2** (`docs/FIXTURES.md`) | Evidence committed under `fixtures/` |
-| 6 | 6 Nov | `verify/signature.py` (check f) and report-data and nonce binding (check c) | Fixtures 05, 06 pass |
+| 4 | 4 Nov | Demo repository with the three PRs (R1–R3). `excerpt.py` and `infer.py` with raw-bytes capture. | Request holds excerpts only, no `tools`, exact bytes saved **Done 2 Nov.** |
+| 5 | 5 Nov | **Record R1, R2, R3, A1, A2** (`docs/FIXTURES.md`) | Evidence committed under `fixtures/` **Done 2 Nov** (Actions run 41433656615). |
+| 6 | 6 Nov | `verify/signature.py` (check f) and report-data and nonce binding (check c) | Fixtures 05, 06 pass **Done 2 Nov.** |
 | 7 | 7 Nov | `verify/attestation.py` on `dcap-qvl` and NRAS, NEAR's checks ported to raise (checks a, b, d, e; ADR-0006) | Fixture 04 passes; every failure maps to a reason code |
 | 8 | 8 Nov | `verify/grounding.py` (check g) and output schema | Fixture 08 passes |
 | 9 | 9 Nov | `receipt.py`, idempotency, `trigger.py`, budget | Fixtures 01, 02, 03, 07, 10 pass. Audit-hook test passes. |
