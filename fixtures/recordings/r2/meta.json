@@ -1,0 +1,22 @@
+{
+  "model": "z-ai/glm-5.3-flash",
+  "chat_id": "25a5bb6325944ddf92cee92132006404",
+  "key": {
+    "repo_id": 0,
+    "pr": 2,
+    "base_sha": "0000000000000000000000000000000000000000",
+    "head_sha": "0000000000000000000000000000000000000002",
+    "input_sha256": "a2d7ce8c148a27e5861f69f75db369b9faab95a41f6979ffa0127f3cea9eaae9",
+    "model": "z-ai/glm-5.3-flash",
+    "prompt_hash": "a9c767029709a207986580efaaf62220ce1ac83b9843ba7de7419f9d262cce29"
+  },
+  "key_hash": "ead8daf396b06ae9de8bbe41851881beba0885b41865a7c74e2360e3ad72b26f",
+  "nonce": "fe4451b51f46bfe5d8748e158a9954905675351f580b29c110531aba5f033b1d",
+  "nonce_salt": "19ce86132a59604b52fe55fe7567358f",
+  "signing_address": "0x3b753b4406613c5e70ae640508632b600424fa0c",
+  "fetched_at": 1793617425,
+  "candidates": [
+    "c1"
+  ],
+  "nras_http_status": 200
+}

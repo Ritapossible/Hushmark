@@ -1,0 +1,75 @@
+[project]
+name = "hushmark"
+version = "0.1.0.dev0"
+description = "A GitHub check that stops hidden instructions aimed at AI agents from being merged."
+readme = "README.md"
+requires-python = ">=3.12"
+license = "Apache-2.0"
+authors = [{ name = "Rita" }]
+dependencies = [
+    "dcap-qvl==0.7.0",
+    "eth-account>=0.13",
+    "httpx>=0.27",
+    "pydantic>=2.7",
+    "pyyaml>=6.0",
+]
+
+[dependency-groups]
+dev = [
+    "mypy>=1.11",
+    "pytest>=8.3",
+    "respx>=0.21",
+    "ruff>=0.6",
+    "types-pyyaml>=6.0",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["hushmark"]
+
+[tool.ruff]
+target-version = "py312"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP", "TID", "S"]
+ignore = ["S101"]  # assert is fine in tests
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["S"]
+"scripts/**" = ["S"]
+
+# AGENTS.md hard rule 1: the review code has no path that runs anything.
+[tool.ruff.lint.flake8-tidy-imports.banned-api]
+"subprocess".msg = "Hushmark never runs code (AGENTS.md rule 1)."
+"pty".msg = "Hushmark never runs code (AGENTS.md rule 1)."
+"multiprocessing".msg = "Hushmark never runs code (AGENTS.md rule 1)."
+"os.system".msg = "Hushmark never runs code (AGENTS.md rule 1)."
+"os.popen".msg = "Hushmark never runs code (AGENTS.md rule 1)."
+"os.execv".msg = "Hushmark never runs code (AGENTS.md rule 1)."
+"os.execve".msg = "Hushmark never runs code (AGENTS.md rule 1)."
+"os.execvp".msg = "Hushmark never runs code (AGENTS.md rule 1)."
+"os.execl".msg = "Hushmark never runs code (AGENTS.md rule 1)."
+"os.execlp".msg = "Hushmark never runs code (AGENTS.md rule 1)."
+"os.spawnv".msg = "Hushmark never runs code (AGENTS.md rule 1)."
+"os.spawnl".msg = "Hushmark never runs code (AGENTS.md rule 1)."
+"os.posix_spawn".msg = "Hushmark never runs code (AGENTS.md rule 1)."
+"os.fork".msg = "Hushmark never runs code (AGENTS.md rule 1)."
+"asyncio.create_subprocess_exec".msg = "Hushmark never runs code (AGENTS.md rule 1)."
+"asyncio.create_subprocess_shell".msg = "Hushmark never runs code (AGENTS.md rule 1)."
+
+[tool.mypy]
+strict = true
+python_version = "3.12"
+files = ["hushmark", "tests"]
+
+[[tool.mypy.overrides]]
+module = ["dcap_qvl", "dcap_qvl.*"]
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"

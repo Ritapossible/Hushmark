@@ -30,7 +30,9 @@ Scope: v0.1, the hackathon build (ADR-0007).
 ## What is proved
 
 1. The review code has no path that runs the diff (banned-API lint, runtime audit hook, no
-   `tools` in requests).
+   `tools` in requests). One known process start happens at import time, before any input
+   exists: a dependency (pycryptodome, via `eth_account`) runs `file -b <python>` to learn
+   the platform's word size. Its arguments are fixed, and a test pins it as the only one.
 2. A shown finding came from a NEAR AI Cloud model in an attested TEE, on the exact request
    we sent, for that input (checks a–f in `docs/ARCHITECTURE.md`).
 3. Every shown finding refers to a hidden region Hushmark found itself (check g).

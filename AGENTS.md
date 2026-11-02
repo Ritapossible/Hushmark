@@ -62,31 +62,55 @@ An agent may prepare the submission payload, but must print it and wait.
 - GitHub Checks API for all output (no comments, no advisories)
 - SQLite for state
 - `dcap-qvl` (pinned `0.7.0`) for TDX quotes; NVIDIA NRAS for GPU evidence
-- Model: `Qwen/Qwen3.8-27B` (model TEE attestation confirmed); fallback `z-ai/glm-5.3-flash`
+- Model: `z-ai/glm-5.3-flash` (day-one GO, 2026-11-02). It is a reasoning model: give it
+  enough `max_tokens` for reasoning plus the JSON answer. `Qwen/Qwen3.8-27B` timed out twice.
 - `eth-account` for EIP-191 signature recovery
 - NEAR contract in Rust (`near-sdk`), deployed to **testnet**
 - Tooling: ruff, `mypy --strict`, pytest with recorded HTTP (respx)
 
-## Commands (planned, not yet working)
+## Commands
 
 ```sh
-make lint          # ruff + mypy --strict
-make test          # unit tests
-make verify        # all fixtures, offline
-make verify-live   # re-verify recorded evidence online
+make install       # uv sync --locked
+make lint          # ruff + format check + mypy --strict
+make test          # all tests
+make verify        # all offline fixtures, no key, no network
+make verify-live   # (planned) re-verify recorded evidence online
 ```
 
 ## Current state
 
 - **Phase:** building v0.1. Design settled by ADR-0007 (2026-11-01). No more design docs.
-- **Next:** day-one check: run `scripts/day1_check.py` with a real key. The attestation
-  half already passes without a key; only the completion signature is unproven.
-  Nothing else starts until it passes.
+- **Built (branch `build/foundation`):** tooling and CI; attestation checks a–e (offline part)
+  tested on two real recorded reports; scanner (all detectors, title, body, rules files);
+  `.hushmark.yml` parser. 44 tests, lint and `mypy --strict` clean.
+- **Day-one check: GO (2026-11-02)** on GitHub Actions with `z-ai/glm-5.3-flash`: `provider_tee`
+  signature over our exact bytes, signer bound into an `UpToDate` TDX quote with our nonce.
+  Evidence: artifact `day1-evidence` on Actions run 41432789466.
+- **Key handling:** `NEARAI_API_KEY` is a GitHub Actions repository secret. Anything that
+  needs the key runs as a manual workflow (`.github/workflows/day1-check.yml` is the pattern).
+- **Recorded 2026-11-02:** R1–R3 (`fixtures/recordings/`, Actions run 41433656615) and a GLM
+  attestation A2. Model answers: R1 two findings, R2 none (harmless TODO), R3 one. Check f
+  (`verify/signature.py`) done; fixtures 01, 04, 05, 06, 07, 10 pass offline.
+- **R4 (2026-11-02, run 41441898820):** ordinary `AGENTS.md` style rules, zero findings: the
+  rules-file control for R3 (fixture 13). GitGuardian allowlist for `nras.json` added.
+- **Known import-time spawn:** pycryptodome (via `eth_account`) runs `file -b <python>` once
+  at import. Pinned by `tests/test_no_shell.py`; stated in `THREAT_MODEL.md`.
+- **Next:** NRAS JWT verification (rest of check e), grounding (check g), receipt.
 
 ## Decision log
 
 Newest first. One line each, with a link when there is an ADR.
 
+- 2026-11-02: Grok review: added R4 as the benign rules-file control before building the
+  Check Run, and allowlisted the NVIDIA JWTs that GitGuardian flagged.
+- 2026-11-02: Recordings R1–R3 done on GitHub Actions, verified before saving. Days 4–6 of
+  the plan are complete ahead of schedule.
+- 2026-11-02: Day-one go/no-go passed. Primary model switched to `z-ai/glm-5.3-flash`
+  (answered in under 5 s; Qwen3.8-27B gave no answer within 2 or 5 minutes). $1 of credit
+  bought with NEAR via PingPay; the NEAR Builders $10 credit is still pending.
+- 2026-11-01: Built key-independent parts while waiting for NEAR AI credit. New reason code
+  `signer_not_bound` (check c) and `config_invalid`.
 - 2026-11-01: Redesigned for team adoption: automatic check on every PR, excerpts only to
   the model, one Check Run output with warn/block, PR title/body and rules files scanned,
   config from base. Drops `/advisory` and draft advisories. HACKATHON.md rules added.

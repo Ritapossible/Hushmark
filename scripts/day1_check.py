@@ -110,7 +110,9 @@ def main() -> int:
             content=request_bytes,
             headers={"Content-Type": "application/json", "x-no-aliasing": "true"},
         )
-        check(r.status_code == 200, "completion returned 200", f"HTTP {r.status_code}: {r.text[:200]}")
+        check(
+            r.status_code == 200, "completion returned 200", f"HTTP {r.status_code}: {r.text[:200]}"
+        )
         response_bytes = r.content
         (out / "request.bin").write_bytes(request_bytes)
         (out / "response.bin").write_bytes(response_bytes)
@@ -122,9 +124,14 @@ def main() -> int:
         kind = sig.get("signature_kind")
         check(kind == "provider_tee", "signature_kind is provider_tee", f"got {kind!r}")
         expected_text = f"{args.model}:{sha256_hex(request_bytes)}:{sha256_hex(response_bytes)}"
-        check(sig["text"] == expected_text, "signed text covers our exact bytes",
-              f"expected {expected_text!r}, got {sig['text']!r}")
-        signer = Account.recover_message(encode_defunct(text=sig["text"]), signature=sig["signature"])
+        check(
+            sig["text"] == expected_text,
+            "signed text covers our exact bytes",
+            f"expected {expected_text!r}, got {sig['text']!r}",
+        )
+        signer = Account.recover_message(
+            encode_defunct(text=sig["text"]), signature=sig["signature"]
+        )
         address = str(sig["signing_address"])
         check(signer.lower() == address.lower(), "EIP-191 signer equals signing_address", signer)
 
@@ -132,16 +139,26 @@ def main() -> int:
         nonce = secrets.token_hex(32)
         r = http.get(
             "/attestation/report",
-            params={"model": args.model, "nonce": nonce, "signing_algo": "ecdsa", "signing_address": address},
+            params={
+                "model": args.model,
+                "nonce": nonce,
+                "signing_algo": "ecdsa",
+                "signing_address": address,
+            },
         )
         check(r.status_code == 200, "attestation report returned 200", f"HTTP {r.status_code}")
         (out / "attestation.json").write_bytes(r.content)
         report = r.json()
         candidates = [
-            a for a in report.get("model_attestations", [report])
+            a
+            for a in report.get("model_attestations", [report])
             if str(a.get("signing_address", "")).lower() == address.lower()
         ]
-        check(len(candidates) == 1, "exactly one model attestation for this signer", f"found {len(candidates)}")
+        check(
+            len(candidates) == 1,
+            "exactly one model attestation for this signer",
+            f"found {len(candidates)}",
+        )
         att = candidates[0]
 
     # 4. TDX quote, and report_data = padded signer || nonce.

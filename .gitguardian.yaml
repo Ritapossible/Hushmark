@@ -1,0 +1,8 @@
+# Required, otherwise GitGuardian reads this as the deprecated v1 format.
+version: 2
+
+secret:
+  ignored_paths:
+    # NVIDIA NRAS responses recorded as test evidence (fixtures/recordings/FIXTURE.md). They
+    # hold JWTs that NVIDIA signed about the GPU: public attestation results, not credentials.
+    - 'fixtures/recordings/*/nras.json'

@@ -66,7 +66,7 @@ Each hit becomes a candidate `{id, source, file, line, span, detector}`, where `
 | `zero_width` | U+200B–U+200D, U+2060, U+FEFF, anywhere |
 | `bidi` | U+202A–U+202E, U+2066–U+2069 (Trojan Source), anywhere |
 | `tag_chars` | U+E0000–U+E007F (invisible "tag" characters), anywhere |
-| `hidden_html` | `<details>`, `alt=`, link titles, `style="display:none"` |
+| `hidden_html` | `<details>`, the `hidden` attribute, `display:none`, `visibility:hidden`, `font-size:0`, and alt text or link titles of 40+ characters |
 | `agent_rules_file` | every added line in `AGENTS.md`, `CLAUDE.md`, `.cursorrules`, `.cursor/rules/**`, `.github/copilot-instructions.md`, `.windsurfrules`, `GEMINI.md` |
 | `agent_phrase` | weak signal only, inside the above: `ignore previous`, `you are`, `curl ... \| sh` |
 
@@ -79,8 +79,9 @@ Each hit becomes a candidate `{id, source, file, line, span, detector}`, where `
 ### Step 4: Infer (`hushmark/infer.py`)
 - **Excerpts only.** Each candidate plus up to 10 lines of context on each side, taken from
   the diff hunk (or from the title or body). The rest of the diff never leaves our service.
-- Model: `Qwen/Qwen3.8-27B` (model TEE attestation confirmed 2026-11-01; fallback
-  `z-ai/glm-5.3-flash`). It must return `signature_kind: provider_tee`.
+- Model: `z-ai/glm-5.3-flash` (`provider_tee` signature verified end to end 2026-11-02). It is
+  a reasoning model, so `max_tokens` must leave room for reasoning before the JSON answer.
+  It must return `signature_kind: provider_tee`.
   Canonical model ID, header `x-no-aliasing: true`.
 - Fixed system prompt in `prompts/v1.txt`; its SHA-256 is `prompt_hash`.
 - Excerpts go inside a random boundary (`<<<EXCERPTS-{16 random hex}>>>`). The prompt says
@@ -106,7 +107,7 @@ finding is shown.
 |---|---|---|
 | a | `GET /v1/attestation/report?model=...&nonce=...&signing_algo=ecdsa&signing_address=...` returns a model attestation for the signer | `no_attestation` |
 | b | Intel TDX quote valid (`dcap-qvl`), TCB status in allowlist, debug bit off | `quote_invalid` |
-| c | `report_data` = signing address right-padded to 32 bytes ‖ nonce; `request_nonce` echoes the nonce | `nonce_mismatch` |
+| c | `report_data` = signing address right-padded to 32 bytes ‖ nonce; `request_nonce` echoes the nonce | `signer_not_bound` or `nonce_mismatch` |
 | d | MRCONFIGID matches `app_compose`; RTMR3 replays from the event log | `measurement_mismatch` |
 | e | NVIDIA GPU evidence carries our nonce; NRAS verdict true; NRAS JWT signature valid | `gpu_evidence_invalid` |
 | f | `GET /v1/signature/{chat_id}`: `text == "{model}:{sha256(req)}:{sha256(resp)}"`, EIP-191 signer equals the attested `signing_address`, `signature_kind == "provider_tee"` | `signature_mismatch` |
