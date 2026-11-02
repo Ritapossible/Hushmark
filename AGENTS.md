@@ -109,13 +109,18 @@ make verify-live   # (planned) re-verify recorded evidence online
   config at base, permissions, Check Run calls), `service.py` (one PR end to end), `near.py`
   (live adapters). Tests replay R1–R4 byte for byte (`tests/replay.py`) and mock GitHub with
   respx. Fixtures 02 and 12 covered. 127 tests. New codes `tee_unavailable`, `webhook_invalid`.
-- **Next:** register the GitHub App (Rita), webhook server (FastAPI) with delivery-ID dedupe
-  and idempotency in SQLite, then the NEAR contract.
+- **GitHub Action (ADR-0009):** `.github/workflows/hushmark.yml` on `pull_request_target`
+  runs `python -m hushmark.action` from the base branch; it never checks out the PR. Receipts
+  are kept as workflow artifacts. `tests/test_action.py` guards the workflow. 131 tests.
+- **Next:** merge, demo PR with a hidden instruction on this repo, then the NEAR contract.
+  GitHub App and webhook server stay planned.
 
 ## Decision log
 
 Newest first. One line each, with a link when there is an ADR.
 
+- 2026-11-02: v0.1 ships as a GitHub Action on `pull_request_target` (no server; rule 10
+  stands). See [ADR-0009](docs/adr/0009-github-action-pull-request-target.md).
 - 2026-11-02: Check Run pipeline built and tested offline before the GitHub App exists, so
   going live is configuration. Docs page updated: built vs planned.
 - 2026-11-02: PR #2 merged; site live on Vercel. Docs page added.
