@@ -50,7 +50,7 @@
           <a href="#receipts">Receipts</a>
           <a href="#near">NEAR anchor</a>
           <p class="toc-head">Using Hushmark</p>
-          <a href="#install">Install the GitHub App</a>
+          <a href="#install">Install</a>
           <a href="#configuration">Configuration</a>
           <a href="#results">Check results</a>
           <a href="#refusals">Refusal codes</a>
@@ -96,7 +96,9 @@
             <tr><td>Verification checks a–g</td><td><span class="tag tag-live">built</span></td></tr>
             <tr><td>Receipts</td><td><span class="tag tag-live">built</span></td></tr>
             <tr><td>Real recorded evidence, verified offline</td><td><span class="tag tag-live">built</span></td></tr>
-            <tr><td>GitHub App and Check Run output</td><td><span class="tag tag-planned">planned</span></td></tr>
+            <tr><td>Pipeline, Check Run output and GitHub client (tested against a mocked GitHub API)</td><td><span class="tag tag-live">built</span></td></tr>
+            <tr><td>GitHub Action on every pull request (<code>pull_request_target</code>)</td><td><span class="tag tag-live">built</span></td></tr>
+            <tr><td>GitHub App and webhook server (one-click installs, <code>/hushmark</code> re-runs)</td><td><span class="tag tag-planned">planned</span></td></tr>
             <tr><td>NEAR testnet anchor contract</td><td><span class="tag tag-planned">planned</span></td></tr>
           </tbody>
         </table>
@@ -123,14 +125,15 @@ cd Hushmark</code></pre></li>
         <h2>How it works</h2>
         <p>Each pull request moves through the same pipeline. Any step can stop the run with a <a href="#refusals">refusal code</a>; a refusal never shows a model finding.</p>
         <ol class="pipeline">
-          <li><strong>Trigger.</strong> Every pull request event: opened, updated, reopened or edited. A maintainer can re-run with <code>/hushmark</code>. <span class="tag tag-planned">planned</span></li>
-          <li><strong>Fetch.</strong> The diff between the pinned base and head commits, the title and the body. <code>.hushmark.yml</code> is read from the base commit only. <span class="tag tag-planned">planned</span></li>
+          <li><strong>Trigger.</strong> Every pull request event: opened, updated, reopened or edited, through the GitHub Action. <span class="tag tag-live">built</span> Maintainer re-runs with <code>/hushmark</code>. <span class="tag tag-planned">planned</span></li>
+          <li><strong>Fetch.</strong> The diff between the pinned base and head commits, the title and the body. <code>.hushmark.yml</code> is read from the base commit only. <span class="tag tag-live">built</span></li>
           <li><strong>Scan.</strong> Deterministic <a href="#detectors">detectors</a> read every added line, the title and the body. No size limit, nothing executed. <span class="tag tag-live">built</span></li>
           <li><strong>Excerpt.</strong> Each flagged region plus up to ten lines of context. Invisible characters are written as tags such as <code>⟦U+200B⟧</code>. Only excerpts leave the service. <span class="tag tag-live">built</span></li>
           <li><strong>Infer.</strong> One completion on NEAR AI Cloud with a fixed prompt and no tools. The exact request and response bytes are kept. <span class="tag tag-live">built</span></li>
           <li><strong>Verify.</strong> <a href="#verification">Checks a–g</a>: attestation, signature and grounding. <span class="tag tag-live">built</span></li>
           <li><strong>Receipt.</strong> A canonical JSON <a href="#receipts">receipt</a> with hashes only. <span class="tag tag-live">built</span></li>
-          <li><strong>Report and anchor.</strong> One <code>Hushmark</code> Check Run with line annotations, and the receipt hash anchored on NEAR. <span class="tag tag-planned">planned</span></li>
+          <li><strong>Report.</strong> One <code>Hushmark</code> Check Run with line annotations. <span class="tag tag-live">built</span></li>
+          <li><strong>Anchor.</strong> The receipt hash anchored on NEAR. <span class="tag tag-planned">planned</span></li>
         </ol>
         <p>A pull request with no hidden regions finishes after step 3: no model call, no cost, no receipt. That is the common case.</p>
       </section>
@@ -212,24 +215,29 @@ cd Hushmark</code></pre></li>
       </section>
 
       <section id="install" class="doc">
-        <h2>Install the GitHub App <span class="tag tag-planned">planned</span></h2>
-        <p>Once published, installation will take three steps.</p>
+        <h2>Install <span class="tag tag-live">built</span></h2>
+        <p>In v0.1 Hushmark runs as a GitHub Action. No server, no app to install.</p>
         <ol>
-          <li>Install the Hushmark GitHub App on a repository. The next pull request gets a <code>Hushmark</code> check.</li>
-          <li>Optionally add <code>.hushmark.yml</code> with <code>mode: block</code> to the default branch.</li>
-          <li>In branch protection, require the <code>Hushmark</code> check <strong>with the Hushmark app as its source</strong>, so another app cannot post a passing check with the same name.</li>
+          <li>Copy <a href="https://github.com/Ritapossible/Hushmark/blob/main/.github/workflows/hushmark.yml"><code>.github/workflows/hushmark.yml</code></a> into your repository's default branch.</li>
+          <li>Add a NEAR AI Cloud API key as a repository secret named <code>NEARAI_API_KEY</code> (<em>Settings → Secrets and variables → Actions</em>).</li>
+          <li>Open a pull request. A <code>Hushmark</code> check appears on it.</li>
+          <li>Optionally add <code>.hushmark.yml</code> with <code>mode: block</code>, and in branch protection require the <code>Hushmark</code> check with GitHub Actions as its source.</li>
         </ol>
+        <div class="callout">
+          <p class="callout-title">Why pull_request_target is safe here</p>
+          <p>The workflow runs Hushmark's code from your <strong>base branch</strong>, so a pull request cannot change how it is reviewed, and pull requests from forks are reviewed too. It never checks out or runs the pull request: the diff, title and body are read through the GitHub API as text. A test fails if the workflow ever checks out the pull request. See ADR-0009.</p>
+        </div>
         <h3>Permissions</h3>
         <table>
           <thead><tr><th>Permission</th><th>Level</th><th>Why</th></tr></thead>
           <tbody>
-            <tr><td>Metadata</td><td>read</td><td>Required by GitHub</td></tr>
-            <tr><td>Contents</td><td>read</td><td>The pinned diff, and <code>.hushmark.yml</code> at the base commit</td></tr>
-            <tr><td>Pull requests</td><td>read</td><td>Title, body and commit SHAs</td></tr>
-            <tr><td>Checks</td><td>write</td><td>The <code>Hushmark</code> Check Run</td></tr>
+            <tr><td>contents</td><td>read</td><td>The pinned diff, and <code>.hushmark.yml</code> at the base commit</td></tr>
+            <tr><td>pull-requests</td><td>read</td><td>Title, body and commit SHAs</td></tr>
+            <tr><td>checks</td><td>write</td><td>The <code>Hushmark</code> Check Run</td></tr>
           </tbody>
         </table>
-        <p>No write access to code, no comments, no issues. Webhook events: <code>pull_request</code>, <code>issue_comment</code>, <code>check_run</code>.</p>
+        <p>No write access to code, no comments. Without the secret, hidden content is reported as <em>not verified</em> (<code>tee_unavailable</code>), never as a finding. Each review's receipt and attestation report are kept as a workflow artifact for 90 days.</p>
+        <p><span class="tag tag-planned">planned</span> A GitHub App with a webhook server, for one-click installs across repositories and <code>/hushmark</code> re-runs. It runs the same code.</p>
       </section>
 
       <section id="configuration" class="doc">
@@ -241,7 +249,8 @@ mode: warn   # warn (default) | block</code></pre>
       </section>
 
       <section id="results" class="doc">
-        <h2>Check results <span class="tag tag-planned">planned</span></h2>
+        <h2>Check results <span class="tag tag-live">built</span></h2>
+        <p>Posted by the GitHub Action on every pull request.</p>
         <table>
           <thead><tr><th>Outcome</th><th><code>mode: warn</code></th><th><code>mode: block</code></th></tr></thead>
           <tbody>
@@ -270,8 +279,10 @@ mode: warn   # warn (default) | block</code></pre>
             <tr><td><code>gpu_evidence_invalid</code></td><td>NVIDIA's evidence or signed verdict failed</td></tr>
             <tr><td><code>signature_mismatch</code></td><td>The response signature does not cover our exact bytes from the attested signer</td></tr>
             <tr><td><code>model_output_invalid</code></td><td>The model's answer does not match the schema</td></tr>
-            <tr><td><code>not_maintainer</code> <span class="tag tag-planned">planned</span></td><td><code>/hushmark</code> from someone without admin or maintain permission</td></tr>
-            <tr><td><code>diff_unavailable</code> <span class="tag tag-planned">planned</span></td><td>GitHub could not return the full diff</td></tr>
+            <tr><td><code>tee_unavailable</code></td><td>NEAR AI Cloud, Intel or NVIDIA could not be reached</td></tr>
+            <tr><td><code>not_maintainer</code></td><td><code>/hushmark</code> from someone without admin or maintain permission</td></tr>
+            <tr><td><code>diff_unavailable</code></td><td>GitHub could not return the full diff</td></tr>
+            <tr><td><code>webhook_invalid</code></td><td>A webhook whose signature is not GitHub's</td></tr>
             <tr><td><code>budget_exceeded</code> <span class="tag tag-planned">planned</span></td><td>The installation's daily model-call budget is spent</td></tr>
           </tbody>
         </table>
@@ -340,7 +351,8 @@ mode: warn   # warn (default) | block</code></pre>
         <h3>Stack</h3>
         <p>Python 3.12 with <code>uv</code>; httpx; pydantic v2 in strict mode; <code>dcap-qvl</code> for Intel quotes; PyJWT for NVIDIA tokens; <code>eth-account</code> for EIP-191; ruff, <code>mypy --strict</code> and pytest. The NEAR contract will be Rust with <code>near-sdk</code>.</p>
         <h3>Repository layout</h3>
-<pre><code>hushmark/        scan, excerpt, infer, nonce, receipt, config
+<pre><code>hushmark/        scan, excerpt, infer, nonce, receipt, config,
+                 pipeline, report, github, service, near
 hushmark/verify/ attestation, nras, signature, grounding
 prompts/         the versioned system prompt
 fixtures/        inputs, recordings, attestation reports, NVIDIA keys

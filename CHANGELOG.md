@@ -18,6 +18,8 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versions follo
 - NVIDIA NRAS JWT verification with pinned keys (rest of check e), grounding (check g),
   receipts.
 - Landing page (`site/`), live on Vercel, and a documentation page (`site/docs.html`).
+- Review pipeline, Check Run output (warn/block), GitHub App client and per-PR service,
+  tested by replaying the real recordings byte for byte.
 
 ### Changed
 - Applied design review: claim narrowed to the code, privacy as primary track, NEAR anchor

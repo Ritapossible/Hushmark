@@ -18,8 +18,8 @@ cent.
 
 ## Fixtures
 
-Recorded 2026-11-02 (`fixtures/recordings/`). Passing offline today: 01, 04, 05, 06, 07,
-09, 10, 11, 13. Still to come: 02, 03, 08, 12.
+Recorded 2026-11-02 (`fixtures/recordings/`). Passing offline today: 01, 02, 04, 05, 06, 07,
+08, 09, 10, 11, 12, 13. Still to come: 03 (needs idempotency storage and the NEAR anchor).
 
 
 | # | Name | Input | Expected | Real or derived |

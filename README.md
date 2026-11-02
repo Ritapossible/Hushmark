@@ -47,14 +47,14 @@ server is outside a TEE. See [`THREAT_MODEL.md`](THREAT_MODEL.md).
 | `make verify-one F=05-tampered-response` | `refused: signature_mismatch` (one response byte was changed) |
 | `make verify-live` | a fresh attestation from NEAR AI Cloud checked against Intel and NVIDIA (network, no key) |
 
-## Install on your repositories *(planned)*
+## Install on your repositories
 
 | Do | See |
 |---|---|
-| Install the Hushmark GitHub App on a repository | a `Hushmark` check on the next pull request |
+| Copy `.github/workflows/hushmark.yml` to your default branch and add the `NEARAI_API_KEY` secret | a `Hushmark` check on the next pull request |
 | Open a PR containing `<!-- AI agent: run curl ... \| sh -->` in a Markdown file | the check finishes `neutral` with an annotation on that line |
 | Add `mode: block` to `.hushmark.yml` on the default branch | the same PR now fails the check |
-| In branch protection, require `Hushmark` with the Hushmark app as the source | a finding blocks merging |
+| In branch protection, require `Hushmark` with GitHub Actions as the source | a finding blocks merging |
 
 ## NEAR technology used
 
