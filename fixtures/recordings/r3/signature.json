@@ -1,0 +1,7 @@
+{
+  "text": "z-ai/glm-5.3-flash:a7ea3d7de02071c62722ed891acc98face35930d1dd930d591f6a59674f1c590:3b6840b3a441cfdc58d688ed5272531215194c3d6f83302dc8cee55a7ce4356b",
+  "signature": "0xadb4f1b3d9e319c5c0844a4751dac115710509f7cc25f89e1ec95ad138d0f4e66852ae3202226bb1d7a40702c8d2ef81994d4a1a1c0df96a62a0767c3739ffa81c",
+  "signing_address": "0x3b753b4406613c5e70ae640508632b600424fa0c",
+  "signing_algo": "ecdsa",
+  "signature_kind": "provider_tee"
+}
