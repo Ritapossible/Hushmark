@@ -3,14 +3,21 @@
 from __future__ import annotations
 
 from collections.abc import Callable
+from dataclasses import dataclass
 
 from hushmark.config import Config, parse_config
 from hushmark.github import GitHubClient
-from hushmark.pipeline import EvidenceSources, PullRequestInput, Refusal, Tee, review
+from hushmark.pipeline import EvidenceSources, Outcome, PullRequestInput, Refusal, Tee, review
 from hushmark.refusal import Refused
 from hushmark.report import CheckOutput, render
 
 MAINTAINER_ROLES = frozenset({"admin", "maintain"})
+
+
+@dataclass(frozen=True)
+class CheckResult:
+    output: CheckOutput
+    outcome: Outcome
 
 
 def load_config(gh: GitHubClient, owner: str, repo: str, base_sha: str) -> Config:
@@ -37,7 +44,7 @@ def run_check(
     now: Callable[[], int],
     salt: bytes | None = None,
     boundary: str | None = None,
-) -> CheckOutput:
+) -> CheckResult:
     """Start the Check Run first, so the PR shows Hushmark is working, then finish it.
 
     `salt` and `boundary` are fixed only when replaying a recording.
@@ -59,8 +66,8 @@ def run_check(
         outcome = review(
             pr, model=model, tee=tee, sources=sources, now=now, salt=salt, boundary=boundary
         )
-        out = render(outcome, config)
     except Refused as e:  # before review: config or diff
-        out = render(Refusal(e.code, e.detail, ()), Config())
+        outcome, config = Refusal(e.code, e.detail, ()), Config()
+    out = render(outcome, config)
     gh.finish_check(owner, repo, check_id, out)
-    return out
+    return CheckResult(out, outcome)

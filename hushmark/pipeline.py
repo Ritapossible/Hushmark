@@ -71,6 +71,7 @@ class Reviewed:
     grounded: Grounded
     receipt: Receipt
     key: IdempotencyKey
+    attestation: bytes  # the report the receipt's attestation_sha256 refers to
 
 
 Outcome = NoCandidates | Refusal | Reviewed
@@ -156,4 +157,4 @@ def _verified_review(
         verified_at=verified_at,
         created_at=now(),
     )
-    return Reviewed(result.candidates, grounded, receipt, key)
+    return Reviewed(result.candidates, grounded, receipt, key, attestation_bytes)

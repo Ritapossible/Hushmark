@@ -131,7 +131,7 @@ def test_full_check_run_for_r1_in_block_mode() -> None:
         now=lambda: rec.meta["fetched_at"],
         salt=rec.salt(),
         boundary=rec.boundary(),
-    )
+    ).output
     assert out.conclusion == "failure"
     assert json.loads(start.calls.last.request.content) == {
         "name": "Hushmark", "head_sha": pr.head_sha, "status": "in_progress"

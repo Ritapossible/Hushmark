@@ -1,0 +1,48 @@
+# Hushmark on every pull request (ADR-0009).
+#
+# pull_request_target runs this file and Hushmark's code from the BASE branch, with secrets, so
+# a pull request cannot change how it is reviewed and fork PRs are reviewed too. That trigger is
+# only safe because nothing here checks out or runs the pull request: its diff, title and body
+# are read through the GitHub API as text. Never add a step that checks out the PR head.
+name: hushmark
+
+on:
+  pull_request_target:
+    types: [opened, synchronize, reopened, edited]
+
+permissions:
+  contents: read
+  pull-requests: read
+  checks: write
+
+concurrency:
+  group: hushmark-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Check out Hushmark from the base branch (never the pull request)
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.base.sha }}
+          persist-credentials: false
+      - uses: astral-sh/setup-uv@v6
+        with:
+          python-version: "3.12"
+      - run: uv sync --locked --no-dev
+      - name: Review this pull request
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          NEARAI_API_KEY: ${{ secrets.NEARAI_API_KEY }}
+        run: uv run --no-sync python -m hushmark.action
+      - name: Keep the receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: hushmark-receipt-pr${{ github.event.pull_request.number }}
+          path: ${{ runner.temp }}/hushmark/
+          if-no-files-found: ignore
+          retention-days: 90
