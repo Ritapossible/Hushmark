@@ -32,7 +32,10 @@ Run Hushmark as `.github/workflows/hushmark.yml` on `pull_request_target`:
 
 - No server to host; rule 10 stands.
 - Fork PRs are reviewed too, which can cost model calls. Bounded by: no call without hidden
-  regions, the 20-candidate cap. A per-repo budget remains planned.
+  regions, the 20-candidate cap, and a daily budget of 50 model-calling reviews per repository
+  (`HUSHMARK_DAILY_REVIEWS`), counted from today's receipt artifacts (`actions: read`). Worst
+  case about $0.0025 a review, about $0.13 a day. The count is approximate under concurrent
+  runs, and a refused review that already called the model is not counted.
 - In branch protection, require the `Hushmark` check from GitHub Actions as its source.
 - The GitHub App and webhook server (`/hushmark` re-runs, multi-repo installs) stay on the
   roadmap; `service.py` is shared, so both paths run the same code.

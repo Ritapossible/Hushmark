@@ -20,6 +20,18 @@ cargo install cargo-near --locked --no-default-features
 cargo near build non-reproducible-wasm   # target/near/hushmark_anchor.wasm
 ```
 
+## Deployed
+
+- Contract: [`anchor.hushmark.testnet`](https://testnet.nearblocks.io/address/anchor.hushmark.testnet),
+  deployed 2026-11-02. On-chain code hash `A1QKAEQSGgwYXQwUL4yWfh64czifnjTtejgu1eDFpPTZ` =
+  SHA-256 of `target/near/hushmark_anchor.wasm` built from this source.
+- Service key: function-call key `ed25519:Gxpb82w5XgStK1aznwB77F2EpLAQqfLPk3xa61LjvCFN`,
+  limited to `anchor` on this contract, 0.5 NEAR gas allowance.
+- First anchor: demo PR #6's receipt `f0a01b7c…f21d8aa`
+  ([tx](https://testnet.nearblocks.io/txns/6UQaEH9gvmeaCLYs2rVomtWjWoekH6edzqtmSxs4EmB9)).
+  The same anchor again was refused, "this review key is already anchored"
+  ([tx](https://testnet.nearblocks.io/txns/EH33MVqn6PsFWrGWJ1ebYd2u8eWV2amcNyBnq81yEKoe)).
+
 ## Deploy (testnet)
 
 Accounts: `hushmark.testnet` (parent, full access, kept offline) and

@@ -117,13 +117,21 @@ make verify-live   # (planned) re-verify recorded evidence online
 - **Branch `build/near-anchor`:** `contract/` (Rust, near-sdk 5.30, 5 unit tests, 106 KB wasm
   via `cargo-near`), `hushmark/anchor.py` (Borsh tx, Ed25519 signing, RPC), Action wiring
   (`NEAR_ANCHOR_ACCOUNT` variable, `NEAR_ANCHOR_KEY` secret). 142 tests.
-- **Next:** with Rita's OK (signs transactions): create `hushmark.testnet`, deploy to
-  `anchor.hushmark.testnet`, add the function-call key. See `contract/README.md`.
+- **Deployed 2026-11-02 (Rita's OK):** `hushmark.testnet` (faucet) and
+  `anchor.hushmark.testnet` (contract; code hash matches the build). Function-call key
+  `Gxpb82w5…` limited to `anchor`. PR #6's receipt anchored; a second anchor was refused on
+  chain. Keys were handed to Rita; the Action needs secret `NEAR_ANCHOR_KEY` and variable
+  `NEAR_ANCHOR_ACCOUNT`.
+- **Daily budget:** 50 model-calling reviews per repo per day (`HUSHMARK_DAILY_REVIEWS`),
+  counted from receipt artifacts; `budget_exceeded`. 145 tests.
+- **Next:** demo video, X post draft, make the repo public, submit (all need Rita).
 
 ## Decision log
 
 Newest first. One line each, with a link when there is an ADR.
 
+- 2026-11-02: Grok review: stop site work; deploy the anchor (done, second anchor refused on
+  chain) and cap the paid key before leaving `pull_request_target` on (50/day).
 - 2026-11-02: Anchor contract on its own sub-account; only the contract account may write;
   the service key is a function-call key limited to `anchor`.
 - 2026-11-02: v0.1 ships as a GitHub Action on `pull_request_target` (no server; rule 10

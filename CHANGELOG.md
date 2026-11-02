@@ -21,7 +21,9 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versions follo
 - Review pipeline, Check Run output (warn/block), GitHub App client and per-PR service,
   tested by replaying the real recordings byte for byte.
 - GitHub Action on `pull_request_target` (ADR-0009); first live check on demo PR #6.
-- NEAR anchor contract (`contract/`) and the Action's anchor call.
+- NEAR anchor contract (`contract/`) and the Action's anchor call; deployed to
+  `anchor.hushmark.testnet`.
+- Daily review budget for the Action (default 50 per repository).
 
 ### Changed
 - Applied design review: claim narrowed to the code, privacy as primary track, NEAR anchor
