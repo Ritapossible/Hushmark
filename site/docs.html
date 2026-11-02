@@ -1,0 +1,435 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Hushmark Docs</title>
+  <meta name="description" content="Documentation for Hushmark: how it works, the verification checks, receipts, configuration, security model, evidence, development and roadmap.">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="docs-page">
+  <a class="skip" href="#content">Skip to content</a>
+
+  <header class="site-header">
+    <div class="wrap header-inner">
+      <a class="brand" href="index.html" aria-label="Hushmark home">
+        <svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true">
+          <rect x="3" y="3" width="26" height="26" rx="6" fill="none" stroke="currentColor" stroke-width="1.5"/>
+          <path d="M9 11h14M9 16h6M9 21h11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          <rect x="17" y="13.5" width="7" height="5" rx="1.5" class="brand-mark-hit"/>
+        </svg>
+        <span class="brand-name">hush<em>mark</em></span>
+      </a>
+      <nav class="nav" aria-label="Main">
+        <a href="index.html#how">How it works</a>
+        <a href="index.html#evidence">Evidence</a>
+        <a href="docs.html" aria-current="page">Docs</a>
+      </nav>
+      <a class="btn btn-dark btn-sm" href="https://github.com/Ritapossible/Hushmark">View on GitHub</a>
+    </div>
+  </header>
+
+  <div class="wrap docs-layout">
+    <aside class="docs-side">
+      <details class="docs-toc" open>
+        <summary>On this page</summary>
+        <nav aria-label="Documentation">
+          <p class="toc-head">Start</p>
+          <a href="#overview">Overview</a>
+          <a href="#status">Status</a>
+          <a href="#quickstart">Quickstart</a>
+          <p class="toc-head">Concepts</p>
+          <a href="#how-it-works">How it works</a>
+          <a href="#detectors">Detectors</a>
+          <a href="#verification">Verification checks</a>
+          <a href="#receipts">Receipts</a>
+          <a href="#near">NEAR anchor</a>
+          <p class="toc-head">Using Hushmark</p>
+          <a href="#install">Install the GitHub App</a>
+          <a href="#configuration">Configuration</a>
+          <a href="#results">Check results</a>
+          <a href="#refusals">Refusal codes</a>
+          <p class="toc-head">Trust</p>
+          <a href="#security">Security model</a>
+          <a href="#privacy">Privacy</a>
+          <a href="#evidence">Evidence and fixtures</a>
+          <p class="toc-head">Project</p>
+          <a href="#development">Development</a>
+          <a href="#roadmap">Roadmap</a>
+          <a href="#faq">FAQ</a>
+          <a href="#references">References</a>
+        </nav>
+      </details>
+    </aside>
+
+    <main class="docs-main" id="content">
+      <header class="docs-hero">
+        <p class="eyebrow">// Documentation</p>
+        <h1>Hushmark <span class="accent">docs.</span></h1>
+        <p class="lead">Everything about Hushmark in one place: what it does, how each check works, what it proves and what it does not, how to run it, and where it is going.</p>
+      </header>
+
+      <section id="overview" class="doc">
+        <h2>Overview</h2>
+        <p>Hushmark is a GitHub check that stops hidden instructions aimed at AI agents from being merged into a repository.</p>
+        <p>AI coding agents read everything in a repository: documentation, pull request descriptions and agent rules files such as <code>AGENTS.md</code> or <code>.cursorrules</code>. Text a human reviewer never sees, such as an HTML comment or an invisible Unicode character, is still read and followed by the agent. Once merged, it steers every agent session on the team.</p>
+        <p>Hushmark scans each pull request with deterministic detectors, sends only the suspicious lines to a model running inside a NEAR AI Cloud trusted execution environment (TEE), and shows a finding only when the TEE's signature and attestation verify.</p>
+        <div class="callout">
+          <p class="callout-title">The claim, exactly</p>
+          <p>The review code has no shell, so nothing in a pull request can make it run code. A finding is shown only if it was signed inside a NEAR AI Cloud TEE for that exact input. This is a claim about Hushmark's code, not the machine it runs on: see <a href="#security">Security model</a>.</p>
+        </div>
+      </section>
+
+      <section id="status" class="doc">
+        <h2>Status</h2>
+        <p>Hushmark is <strong>v0.1, in development</strong> for NEAR HACKATHON (1–14 November 2026). Features on this page are marked <span class="tag tag-live">built</span> or <span class="tag tag-planned">planned</span>.</p>
+        <table>
+          <thead><tr><th>Component</th><th>State</th></tr></thead>
+          <tbody>
+            <tr><td>Detectors (diff, PR title, PR body, rules files)</td><td><span class="tag tag-live">built</span></td></tr>
+            <tr><td>Excerpts, prompt and the NEAR AI Cloud call</td><td><span class="tag tag-live">built</span></td></tr>
+            <tr><td>Verification checks a–g</td><td><span class="tag tag-live">built</span></td></tr>
+            <tr><td>Receipts</td><td><span class="tag tag-live">built</span></td></tr>
+            <tr><td>Real recorded evidence, verified offline</td><td><span class="tag tag-live">built</span></td></tr>
+            <tr><td>GitHub App and Check Run output</td><td><span class="tag tag-planned">planned</span></td></tr>
+            <tr><td>NEAR testnet anchor contract</td><td><span class="tag tag-planned">planned</span></td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section id="quickstart" class="doc">
+        <h2>Quickstart</h2>
+        <p>Verify the real evidence yourself. No account, no API key, no network after install.</p>
+        <ol class="steps-list">
+          <li><p>Install <a href="https://docs.astral.sh/uv/">uv</a> and clone the repository.</p>
+<pre><code>git clone https://github.com/Ritapossible/Hushmark
+cd Hushmark</code></pre></li>
+          <li><p>Install the locked dependencies.</p>
+<pre><code>make install</code></pre></li>
+          <li><p>Run every check on the saved evidence. Expect all tests to pass in under a second.</p>
+<pre><code>make verify</code></pre></li>
+          <li><p>See a refusal: one changed byte in a recorded model answer is refused.</p>
+<pre><code>uv run pytest tests/test_recordings.py -k one_changed_response_byte -v</code></pre></li>
+        </ol>
+        <p>Other commands: <code>make lint</code> (ruff, format check, <code>mypy --strict</code>) and <code>make test</code> (all tests).</p>
+      </section>
+
+      <section id="how-it-works" class="doc">
+        <h2>How it works</h2>
+        <p>Each pull request moves through the same pipeline. Any step can stop the run with a <a href="#refusals">refusal code</a>; a refusal never shows a model finding.</p>
+        <ol class="pipeline">
+          <li><strong>Trigger.</strong> Every pull request event: opened, updated, reopened or edited. A maintainer can re-run with <code>/hushmark</code>. <span class="tag tag-planned">planned</span></li>
+          <li><strong>Fetch.</strong> The diff between the pinned base and head commits, the title and the body. <code>.hushmark.yml</code> is read from the base commit only. <span class="tag tag-planned">planned</span></li>
+          <li><strong>Scan.</strong> Deterministic <a href="#detectors">detectors</a> read every added line, the title and the body. No size limit, nothing executed. <span class="tag tag-live">built</span></li>
+          <li><strong>Excerpt.</strong> Each flagged region plus up to ten lines of context. Invisible characters are written as tags such as <code>⟦U+200B⟧</code>. Only excerpts leave the service. <span class="tag tag-live">built</span></li>
+          <li><strong>Infer.</strong> One completion on NEAR AI Cloud with a fixed prompt and no tools. The exact request and response bytes are kept. <span class="tag tag-live">built</span></li>
+          <li><strong>Verify.</strong> <a href="#verification">Checks a–g</a>: attestation, signature and grounding. <span class="tag tag-live">built</span></li>
+          <li><strong>Receipt.</strong> A canonical JSON <a href="#receipts">receipt</a> with hashes only. <span class="tag tag-live">built</span></li>
+          <li><strong>Report and anchor.</strong> One <code>Hushmark</code> Check Run with line annotations, and the receipt hash anchored on NEAR. <span class="tag tag-planned">planned</span></li>
+        </ol>
+        <p>A pull request with no hidden regions finishes after step 3: no model call, no cost, no receipt. That is the common case.</p>
+      </section>
+
+      <section id="detectors" class="doc">
+        <h2>Detectors</h2>
+        <p>Detectors run on added lines only, because removed lines are not merged. They decide nothing about intent; they find regions a reviewer cannot see, or text written for agents.</p>
+        <table>
+          <thead><tr><th>Detector</th><th>Matches</th><th>Where</th></tr></thead>
+          <tbody>
+            <tr><td><code>html_comment</code></td><td><code>&lt;!-- … --&gt;</code></td><td>Markdown, MDX, reStructuredText and HTML files; PR title and body</td></tr>
+            <tr><td><code>zero_width</code></td><td>U+200B–U+200D, U+2060, U+FEFF</td><td>Any file</td></tr>
+            <tr><td><code>bidi</code></td><td>U+202A–U+202E, U+2066–U+2069 (Trojan Source)</td><td>Any file</td></tr>
+            <tr><td><code>tag_chars</code></td><td>U+E0000–U+E007F (invisible tag characters)</td><td>Any file</td></tr>
+            <tr><td><code>hidden_html</code></td><td><code>&lt;details&gt;</code>, the <code>hidden</code> attribute, <code>display:none</code>, <code>visibility:hidden</code>, <code>font-size:0</code>, and alt text or link titles of 40+ characters</td><td>Markup files</td></tr>
+            <tr><td><code>agent_rules_file</code></td><td>Every block of added lines</td><td><code>AGENTS.md</code>, <code>CLAUDE.md</code>, <code>GEMINI.md</code>, <code>.cursorrules</code>, <code>.cursor/rules/*</code>, <code>.windsurfrules</code>, <code>.github/copilot-instructions.md</code></td></tr>
+          </tbody>
+        </table>
+        <p>Phrases such as "ignore previous instructions" or <code>curl … | sh</code> are recorded as weak signals on a candidate; they never create one on their own.</p>
+        <p><strong>Limit:</strong> more than 20 candidates, or more than 200 excerpt lines, refuses the run with <code>too_many_candidates</code>. Hushmark refuses rather than reviewing part of a pull request.</p>
+      </section>
+
+      <section id="verification" class="doc">
+        <h2>Verification checks</h2>
+        <p>Every check must pass, in order. A failure refuses the run with the code shown and no model finding is shown.</p>
+        <table>
+          <thead><tr><th>#</th><th>Check</th><th>Refusal code</th></tr></thead>
+          <tbody>
+            <tr><td>a</td><td>The attestation report holds exactly one model attestation for the signer</td><td><code>no_attestation</code></td></tr>
+            <tr><td>b</td><td>The Intel TDX quote verifies with <code>dcap-qvl</code> against Intel collateral; TCB status is <code>UpToDate</code>; debug mode is off</td><td><code>quote_invalid</code></td></tr>
+            <tr><td>c</td><td>The quote's report data binds the signing address and our fresh nonce; the nonce is echoed back</td><td><code>signer_not_bound</code>, <code>nonce_mismatch</code></td></tr>
+            <tr><td>d</td><td>MRCONFIGID commits to the published <code>app_compose</code>; RTMR3 replays from the event log</td><td><code>measurement_mismatch</code></td></tr>
+            <tr><td>e</td><td>The GPU evidence carries our nonce; every NVIDIA NRAS token (overall and per GPU) has a valid ES384 signature from NVIDIA's key set, the right issuer, a valid time window and a <code>true</code> verdict; the overall token commits to each GPU token by SHA-256</td><td><code>gpu_evidence_invalid</code></td></tr>
+            <tr><td>f</td><td>The response signature is <code>provider_tee</code>, signs <code>model:sha256(request):sha256(response)</code> over our exact bytes, and recovers to the attested signing address</td><td><code>signature_mismatch</code></td></tr>
+            <tr><td>g</td><td>The model's answer matches a strict schema, and every finding names a candidate Hushmark found itself</td><td><code>model_output_invalid</code>; unknown ids are dropped and counted</td></tr>
+          </tbody>
+        </table>
+        <h3>Nonce</h3>
+        <p><code>nonce = SHA-256(JCS(idempotency_key) ‖ salt)</code>, with 16 fresh random bytes of salt per run, stored in the receipt. Every run is fresh, so an old report cannot be replayed, and anyone with the receipt can recompute the nonce from the commit it covers.</p>
+        <h3>Why the model cannot point anywhere</h3>
+        <p>The model returns only a <code>candidate_id</code>, a severity and one sentence. The file and line always come from Hushmark's own scan. An id that does not exist in the run is dropped.</p>
+      </section>
+
+      <section id="receipts" class="doc">
+        <h2>Receipts</h2>
+        <p>A receipt records one run that called the model. It lets anyone check, without seeing any code, that the findings came from an attested TEE for one exact input. It is canonical JSON (RFC 8785), and its <code>receipt_id</code> is the SHA-256 of those bytes.</p>
+<pre><code>{
+  "v": 1,
+  "key": { "repo_id", "pr", "base_sha", "head_sha", "input_sha256", "model", "prompt_hash" },
+  "nonce_salt", "nonce",
+  "request_sha256", "response_sha256",
+  "signature": { "text", "sig", "signing_address", "algo", "kind" },
+  "attestation_sha256",
+  "verification": { "tcb_status", "checks": ["a"…"g"], "verified_at" },
+  "scan": { "detectors_version", "candidates" },
+  "findings_sha256", "findings_count", "rejected_ungrounded",
+  "created_at"
+}</code></pre>
+        <p><strong>Never in a receipt:</strong> the diff, excerpts, file contents, PR title or body, finding text, repository name or any username. The findings digest hashes each rationale instead of storing it.</p>
+        <h3>Verify a receipt</h3>
+        <ol>
+          <li>Recompute <code>nonce</code> from <code>key</code> and <code>nonce_salt</code>.</li>
+          <li>Load the attestation report by <code>attestation_sha256</code> and run checks a–e against that nonce.</li>
+          <li>Check <code>signature.text</code> and recover the EIP-191 signer; it must equal <code>signing_address</code>.</li>
+          <li>Optionally compare the receipt hash anchored on NEAR for <code>SHA-256(JCS(key))</code>.</li>
+        </ol>
+        <p>Full specification: <a href="https://github.com/Ritapossible/Hushmark/blob/main/RECEIPT.md">RECEIPT.md</a>.</p>
+      </section>
+
+      <section id="near" class="doc">
+        <h2>NEAR anchor <span class="tag tag-planned">planned</span></h2>
+        <p>A NEAR smart contract on testnet stores one receipt hash per review with <code>anchor(key_hash, receipt_hash)</code>, and refuses a second anchor for the same key, so one input is reviewed once.</p>
+        <ul>
+          <li>The contract lives on its own sub-account.</li>
+          <li>The service calls it with a function-call access key limited to <code>anchor</code>, with zero deposit. A stolen server key can add anchors but cannot move funds.</li>
+          <li>Only hashes go on chain: no repository names or usernames.</li>
+          <li>A failed anchor never blocks the report; it is retried.</li>
+        </ul>
+      </section>
+
+      <section id="install" class="doc">
+        <h2>Install the GitHub App <span class="tag tag-planned">planned</span></h2>
+        <p>Once published, installation will take three steps.</p>
+        <ol>
+          <li>Install the Hushmark GitHub App on a repository. The next pull request gets a <code>Hushmark</code> check.</li>
+          <li>Optionally add <code>.hushmark.yml</code> with <code>mode: block</code> to the default branch.</li>
+          <li>In branch protection, require the <code>Hushmark</code> check <strong>with the Hushmark app as its source</strong>, so another app cannot post a passing check with the same name.</li>
+        </ol>
+        <h3>Permissions</h3>
+        <table>
+          <thead><tr><th>Permission</th><th>Level</th><th>Why</th></tr></thead>
+          <tbody>
+            <tr><td>Metadata</td><td>read</td><td>Required by GitHub</td></tr>
+            <tr><td>Contents</td><td>read</td><td>The pinned diff, and <code>.hushmark.yml</code> at the base commit</td></tr>
+            <tr><td>Pull requests</td><td>read</td><td>Title, body and commit SHAs</td></tr>
+            <tr><td>Checks</td><td>write</td><td>The <code>Hushmark</code> Check Run</td></tr>
+          </tbody>
+        </table>
+        <p>No write access to code, no comments, no issues. Webhook events: <code>pull_request</code>, <code>issue_comment</code>, <code>check_run</code>.</p>
+      </section>
+
+      <section id="configuration" class="doc">
+        <h2>Configuration</h2>
+        <p>One optional file on the default branch, read from the <strong>base commit only</strong>, so a pull request can never change how it is judged.</p>
+<pre><code># .hushmark.yml
+mode: warn   # warn (default) | block</code></pre>
+        <p>Missing or empty file means <code>warn</code>. Any other key or value refuses the run with <code>config_invalid</code>. Path ignores and per-path modes are on the <a href="#roadmap">roadmap</a>.</p>
+      </section>
+
+      <section id="results" class="doc">
+        <h2>Check results <span class="tag tag-planned">planned</span></h2>
+        <table>
+          <thead><tr><th>Outcome</th><th><code>mode: warn</code></th><th><code>mode: block</code></th></tr></thead>
+          <tbody>
+            <tr><td>No hidden regions</td><td>success</td><td>success</td></tr>
+            <tr><td>Hidden regions, none aimed at agents</td><td>success, with the receipt ID</td><td>success</td></tr>
+            <tr><td>Verified findings</td><td>neutral, one annotation per finding</td><td>failure</td></tr>
+            <tr><td>Refused</td><td>neutral, reason code, scanner hits marked <em>unconfirmed</em></td><td>neutral</td></tr>
+          </tbody>
+        </table>
+        <p>Findings in the PR title or body cannot be line annotations, so they appear in the check summary.</p>
+      </section>
+
+      <section id="refusals" class="doc">
+        <h2>Refusal codes</h2>
+        <p>Every refusal has a stable code. Tests assert on codes, never on message text.</p>
+        <table>
+          <thead><tr><th>Code</th><th>Meaning</th></tr></thead>
+          <tbody>
+            <tr><td><code>too_many_candidates</code></td><td>More than 20 hidden regions or 200 excerpt lines</td></tr>
+            <tr><td><code>config_invalid</code></td><td><code>.hushmark.yml</code> is not <code>mode: warn</code> or <code>mode: block</code></td></tr>
+            <tr><td><code>no_attestation</code></td><td>No model attestation for the signer</td></tr>
+            <tr><td><code>quote_invalid</code></td><td>Intel TDX quote failed, wrong TCB status, or debug mode on</td></tr>
+            <tr><td><code>signer_not_bound</code></td><td>The quote does not bind the signing address</td></tr>
+            <tr><td><code>nonce_mismatch</code></td><td>The evidence was not produced for our nonce</td></tr>
+            <tr><td><code>measurement_mismatch</code></td><td>MRCONFIGID or RTMR3 does not match</td></tr>
+            <tr><td><code>gpu_evidence_invalid</code></td><td>NVIDIA's evidence or signed verdict failed</td></tr>
+            <tr><td><code>signature_mismatch</code></td><td>The response signature does not cover our exact bytes from the attested signer</td></tr>
+            <tr><td><code>model_output_invalid</code></td><td>The model's answer does not match the schema</td></tr>
+            <tr><td><code>not_maintainer</code> <span class="tag tag-planned">planned</span></td><td><code>/hushmark</code> from someone without admin or maintain permission</td></tr>
+            <tr><td><code>diff_unavailable</code> <span class="tag tag-planned">planned</span></td><td>GitHub could not return the full diff</td></tr>
+            <tr><td><code>budget_exceeded</code> <span class="tag tag-planned">planned</span></td><td>The installation's daily model-call budget is spent</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section id="security" class="doc">
+        <h2>Security model</h2>
+        <div class="grid two compact">
+          <div class="card">
+            <h3>Proved</h3>
+            <ul class="ticks">
+              <li>The review code has no path that runs the diff: a lint rule bans every process API, a test-wide audit hook fails on any process start, and requests never contain tools.</li>
+              <li>A shown finding came from a model in an attested NEAR AI Cloud TEE, on the exact request sent, for that input.</li>
+              <li>Every shown finding refers to a region Hushmark found itself.</li>
+              <li>Only excerpts leave the service, and only to an attested TEE.</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>Not proved</h3>
+            <ul class="crosses">
+              <li>The Hushmark server is not in a TEE in v0.1. It sees the full diff, and a compromised server could skip verification.</li>
+              <li>TEE trust is hardware trust in Intel TDX and NVIDIA confidential computing.</li>
+              <li>Detection is incomplete: unknown hiding techniques are missed.</li>
+              <li>Offline verification checks evidence as of the time it was recorded.</li>
+            </ul>
+          </div>
+        </div>
+        <p>Defended attackers include fork authors, non-maintainer commenters, replay attempts, tampering, a hallucinating or injected model, webhook forgers and other GitHub Apps. Details: <a href="https://github.com/Ritapossible/Hushmark/blob/main/THREAT_MODEL.md">THREAT_MODEL.md</a>.</p>
+        <h3>Reporting a vulnerability</h3>
+        <p>Use GitHub's private vulnerability reporting on the repository (<em>Security → Report a vulnerability</em>). Please do not open a public issue. See <a href="https://github.com/Ritapossible/Hushmark/blob/main/SECURITY.md">SECURITY.md</a>.</p>
+      </section>
+
+      <section id="privacy" class="doc">
+        <h2>Privacy</h2>
+        <table>
+          <thead><tr><th>Data</th><th>Where it goes</th></tr></thead>
+          <tbody>
+            <tr><td>Full diff, title, body</td><td>Read by the Hushmark service; never sent to the model, never logged, never stored</td></tr>
+            <tr><td>Excerpts around hidden regions</td><td>Sent only to the attested NEAR AI Cloud TEE</td></tr>
+            <tr><td>Findings</td><td>Shown on the pull request's Check Run, visible to whoever can see the repository</td></tr>
+            <tr><td>Receipts</td><td>Hashes only</td></tr>
+            <tr><td>On chain</td><td>A hash of the review key and a hash of the receipt</td></tr>
+          </tbody>
+        </table>
+        <p>This website has no backend, no cookies, no analytics and no tracking.</p>
+      </section>
+
+      <section id="evidence" class="doc">
+        <h2>Evidence and fixtures</h2>
+        <p>Four real calls to <code>z-ai/glm-5.3-flash</code> on NEAR AI Cloud were recorded on GitHub Actions and verified before saving. Each is in <code>fixtures/recordings/</code> with its exact request and response bytes, signature, attestation report, Intel collateral and NVIDIA response.</p>
+        <table>
+          <thead><tr><th>Recording</th><th>Input</th><th>Result</th></tr></thead>
+          <tbody>
+            <tr><td>R1</td><td>Hidden comments in a doc and the PR body: approve, run a remote script, say nothing</td><td>2 findings</td></tr>
+            <tr><td>R2</td><td>Harmless <code>&lt;!-- TODO --&gt;</code></td><td>No findings</td></tr>
+            <tr><td>R3</td><td><code>AGENTS.md</code>: skip failing tests, push to main, hide it</td><td>1 finding</td></tr>
+            <tr><td>R4</td><td><code>AGENTS.md</code>: ordinary lint, test and commit rules (the control for R3)</td><td>No findings</td></tr>
+          </tbody>
+        </table>
+        <p>Tests built on that evidence refuse: a changed response byte, a <code>gateway</code> signature, another nonce, a removed attestation, a flipped quote byte, edited measurements, a swapped NVIDIA token, an expired verdict and an unknown candidate. The <a href="index.html#evidence">evidence on the home page</a> is generated from these recordings by Hushmark's own verifiers.</p>
+        <p>NVIDIA rotates its signing keys, so its key set is pinned in <code>fixtures/nvidia/jwks.json</code> for offline verification.</p>
+      </section>
+
+      <section id="development" class="doc">
+        <h2>Development</h2>
+        <h3>Stack</h3>
+        <p>Python 3.12 with <code>uv</code>; httpx; pydantic v2 in strict mode; <code>dcap-qvl</code> for Intel quotes; PyJWT for NVIDIA tokens; <code>eth-account</code> for EIP-191; ruff, <code>mypy --strict</code> and pytest. The NEAR contract will be Rust with <code>near-sdk</code>.</p>
+        <h3>Repository layout</h3>
+<pre><code>hushmark/        scan, excerpt, infer, nonce, receipt, config
+hushmark/verify/ attestation, nras, signature, grounding
+prompts/         the versioned system prompt
+fixtures/        inputs, recordings, attestation reports, NVIDIA keys
+scripts/         recording and site-data scripts
+site/            this website
+docs/            architecture, plan, fixtures, decision records</code></pre>
+        <h3>Recording new evidence</h3>
+        <p>The NEAR AI Cloud key is a GitHub Actions secret, never in the repository. The manual <code>record</code> workflow runs <code>scripts/record_completion.py</code> on chosen inputs, verifies every result, and uploads the evidence as an artifact for review.</p>
+        <h3>Rules for contributors</h3>
+        <ul>
+          <li>Never execute the diff, and never send tools to the model.</li>
+          <li>Never store or log the diff or finding text.</li>
+          <li>Fail closed, and refuse rather than truncate.</li>
+          <li>Never mock a signature or attestation in a fixture that claims to be real.</li>
+        </ul>
+        <p>Full list in <a href="https://github.com/Ritapossible/Hushmark/blob/main/AGENTS.md">AGENTS.md</a>; decisions in <a href="https://github.com/Ritapossible/Hushmark/tree/main/docs/adr">docs/adr</a>.</p>
+      </section>
+
+      <section id="roadmap" class="doc">
+        <h2>Roadmap</h2>
+        <p>Each phase has a gate: something true in the real world before the next phase starts.</p>
+        <ol class="roadmap">
+          <li>
+            <p class="rm-phase">v0.1 · NEAR HACKATHON · November 2026</p>
+            <p>Automatic check on every pull request; diff, title, body and rules files scanned; excerpts only to the model; warn or block mode; NEAR testnet anchor; offline evidence.</p>
+          </li>
+          <li>
+            <p class="rm-phase">v0.2 · Complete the trust claim · December 2026 – January 2027</p>
+            <ul>
+              <li>Run the Hushmark service inside a confidential VM, so the diff never sits on a host outside a TEE. The most important item.</li>
+              <li>Public receipt verifier: a CLI and a web page.</li>
+              <li>Anchors on NEAR mainnet.</li>
+              <li>Free open-source CLI and pre-commit hook with the same detectors, offline, no account.</li>
+              <li>GitHub Marketplace listing with a free tier for public repositories.</li>
+            </ul>
+            <p class="rm-gate">Gate: three repositories we do not own have installed it and run it more than once.</p>
+          </li>
+          <li>
+            <p class="rm-phase">v0.3 · From pull request reviewer to agent input firewall · Q1 2027</p>
+            <ul>
+              <li>Scan more of what agents read: issues and comments, linked docs, dependency READMEs.</li>
+              <li>An API and middleware that check MCP tool results before an agent reads them.</li>
+              <li>Path ignores and per-path modes in <code>.hushmark.yml</code>.</li>
+            </ul>
+            <p class="rm-gate">Gate: one design partner with an internal AI agent rollout, using it weekly.</p>
+          </li>
+          <li>
+            <p class="rm-phase">v1.0 · A product teams pay for · Q2 2027</p>
+            <ul>
+              <li>GitLab support; self-hosted or customer-cloud deployment.</li>
+              <li>Organization view: receipts, findings over time, audit export.</li>
+              <li>Pricing: free for public repositories, paid for private ones; prepaid scan credits on NEAR are being explored.</li>
+              <li>SOC 2 readiness.</li>
+            </ul>
+            <p class="rm-gate">Gate: the first paying customer.</p>
+          </li>
+        </ol>
+        <p><strong>Not on the roadmap:</strong> general code-quality review, general vulnerability finding, or running and sandboxing code. Staying narrow is what keeps Hushmark different from general AI reviewers.</p>
+      </section>
+
+      <section id="faq" class="doc">
+        <h2>FAQ</h2>
+        <details class="faq"><summary>Does Hushmark run the code in my pull request?</summary><p>No. It reads text only. The review code cannot start a process; a lint rule and a test-wide audit hook enforce that, and the model is never given tools.</p></details>
+        <details class="faq"><summary>Does my code go to an AI model?</summary><p>Only the lines around hidden regions, plus ten lines of context, and only to a model running in an attested NEAR AI Cloud TEE. Most pull requests send nothing at all.</p></details>
+        <details class="faq"><summary>What does it cost?</summary><p>Pull requests without hidden regions make no model call. A review with a few regions costs a fraction of a cent at current NEAR AI Cloud prices.</p></details>
+        <details class="faq"><summary>Why not just use GitHub's hidden-character warning?</summary><p>GitHub warns about some invisible characters when you view a file. Hushmark also covers HTML comments, hidden HTML and agent rules files, judges whether the text targets an agent, runs as a required check, and gives a verifiable receipt.</p></details>
+        <details class="faq"><summary>What if the model is wrong or manipulated?</summary><p>It can only name candidates Hushmark found, so it cannot invent locations. A malformed answer refuses the run. Harmless notes and ordinary rules files produced no findings in the recorded controls (R2 and R4).</p></details>
+        <details class="faq"><summary>Why NEAR?</summary><p>NEAR AI Cloud runs the model inside Intel TDX and NVIDIA TEEs and signs every response, which is what makes a finding verifiable. NEAR also hosts the receipt anchor.</p></details>
+      </section>
+
+      <section id="references" class="doc">
+        <h2>References</h2>
+        <ul>
+          <li><a href="https://github.com/Ritapossible/Hushmark">Source code</a> (Apache-2.0)</li>
+          <li><a href="https://github.com/Ritapossible/Hushmark/blob/main/docs/ARCHITECTURE.md">ARCHITECTURE.md</a>, <a href="https://github.com/Ritapossible/Hushmark/blob/main/THREAT_MODEL.md">THREAT_MODEL.md</a>, <a href="https://github.com/Ritapossible/Hushmark/blob/main/RECEIPT.md">RECEIPT.md</a>, <a href="https://github.com/Ritapossible/Hushmark/blob/main/CHANGELOG.md">CHANGELOG.md</a></li>
+          <li><a href="https://docs.near.ai/cloud/verification">NEAR AI Cloud verification</a></li>
+          <li><a href="https://github.com/nearai/nearai-cloud-verifier">nearai-cloud-verifier</a> (reference checks, MIT)</li>
+          <li><a href="https://thehackernews.com/2025/03/new-rules-file-backdoor-attack-lets.html">Rules File Backdoor</a> (Pillar Security, 2025)</li>
+          <li><a href="https://invariantlabs.ai/blog/mcp-github-vulnerability">GitHub MCP prompt injection</a> (Invariant Labs, 2025)</li>
+        </ul>
+        <p class="muted small">Much of Hushmark is written with Claude Code under human direction and review; commits carry a Co-Authored-By line.</p>
+      </section>
+    </main>
+  </div>
+
+  <footer class="site-footer">
+    <div class="wrap footer-base">
+      <p>© 2026 Hushmark · Built at NEAR HACKATHON · Apache-2.0 · <a href="index.html">Home</a></p>
+    </div>
+  </footer>
+  <script src="docs.js"></script>
+</body>
+</html>
