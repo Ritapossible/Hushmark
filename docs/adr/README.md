@@ -11,3 +11,4 @@ One decision per file. Never edit an accepted ADR's decision; write a new one th
 | [0005](0005-pinned-diff-and-refusal.md) | Pinned diff; refuse over 200 lines, never truncate |
 | [0006](0006-wrap-dcap-qvl-directly.md) | Wrap `dcap-qvl` and NRAS directly; NEAR's verifier is a reference, not a library (supersedes part of 0002) |
 | [0007](0007-automatic-check-with-excerpts.md) | Automatic required check, excerpts only, one Check Run output (supersedes the trigger and outputs, and part of 0005) |
+| [0008](0008-static-landing-page.md) | A static landing page in `site/` is not a dashboard; its evidence is computed by our verifiers |
