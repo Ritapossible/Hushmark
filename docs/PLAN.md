@@ -18,7 +18,7 @@ Recording first, web app last.
 
 | Day | Date | Deliverable | Done when |
 |---|---|---|---|
-| 1 | 1 Nov | NEAR AI Cloud key works. `scripts/day1_check.py` passes. Read `nearai-cloud-verifier`. **Nothing else today.** | Signature recovers to the attested address |
+| 1 | 1 Nov | NEAR AI Cloud key works. `scripts/day1_check.py` passes. Read `nearai-cloud-verifier`. **Nothing else today.** | **Done 2 Nov: GO** with `z-ai/glm-5.3-flash` (Actions run 41432789466) |
 | 2 | 2 Nov | Repo tooling: `uv`, ruff, mypy, pytest, CI, Makefile. GitHub App registered with the ADR-0007 permissions. A Check Run with one annotation posted by hand from the app. | CI green on an empty package. Q4 answered. |
 | 3 | 3 Nov | `scan.py`: every detector over diff, title and body, including `agent_rules_file`; `config.py` (base branch only) | Unit tests per detector, including the harmless TODO; fixtures 09, 11, 12 |
 | 4 | 4 Nov | Demo repository with the three PRs (R1–R3). `excerpt.py` and `infer.py` with raw-bytes capture. | Request holds excerpts only, no `tools`, exact bytes saved |

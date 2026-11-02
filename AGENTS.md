@@ -62,7 +62,8 @@ An agent may prepare the submission payload, but must print it and wait.
 - GitHub Checks API for all output (no comments, no advisories)
 - SQLite for state
 - `dcap-qvl` (pinned `0.7.0`) for TDX quotes; NVIDIA NRAS for GPU evidence
-- Model: `Qwen/Qwen3.8-27B` (model TEE attestation confirmed); fallback `z-ai/glm-5.3-flash`
+- Model: `z-ai/glm-5.3-flash` (day-one GO, 2026-11-02). It is a reasoning model: give it
+  enough `max_tokens` for reasoning plus the JSON answer. `Qwen/Qwen3.8-27B` timed out twice.
 - `eth-account` for EIP-191 signature recovery
 - NEAR contract in Rust (`near-sdk`), deployed to **testnet**
 - Tooling: ruff, `mypy --strict`, pytest with recorded HTTP (respx)
@@ -83,13 +84,20 @@ make verify-live   # (planned) re-verify recorded evidence online
 - **Built (branch `build/foundation`):** tooling and CI; attestation checks a–e (offline part)
   tested on two real recorded reports; scanner (all detectors, title, body, rules files);
   `.hushmark.yml` parser. 44 tests, lint and `mypy --strict` clean.
-- **Blocked on the API key:** `scripts/day1_check.py` (completion signature, check f), then
-  recordings R1–R3. Still the go/no-go for the end of 2 November.
+- **Day-one check: GO (2026-11-02)** on GitHub Actions with `z-ai/glm-5.3-flash`: `provider_tee`
+  signature over our exact bytes, signer bound into an `UpToDate` TDX quote with our nonce.
+  Evidence: artifact `day1-evidence` on Actions run 41432789466.
+- **Key handling:** `NEARAI_API_KEY` is a GitHub Actions repository secret. Anything that
+  needs the key runs as a manual workflow (`.github/workflows/day1-check.yml` is the pattern).
+- **Next:** recordings R1–R3 (day 4–5 work), then check f in `verify/signature.py`.
 
 ## Decision log
 
 Newest first. One line each, with a link when there is an ADR.
 
+- 2026-11-02: Day-one go/no-go passed. Primary model switched to `z-ai/glm-5.3-flash`
+  (answered in under 5 s; Qwen3.8-27B gave no answer within 2 or 5 minutes). $1 of credit
+  bought with NEAR via PingPay; the NEAR Builders $10 credit is still pending.
 - 2026-11-01: Built key-independent parts while waiting for NEAR AI credit. New reason code
   `signer_not_bound` (check c) and `config_invalid`.
 - 2026-11-01: Redesigned for team adoption: automatic check on every PR, excerpts only to

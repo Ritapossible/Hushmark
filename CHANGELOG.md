@@ -11,6 +11,7 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versions follo
 - Offline attestation verification (checks a–e, NRAS pending) with two real NEAR fixtures.
 - Scanner for hidden content in the diff, PR title, PR body and agent rules files.
 - `.hushmark.yml` parser (base branch only).
+- Manual `day1-check` workflow; day-one go/no-go passed with `z-ai/glm-5.3-flash`.
 
 ### Changed
 - Applied design review: claim narrowed to the code, privacy as primary track, NEAR anchor

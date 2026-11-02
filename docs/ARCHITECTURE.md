@@ -79,8 +79,9 @@ Each hit becomes a candidate `{id, source, file, line, span, detector}`, where `
 ### Step 4: Infer (`hushmark/infer.py`)
 - **Excerpts only.** Each candidate plus up to 10 lines of context on each side, taken from
   the diff hunk (or from the title or body). The rest of the diff never leaves our service.
-- Model: `Qwen/Qwen3.8-27B` (model TEE attestation confirmed 2026-11-01; fallback
-  `z-ai/glm-5.3-flash`). It must return `signature_kind: provider_tee`.
+- Model: `z-ai/glm-5.3-flash` (`provider_tee` signature verified end to end 2026-11-02). It is
+  a reasoning model, so `max_tokens` must leave room for reasoning before the JSON answer.
+  It must return `signature_kind: provider_tee`.
   Canonical model ID, header `x-no-aliasing: true`.
 - Fixed system prompt in `prompts/v1.txt`; its SHA-256 is `prompt_hash`.
 - Excerpts go inside a random boundary (`<<<EXCERPTS-{16 random hex}>>>`). The prompt says
