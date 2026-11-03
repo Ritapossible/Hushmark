@@ -226,11 +226,13 @@ fixtures/   inputs/ recordings/ attestation/ nvidia/
 tests/      replay.py replays recorded evidence byte for byte
 scripts/    day1_check.py record_completion.py record_attestation.py build_site_data.py
 site/       landing page and docs
-contract/   (planned) near-sdk Rust contract
+contract/   near-sdk Rust contract, deployed to anchor.hushmark.testnet
 ```
 
 Refusal codes added while building: `tee_unavailable` (NEAR AI Cloud, Intel or NVIDIA
-unreachable) and `webhook_invalid` (bad `X-Hub-Signature-256`).
+unreachable), `webhook_invalid` (bad `X-Hub-Signature-256`), `budget_exceeded` (daily review
+cap spent) and `internal_error` (Hushmark failed before reviewing; the Check Run is closed as
+not verified instead of being left in progress).
 
 ## References
 

@@ -288,6 +288,7 @@ mode: warn   # warn (default) | block</code></pre>
             <tr><td><code>signature_mismatch</code></td><td>The response signature does not cover our exact bytes from the attested signer</td></tr>
             <tr><td><code>model_output_invalid</code></td><td>The model's answer does not match the schema</td></tr>
             <tr><td><code>tee_unavailable</code></td><td>NEAR AI Cloud, Intel or NVIDIA could not be reached</td></tr>
+            <tr><td><code>internal_error</code></td><td>Hushmark itself failed before reviewing; the check is closed as not verified and the Actions job fails, so the error is visible</td></tr>
             <tr><td><code>not_maintainer</code></td><td><code>/hushmark</code> from someone without admin or maintain permission</td></tr>
             <tr><td><code>diff_unavailable</code></td><td>GitHub could not return the full diff</td></tr>
             <tr><td><code>webhook_invalid</code></td><td>A webhook whose signature is not GitHub's</td></tr>

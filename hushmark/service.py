@@ -5,6 +5,8 @@ from __future__ import annotations
 from collections.abc import Callable
 from dataclasses import dataclass, replace
 
+import httpx
+
 from hushmark.config import Config, parse_config
 from hushmark.github import GitHubClient
 from hushmark.pipeline import (
@@ -79,6 +81,13 @@ def run_check(
         )
     except Refused as e:  # before review: config or diff
         outcome, config = Refusal(e.code, e.detail, ()), Config()
+    except httpx.HTTPError as e:  # GitHub failed mid-fetch: nothing was reviewed
+        outcome, config = Refusal("diff_unavailable", type(e).__name__, ()), Config()
+    except Exception:
+        # Never leave the Check Run stuck "in progress": close it as not verified, then let
+        # the job fail so the error is visible in the Actions log.
+        gh.finish_check(owner, repo, check_id, render(Refusal("internal_error", "", ()), Config()))
+        raise
     out = render(outcome, config)
     if anchor is not None and isinstance(outcome, Reviewed):
         out = replace(out, summary=out.summary + "\n\n" + _anchor_note(anchor, outcome))
