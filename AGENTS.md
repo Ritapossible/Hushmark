@@ -112,13 +112,28 @@ make verify-live   # (planned) re-verify recorded evidence online
 - **GitHub Action (ADR-0009):** `.github/workflows/hushmark.yml` on `pull_request_target`
   runs `python -m hushmark.action` from the base branch; it never checks out the PR. Receipts
   are kept as workflow artifacts. `tests/test_action.py` guards the workflow. 131 tests.
-- **Next:** merge, demo PR with a hidden instruction on this repo, then the NEAR contract.
-  GitHub App and webhook server stay planned.
+- **Live 2026-11-02:** demo PR #6 (do not merge) got a real `Hushmark` check: 2 verified
+  findings, receipt artifact checked (hashes only).
+- **Branch `build/near-anchor`:** `contract/` (Rust, near-sdk 5.30, 5 unit tests, 106 KB wasm
+  via `cargo-near`), `hushmark/anchor.py` (Borsh tx, Ed25519 signing, RPC), Action wiring
+  (`NEAR_ANCHOR_ACCOUNT` variable, `NEAR_ANCHOR_KEY` secret). 142 tests.
+- **Deployed 2026-11-02 (Rita's OK):** `hushmark.testnet` (faucet) and
+  `anchor.hushmark.testnet` (contract; code hash matches the build). Function-call key
+  `Gxpb82w5…` limited to `anchor`. PR #6's receipt anchored; a second anchor was refused on
+  chain. Keys were handed to Rita; the Action needs secret `NEAR_ANCHOR_KEY` and variable
+  `NEAR_ANCHOR_ACCOUNT`.
+- **Daily budget:** 50 model-calling reviews per repo per day (`HUSHMARK_DAILY_REVIEWS`),
+  counted from receipt artifacts; `budget_exceeded`. 145 tests.
+- **Next:** demo video, X post draft, make the repo public, submit (all need Rita).
 
 ## Decision log
 
 Newest first. One line each, with a link when there is an ADR.
 
+- 2026-11-02: Grok review: stop site work; deploy the anchor (done, second anchor refused on
+  chain) and cap the paid key before leaving `pull_request_target` on (50/day).
+- 2026-11-02: Anchor contract on its own sub-account; only the contract account may write;
+  the service key is a function-call key limited to `anchor`.
 - 2026-11-02: v0.1 ships as a GitHub Action on `pull_request_target` (no server; rule 10
   stands). See [ADR-0009](docs/adr/0009-github-action-pull-request-target.md).
 - 2026-11-02: Check Run pipeline built and tested offline before the GitHub App exists, so

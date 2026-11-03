@@ -22,3 +22,12 @@ failure and retries.
 - A stolen server key can only add anchors. It cannot move funds.
 - Only hashes go on chain. No repository names or usernames.
 - Testnet costs nothing. Mainnet is ROADMAP v0.2.
+
+## Implementation (2026-11-02)
+
+- Contract: `contract/` (`near-sdk` 5.30, built with `cargo-near`), deployed on its own
+  sub-account `anchor.hushmark.testnet`. Only that account may call `anchor`; `get` is public.
+- Caller: `hushmark/anchor.py` signs the call with a function-call access key held as the
+  `NEAR_ANCHOR_KEY` secret. The Action adds the transaction link to the check summary, or a
+  note when anchoring fails; the check is never blocked.
+- `key_hash = SHA-256(JCS(idempotency key))`; `receipt_hash = receipt_id`.

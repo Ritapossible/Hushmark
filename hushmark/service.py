@@ -3,11 +3,19 @@
 from __future__ import annotations
 
 from collections.abc import Callable
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 
 from hushmark.config import Config, parse_config
 from hushmark.github import GitHubClient
-from hushmark.pipeline import EvidenceSources, Outcome, PullRequestInput, Refusal, Tee, review
+from hushmark.pipeline import (
+    EvidenceSources,
+    Outcome,
+    PullRequestInput,
+    Refusal,
+    Reviewed,
+    Tee,
+    review,
+)
 from hushmark.refusal import Refused
 from hushmark.report import CheckOutput, render
 
@@ -44,10 +52,13 @@ def run_check(
     now: Callable[[], int],
     salt: bytes | None = None,
     boundary: str | None = None,
+    anchor: Callable[[Reviewed], str] | None = None,
 ) -> CheckResult:
     """Start the Check Run first, so the PR shows Hushmark is working, then finish it.
 
-    `salt` and `boundary` are fixed only when replaying a recording.
+    `salt` and `boundary` are fixed only when replaying a recording. `anchor`, if given, records
+    a verified review's receipt on NEAR and returns a line for the summary; it never blocks the
+    check (ADR-0004).
     """
     pull = gh.pull(owner, repo, number)
     base_sha, head_sha = str(pull["base"]["sha"]), str(pull["head"]["sha"])
@@ -69,5 +80,16 @@ def run_check(
     except Refused as e:  # before review: config or diff
         outcome, config = Refusal(e.code, e.detail, ()), Config()
     out = render(outcome, config)
+    if anchor is not None and isinstance(outcome, Reviewed):
+        out = replace(out, summary=out.summary + "\n\n" + _anchor_note(anchor, outcome))
     gh.finish_check(owner, repo, check_id, out)
     return CheckResult(out, outcome)
+
+
+def _anchor_note(anchor: Callable[[Reviewed], str], outcome: Reviewed) -> str:
+    try:
+        return anchor(outcome)
+    except Exception as e:  # any failure: publish anyway, say so (ADR-0004)
+        return (
+            f"NEAR anchor: not recorded this time ({type(e).__name__}). The receipt is still valid."
+        )

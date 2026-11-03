@@ -35,6 +35,7 @@ REFUSAL_TEXT = {
     "signature_mismatch": "The model's answer was not signed by the attested TEE.",
     "model_output_invalid": "The model's answer was not in the expected format.",
     "tee_unavailable": "NEAR AI Cloud could not be reached.",
+    "budget_exceeded": "Today's review budget for this repository is spent. Review by hand.",
 }
 
 

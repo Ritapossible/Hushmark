@@ -99,7 +99,7 @@
             <tr><td>Pipeline, Check Run output and GitHub client (tested against a mocked GitHub API)</td><td><span class="tag tag-live">built</span></td></tr>
             <tr><td>GitHub Action on every pull request (<code>pull_request_target</code>)</td><td><span class="tag tag-live">built</span></td></tr>
             <tr><td>GitHub App and webhook server (one-click installs, <code>/hushmark</code> re-runs)</td><td><span class="tag tag-planned">planned</span></td></tr>
-            <tr><td>NEAR testnet anchor contract</td><td><span class="tag tag-planned">planned</span></td></tr>
+            <tr><td>NEAR anchor contract and the Action's anchor call</td><td><span class="tag tag-live">built</span></td></tr>
           </tbody>
         </table>
       </section>
@@ -133,7 +133,7 @@ cd Hushmark</code></pre></li>
           <li><strong>Verify.</strong> <a href="#verification">Checks a–g</a>: attestation, signature and grounding. <span class="tag tag-live">built</span></li>
           <li><strong>Receipt.</strong> A canonical JSON <a href="#receipts">receipt</a> with hashes only. <span class="tag tag-live">built</span></li>
           <li><strong>Report.</strong> One <code>Hushmark</code> Check Run with line annotations. <span class="tag tag-live">built</span></li>
-          <li><strong>Anchor.</strong> The receipt hash anchored on NEAR. <span class="tag tag-planned">planned</span></li>
+          <li><strong>Anchor.</strong> The receipt hash anchored on NEAR testnet, with the transaction linked from the check. <span class="tag tag-live">built</span></li>
         </ol>
         <p>A pull request with no hidden regions finishes after step 3: no model call, no cost, no receipt. That is the common case.</p>
       </section>
@@ -204,8 +204,9 @@ cd Hushmark</code></pre></li>
       </section>
 
       <section id="near" class="doc">
-        <h2>NEAR anchor <span class="tag tag-planned">planned</span></h2>
-        <p>A NEAR smart contract on testnet stores one receipt hash per review with <code>anchor(key_hash, receipt_hash)</code>, and refuses a second anchor for the same key, so one input is reviewed once.</p>
+        <h2>NEAR anchor <span class="tag tag-live">built</span></h2>
+        <p>A NEAR smart contract on testnet (<code>anchor.hushmark.testnet</code>) stores one receipt hash per review with <code>anchor(key_hash, receipt_hash)</code>, and refuses a second anchor for the same key, so one input is reviewed once. Anyone can look an anchor up with <code>get(key_hash)</code>. Source: <a href="https://github.com/Ritapossible/Hushmark/tree/main/contract"><code>contract/</code></a>. Deployed: <a href="https://testnet.nearblocks.io/address/anchor.hushmark.testnet"><code>anchor.hushmark.testnet</code></a>; its on-chain code hash matches the built wasm (<code>A1QKAEQS…PpTZ</code>).</p>
+        <p>The first anchor is demo PR #6's real receipt: <a href="https://testnet.nearblocks.io/txns/6UQaEH9gvmeaCLYs2rVomtWjWoekH6edzqtmSxs4EmB9">anchored</a>. Sending the same anchor again was <a href="https://testnet.nearblocks.io/txns/EH33MVqn6PsFWrGWJ1ebYd2u8eWV2amcNyBnq81yEKoe">refused by the contract</a>: <em>"this review key is already anchored"</em>.</p>
         <ul>
           <li>The contract lives on its own sub-account.</li>
           <li>The service calls it with a function-call access key limited to <code>anchor</code>, with zero deposit. A stolen server key can add anchors but cannot move funds.</li>
@@ -234,8 +235,11 @@ cd Hushmark</code></pre></li>
             <tr><td>contents</td><td>read</td><td>The pinned diff, and <code>.hushmark.yml</code> at the base commit</td></tr>
             <tr><td>pull-requests</td><td>read</td><td>Title, body and commit SHAs</td></tr>
             <tr><td>checks</td><td>write</td><td>The <code>Hushmark</code> Check Run</td></tr>
+            <tr><td>actions</td><td>read</td><td>Count today's receipts for the daily budget</td></tr>
           </tbody>
         </table>
+        <h3>Daily budget</h3>
+        <p>A pull request with no hidden regions never calls the model and costs nothing. Reviews that do call the model are capped at <strong>50 per repository per day</strong> (set the repository variable <code>HUSHMARK_DAILY_REVIEWS</code> to change it). At GLM-5.3-flash's listed price the worst case is about $0.0025 a review, so about $0.13 a day. Over the cap, hidden content is shown as not verified (<code>budget_exceeded</code>) and no model call is made. The Action has no database, so it counts today's receipt artifacts, which needs <code>actions: read</code>.</p>
         <p>No write access to code, no comments. Without the secret, hidden content is reported as <em>not verified</em> (<code>tee_unavailable</code>), never as a finding. Each review's receipt and attestation report are kept as a workflow artifact for 90 days.</p>
         <p><span class="tag tag-planned">planned</span> A GitHub App with a webhook server, for one-click installs across repositories and <code>/hushmark</code> re-runs. It runs the same code.</p>
       </section>
@@ -283,7 +287,7 @@ mode: warn   # warn (default) | block</code></pre>
             <tr><td><code>not_maintainer</code></td><td><code>/hushmark</code> from someone without admin or maintain permission</td></tr>
             <tr><td><code>diff_unavailable</code></td><td>GitHub could not return the full diff</td></tr>
             <tr><td><code>webhook_invalid</code></td><td>A webhook whose signature is not GitHub's</td></tr>
-            <tr><td><code>budget_exceeded</code> <span class="tag tag-planned">planned</span></td><td>The installation's daily model-call budget is spent</td></tr>
+            <tr><td><code>budget_exceeded</code></td><td>The repository's daily review budget is spent (default 50 model-calling reviews a day)</td></tr>
           </tbody>
         </table>
       </section>
@@ -349,10 +353,11 @@ mode: warn   # warn (default) | block</code></pre>
       <section id="development" class="doc">
         <h2>Development</h2>
         <h3>Stack</h3>
-        <p>Python 3.12 with <code>uv</code>; httpx; pydantic v2 in strict mode; <code>dcap-qvl</code> for Intel quotes; PyJWT for NVIDIA tokens; <code>eth-account</code> for EIP-191; ruff, <code>mypy --strict</code> and pytest. The NEAR contract will be Rust with <code>near-sdk</code>.</p>
+        <p>Python 3.12 with <code>uv</code>; httpx; pydantic v2 in strict mode; <code>dcap-qvl</code> for Intel quotes; PyJWT for NVIDIA tokens; <code>eth-account</code> for EIP-191; ruff, <code>mypy --strict</code> and pytest. The NEAR contract is Rust with <code>near-sdk</code>, built with <code>cargo-near</code>.</p>
         <h3>Repository layout</h3>
 <pre><code>hushmark/        scan, excerpt, infer, nonce, receipt, config,
-                 pipeline, report, github, service, near
+                 pipeline, report, github, service, near, anchor, action
+contract/        the NEAR anchor contract (Rust, near-sdk)
 hushmark/verify/ attestation, nras, signature, grounding
 prompts/         the versioned system prompt
 fixtures/        inputs, recordings, attestation reports, NVIDIA keys

@@ -32,3 +32,6 @@ near-credentials/
 .vscode/
 .DS_Store
 .evidence/
+
+# NEAR contract build output
+contract/target/
