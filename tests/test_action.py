@@ -7,6 +7,7 @@ from pathlib import Path
 from typing import Any
 
 import httpx
+import pytest
 import respx
 import yaml
 
@@ -162,3 +163,34 @@ def test_clean_prs_never_touch_the_budget() -> None:
     counter = respx.get(f"{BASE}/actions/artifacts")
     run(event(), {"HUSHMARK_DAILY_REVIEWS": "0"}, gh=gh())
     assert not counter.called
+
+
+@respx.mock
+def test_github_error_while_fetching_closes_the_check_as_not_verified() -> None:
+    respx.get(f"{BASE}/pulls/1").respond(
+        200, json={"base": {"sha": "b" * 40}, "head": {"sha": "h" * 40}, "title": "t", "body": ""}
+    )
+    respx.post(f"{BASE}/check-runs").respond(201, json={"id": 9})
+    respx.get(f"{BASE}/contents/.hushmark.yml").respond(502)
+    finish = respx.patch(f"{BASE}/check-runs/9").respond(200, json={})
+    result = run(event(), {}, gh=gh())
+    sent = json.loads(finish.calls.last.request.content)
+    assert sent["status"] == "completed" and sent["conclusion"] == "neutral"
+    assert "`diff_unavailable`" in sent["output"]["summary"]
+    assert result.output.conclusion == "neutral"
+
+
+@respx.mock
+def test_unexpected_error_never_leaves_the_check_in_progress() -> None:
+    respx.get(f"{BASE}/pulls/1").respond(
+        200, json={"base": {"sha": "b" * 40}, "head": {"sha": "h" * 40}, "title": "t", "body": ""}
+    )
+    respx.post(f"{BASE}/check-runs").respond(201, json={"id": 9})
+    respx.get(f"{BASE}/contents/.hushmark.yml").respond(200, text="mode: block")
+    respx.get(f"{BASE}/compare/{'b' * 40}...{'h' * 40}").mock(side_effect=RuntimeError("boom"))
+    finish = respx.patch(f"{BASE}/check-runs/9").respond(200, json={})
+    with pytest.raises(RuntimeError):
+        run(event(), {}, gh=gh())
+    sent = json.loads(finish.calls.last.request.content)
+    assert sent["status"] == "completed" and sent["conclusion"] == "neutral"
+    assert "`internal_error`" in sent["output"]["summary"]

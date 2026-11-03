@@ -36,6 +36,7 @@ REFUSAL_TEXT = {
     "model_output_invalid": "The model's answer was not in the expected format.",
     "tee_unavailable": "NEAR AI Cloud could not be reached.",
     "budget_exceeded": "Today's review budget for this repository is spent. Review by hand.",
+    "internal_error": "Hushmark failed before it could review this pull request.",
 }
 
 
