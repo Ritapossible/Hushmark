@@ -124,6 +124,12 @@ make verify-live   # (planned) re-verify recorded evidence online
   `NEAR_ANCHOR_ACCOUNT`.
 - **Daily budget:** 50 model-calling reviews per repo per day (`HUSHMARK_DAILY_REVIEWS`),
   counted from receipt artifacts; `budget_exceeded`. 145 tests.
+- **Live 2026-11-03:** with `NEAR_ANCHOR_KEY` set, demo PR #8 failed in block mode (1 verified
+  finding) and the Action anchored its receipt (tx `4aVFSs9k…`); contract `count` = 2. A
+  malformed anchor key no longer crashes the check (PR #10).
+- **README review (2026-11-03):** every test file reported; GitHub errors before the review
+  now close the Check Run (`diff_unavailable` or new code `internal_error`) instead of
+  leaving it in progress. 149 tests.
 - **Next:** demo video, X post draft, make the repo public, submit (all need Rita).
 
 ## Decision log

@@ -24,6 +24,12 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versions follo
 - NEAR anchor contract (`contract/`) and the Action's anchor call; deployed to
   `anchor.hushmark.testnet`.
 - Daily review budget for the Action (default 50 per repository).
+- Block mode on this repository; anatomy figure in the README and docs.
+- Refusal code `internal_error`.
+
+### Fixed
+- A GitHub error before the review no longer leaves the `Hushmark` check in progress.
+- A malformed `NEAR_ANCHOR_KEY` no longer crashes the check.
 
 ### Changed
 - Applied design review: claim narrowed to the code, privacy as primary track, NEAR anchor

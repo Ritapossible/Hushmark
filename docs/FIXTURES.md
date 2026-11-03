@@ -19,7 +19,9 @@ cent.
 ## Fixtures
 
 Recorded 2026-11-02 (`fixtures/recordings/`). Passing offline today: 01, 02, 04, 05, 06, 07,
-08, 09, 10, 11, 12, 13. Still to come: 03 (needs idempotency storage and the NEAR anchor).
+08, 09, 10, 11, 12, 13. Fixture 03 is partly covered: the contract refuses a second anchor for
+the same review key (contract unit test, and live on testnet, tx `EH33MVqn…`); reusing the same
+receipt and Check Run needs idempotency storage, which the v0.1 Action does not have.
 
 
 | # | Name | Input | Expected | Real or derived |
