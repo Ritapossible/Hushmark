@@ -1,0 +1,3 @@
+# Hushmark settings, read from the default branch only (a pull request cannot change them).
+# block: a verified finding fails the Hushmark check. warn (the default): it is neutral.
+mode: block

@@ -130,6 +130,8 @@ make verify-live   # (planned) re-verify recorded evidence online
 
 Newest first. One line each, with a link when there is an ADR.
 
+- 2026-11-03: This repository runs Hushmark in `mode: block` (`.hushmark.yml` on `main`), so a
+  verified finding fails the check. Demo PR #8 shows it; PR #6 stays open too.
 - 2026-11-02: Grok review: stop site work; deploy the anchor (done, second anchor refused on
   chain) and cap the paid key before leaving `pull_request_target` on (50/day).
 - 2026-11-02: Anchor contract on its own sub-account; only the contract account may write;
