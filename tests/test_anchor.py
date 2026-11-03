@@ -119,3 +119,16 @@ def test_other_failures_raise() -> None:
     rpc_mock({"Failure": {"ActionError": {"kind": "something else"}}})
     with pytest.raises(AnchorError):
         NearAnchor(ACCOUNT, secret()).anchor(KEY_HASH, RECEIPT)
+
+
+def test_key_tolerates_whitespace_from_a_settings_page() -> None:
+    assert NearKey(secret() + "\n").public_key == NearKey(" " + secret()).public_key
+
+
+def test_malformed_key_is_an_anchor_failure_not_a_crash() -> None:
+    from hushmark.action import near_anchor
+
+    anchor = near_anchor({"NEAR_ANCHOR_ACCOUNT": "a.testnet", "NEAR_ANCHOR_KEY": "ed25519:0OIl"})
+    assert anchor is not None  # building it must not raise; the failure surfaces per review
+    with pytest.raises(ValueError, match="not base58"):
+        anchor(None)  # type: ignore[arg-type]

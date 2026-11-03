@@ -75,9 +75,12 @@ def near_anchor(env: Mapping[str, str]) -> Callable[[Reviewed], str] | None:
     account, secret = env.get("NEAR_ANCHOR_ACCOUNT"), env.get("NEAR_ANCHOR_KEY")
     if not account or not secret:
         return None
-    client = NearAnchor(account, secret, rpc=env.get("NEAR_RPC_URL") or TESTNET_RPC)
+    rpc = env.get("NEAR_RPC_URL") or TESTNET_RPC
 
     def anchor(outcome: Reviewed) -> str:
+        # Built here, not up front, so a malformed key is an anchor failure (the review is
+        # still published, ADR-0004) and never crashes the check.
+        client = NearAnchor(account, secret, rpc=rpc)
         result = client.anchor(key_hash(outcome.key), outcome.receipt.receipt_id)
         if result.status == "already_anchored":
             return "NEAR anchor: this review was already anchored; the contract refused a second."
