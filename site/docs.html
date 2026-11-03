@@ -124,6 +124,10 @@ cd Hushmark</code></pre></li>
       <section id="how-it-works" class="doc">
         <h2>How it works</h2>
         <p>Each pull request moves through the same pipeline. Any step can stop the run with a <a href="#refusals">refusal code</a>; a refusal never shows a model finding.</p>
+        <figure class="doc-figure">
+          <img src="img/hushmark-anatomy.png" width="2384" height="1514" loading="lazy" alt="Hushmark drawn as a bench machine: fanfold paper (the whole pull request) feeds under a scanner; one hidden region is punched out as a chip (the excerpt), the rest drops into a slot and never leaves; the chip rides into a vault marked TEE, a press signs it, and a receipt slides onto the newest block of a chain (the NEAR testnet anchor).">
+          <figcaption>Left to right: the whole pull request is scanned, only the hidden excerpt goes to the TEE, and the receipt (hashes only) is anchored on NEAR testnet.</figcaption>
+        </figure>
         <ol class="pipeline">
           <li><strong>Trigger.</strong> Every pull request event: opened, updated, reopened or edited, through the GitHub Action. <span class="tag tag-live">built</span> Maintainer re-runs with <code>/hushmark</code>. <span class="tag tag-planned">planned</span></li>
           <li><strong>Fetch.</strong> The diff between the pinned base and head commits, the title and the body. <code>.hushmark.yml</code> is read from the base commit only. <span class="tag tag-live">built</span></li>
