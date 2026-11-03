@@ -20,6 +20,11 @@ those agents instructions. Once merged, it affects every agent session on the te
 
 ## What Hushmark does
 
+![Hushmark drawn as a bench machine: fanfold paper (the whole pull request) feeds under a scanner; one hidden region is punched out as a chip (the excerpt), the rest drops into a slot and never leaves; the chip rides into a vault marked TEE, a press signs it, and a receipt slides onto the newest block of a chain (the NEAR testnet anchor).](site/img/hushmark-anatomy.png)
+
+*Left to right: the whole pull request is scanned, only the hidden excerpt goes to the TEE,
+and the receipt (hashes only) is anchored on NEAR testnet.*
+
 1. Runs on every pull request. It never checks out or runs the code.
 2. Scans the whole diff, the PR title and the PR body for hidden content, and treats any
    change to an agent rules file (`AGENTS.md`, `.cursorrules`, ...) as worth checking.
