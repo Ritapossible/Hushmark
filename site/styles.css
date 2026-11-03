@@ -203,6 +203,9 @@ section[id] { scroll-margin-top: 76px; }
 .doc h3 { font-size: 1.4rem; margin: 28px 0 8px; }
 .doc p, .doc li { color: #3d3a36; }
 .doc a { color: var(--navy); }
+.doc-figure { margin: 24px 0; }
+.doc-figure img { display: block; width: 100%; height: auto; border-radius: 14px; border: 1px solid var(--line); }
+.doc-figure figcaption { margin-top: 10px; font-size: 0.9rem; color: var(--muted); }
 .doc ul, .doc ol { padding-left: 22px; }
 .doc li { margin: 6px 0; }
 .doc table { width: 100%; border-collapse: collapse; margin: 18px 0; font-size: 0.95rem; background: var(--card); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; display: block; overflow-x: auto; }
