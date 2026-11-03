@@ -37,6 +37,8 @@ def b58encode(data: bytes) -> str:
 def b58decode(text: str) -> bytes:
     n = 0
     for ch in text:
+        if ch not in _B58:
+            raise ValueError("not base58")  # never echo the text: it may be a secret key
         n = n * 58 + _B58.index(ch)
     body = n.to_bytes((n.bit_length() + 7) // 8, "big") if n else b""
     return b"\0" * (len(text) - len(text.lstrip("1"))) + body
@@ -63,7 +65,8 @@ class NearKey:
     """An ed25519 key in NEAR's `ed25519:<base58>` form (64 bytes: seed then public key)."""
 
     def __init__(self, secret: str) -> None:
-        kind, _, encoded = secret.partition(":")
+        # Secrets pasted into a settings page often carry a trailing newline or spaces.
+        kind, _, encoded = secret.strip().partition(":")
         raw = b58decode(encoded)
         if kind != "ed25519" or len(raw) not in (32, 64):
             raise ValueError("expected an ed25519:<base58> NEAR secret key")
