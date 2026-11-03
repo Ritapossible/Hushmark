@@ -9,6 +9,11 @@ See `docs/PLAN.md`. Automatic required check on every pull request; diff, title,
 agent rules files scanned; excerpts only to the model; warn or block mode; NEAR testnet
 anchor; offline fixtures.
 
+Weekend of 7–8 November ([ADR-0010](docs/adr/0010-github-app-and-mcp-server.md)): the GitHub
+App with a webhook server (one-click installs, `/hushmark` re-runs), and an **MCP server** so
+agents can call `scan`, `review` and `verify_receipt` themselves. The MCP server brings part
+of v0.3 forward.
+
 ## v0.2: complete the trust claim (December 2026 – January 2027)
 
 - Run the Hushmark service inside a confidential VM, so the diff never sits on a host

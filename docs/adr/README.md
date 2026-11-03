@@ -13,3 +13,4 @@ One decision per file. Never edit an accepted ADR's decision; write a new one th
 | [0007](0007-automatic-check-with-excerpts.md) | Automatic required check, excerpts only, one Check Run output (supersedes the trigger and outputs, and part of 0005) |
 | [0008](0008-static-landing-page.md) | A static landing page in `site/` is not a dashboard; its evidence is computed by our verifiers |
 | [0009](0009-github-action-pull-request-target.md) | Ship v0.1 as a GitHub Action on `pull_request_target`, never checking out the PR |
+| [0010](0010-github-app-and-mcp-server.md) | Build the GitHub App webhook server and a local MCP server during the hackathon (lifts rule 10's "no deployment"; the Action from 0009 stays) |

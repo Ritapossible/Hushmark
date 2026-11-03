@@ -1,6 +1,6 @@
 # Build plan: 1–14 November 2026
 
-One person, fourteen days. **Submit on 13 November**, after a clean clone passes. The deadline
+One person, fourteen days. **Submit next week, before the deadline of 14 November 23:59 UTC**, after a clean clone passes. The deadline
 is 14 November 23:59 UTC; the 14th is a buffer only.
 
 ## Go/no-go conditions
@@ -32,6 +32,14 @@ Recording first, web app last.
 | 12 | 12 Nov | README final, demo video, threat model reviewed against the code | Video under 90 seconds, states the excerpt cap plainly |
 | 13 | 13 Nov | Fresh clone test, tag `v0.1.0`, X post, **submit** | Form sent |
 | 14 | 14 Nov | Buffer only | |
+
+## Weekend build: 7–8 November (ADR-0010)
+
+| Day | Deliverable | Done when |
+|---|---|---|
+| Sat 7 Nov | MCP server: `scan`, `review`, `verify_receipt`; install snippet for Claude Code and Cursor | An agent calls `scan` on R1's input and gets both regions, with nothing hidden returned raw; tests pass |
+| Sun 8 Nov | GitHub App: registration, webhook server, `/hushmark` re-runs, deployed | A PR on a second repository gets a `Hushmark` check through the App |
+| Mon 9 Nov | Feature freeze. Docs, README and site match the code | A fresh clone passes `make verify` |
 
 ## Cut list, in order
 

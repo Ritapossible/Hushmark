@@ -41,19 +41,40 @@ These are not up for debate during the hackathon. Changing one needs an ADR in `
 9. **Never commit secrets.** No GitHub App private key, webhook secret, NEAR key or
    NEAR AI Cloud key in the repository. Use environment variables.
 10. **Scope is fixed.** One finding kind (`injection`, covering hidden instructions). No
-    dashboard, no second finding kind, no deployment during the hackathon. New ideas go
-    to `ROADMAP.md`.
+    dashboard, no second finding kind. Deployment only as ADR-0010 allows: the GitHub App's
+    webhook server and the local MCP server. New ideas go to `ROADMAP.md`.
 11. **Excerpts only leave the service.** The full diff, title and body never go to the model
     or anywhere else; only candidate excerpts go to the attested TEE.
 12. **Config comes from the base commit.** Never read `.hushmark.yml` from the PR head.
 13. **No model call without candidates.** A PR with no hidden regions costs nothing.
 
-## Hackathon rules for agents (from HACKATHON.md)
+## Hackathon rules for agents (https://nearhackathon.com/HACKATHON.md, re-read 2026-11-03)
 
-Never do any of these without Rita's explicit confirmation in the conversation:
-submit the hackathon form, post on X or elsewhere, change the repository's visibility,
-force-push, sign transactions, spend tokens, deploy to mainnet, or commit secrets.
-An agent may prepare the submission payload, but must print it and wait.
+Never do any of these without Rita's explicit confirmation in the conversation: submit the
+hackathon form, post on X or elsewhere, make the repository public, **push** or force-push,
+sign transactions, spend tokens, deploy to mainnet, or commit secrets. An agent may prepare
+the submission payload, but must print it and wait.
+
+Working practice (2026-11-03): when Rita asks for a change, the agent may push it to a
+working branch and open a pull request. Merging, pushing to `main`, force-pushing and
+deleting branches each need her explicit "merge it" or equivalent.
+
+What the official rules require:
+
+- **Deadline:** 14 November 2026, 23:59 UTC. One submission per repository, and it **cannot
+  be edited**. Rita submits next week, after the weekend build.
+- **Repository:** public by the deadline and through judging, with a LICENSE. Code from
+  19 October 2026 counts; this repository was created on 1 November, so all of it does.
+  Libraries and AI-generated code are listed in the README.
+- **Demo:** a reproducible README plus a **video** in the X post (screenshots alone are not
+  enough). A hosted demo is a plus: keep it up until at least 18 November, ideally
+  25 November.
+- **X post:** says it was built at NEAR HACKATHON, tags @NEARProtocol and #NEARHackathon
+  (optional @NearLegion, @NearBuilders). Posted by Rita.
+- **Form:** needs a **mainnet** NEAR payout account (ours are testnet), tracks, the repository
+  URL, the X post URL and a 20–2,000 character description.
+- **Screening:** Claude Code and Codex check reproducibility and features first; humans decide.
+  The README must match the code exactly.
 
 ## Stack (planned)
 
@@ -132,12 +153,19 @@ make verify-live   # (planned) re-verify recorded evidence online
   leaving it in progress. PR #11.
 - **Links (Grok review):** any URL or Markdown link in the model's rationale is rendered as
   the word "link" (`report.py`); the 500-character cap stays. 150 tests.
-- **Next:** demo video, X post draft, make the repo public, submit (all need Rita).
+- **Weekend 7–8 November (ADR-0010):** GitHub App with a webhook server (`/hushmark` re-runs,
+  one-click installs), and an MCP server so agents can call `scan`, `review` and
+  `verify_receipt`. Then upgrades for team adoption.
+- **Next week (all need Rita):** mainnet payout account, demo video, X post, make the repo
+  public, submit before 14 November 23:59 UTC.
 
 ## Decision log
 
 Newest first. One line each, with a link when there is an ADR.
 
+- 2026-11-03: Re-read the official HACKATHON.md: a hosted demo is a plus, so rule 10's "no
+  deployment" is lifted for the GitHub App server and a local MCP server. Our agent rules
+  now include "push". See [ADR-0010](docs/adr/0010-github-app-and-mcp-server.md).
 - 2026-11-03: Grok review: re-runs stay as they are (a new model call is a new receipt; the
   contract refuses a second anchor); no database, since that means hosting.
 - 2026-11-03: This repository runs Hushmark in `mode: block` (`.hushmark.yml` on `main`), so a
