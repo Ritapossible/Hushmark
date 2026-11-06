@@ -35,6 +35,7 @@ class PullRequestInput:
     diff: str
     title: str
     body: str
+    ignore: tuple[str, ...] = ()  # from the base branch's .hushmark.yml only (ADR-0011)
 
 
 class Tee(Protocol):
@@ -63,6 +64,7 @@ class Refusal:
     code: str
     detail: str
     candidates: tuple[Candidate, ...]
+    ignored_files: tuple[str, ...] = ()
 
 
 @dataclass(frozen=True)
@@ -72,6 +74,7 @@ class Reviewed:
     receipt: Receipt
     key: IdempotencyKey
     attestation: bytes  # the report the receipt's attestation_sha256 refers to
+    ignored_files: tuple[str, ...] = ()
 
 
 Outcome = NoCandidates | Refusal | Reviewed
@@ -88,15 +91,16 @@ def review(
     boundary: str | None = None,
 ) -> Outcome:
     """Run one review. `salt` and `boundary` are fixed only when replaying a recording."""
-    result = scan(pr.diff, pr.title, pr.body)
+    result = scan(pr.diff, pr.title, pr.body, pr.ignore)
     if not result.candidates:
         return NoCandidates(result)  # rule 13: no model call, no cost
     try:
         return _verified_review(pr, result, model, tee, sources, now, salt, boundary)
     except Refused as e:
-        return Refusal(e.code, e.detail, result.candidates)
+        return Refusal(e.code, e.detail, result.candidates, result.ignored_files)
     except (httpx.HTTPError, ValueError, KeyError) as e:
-        return Refusal("tee_unavailable", f"{type(e).__name__}: {e}", result.candidates)
+        detail = f"{type(e).__name__}: {e}"
+        return Refusal("tee_unavailable", detail, result.candidates, result.ignored_files)
 
 
 def _verified_review(
@@ -157,4 +161,6 @@ def _verified_review(
         verified_at=verified_at,
         created_at=now(),
     )
-    return Reviewed(result.candidates, grounded, receipt, key, attestation_bytes)
+    return Reviewed(
+        result.candidates, grounded, receipt, key, attestation_bytes, result.ignored_files
+    )

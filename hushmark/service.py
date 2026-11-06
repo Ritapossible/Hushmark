@@ -75,6 +75,7 @@ def run_check(
             diff=gh.diff(owner, repo, base_sha, head_sha),
             title=str(pull.get("title") or ""),
             body=str(pull.get("body") or ""),
+            ignore=config.ignore,
         )
         outcome = review(
             pr, model=model, tee=tee, sources=sources, now=now, salt=salt, boundary=boundary
