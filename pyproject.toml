@@ -20,6 +20,7 @@ dependencies = [
 
 [project.scripts]
 hushmark-mcp = "hushmark.mcp:main"
+hushmark-verify = "hushmark.verify_receipt:main"
 
 [dependency-groups]
 dev = [

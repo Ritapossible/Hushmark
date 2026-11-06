@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Verify a receipt · Hushmark</title>
+  <meta name="description" content="Check a Hushmark receipt yourself, in your browser, without trusting Hushmark: its ID, nonce, the TEE signature and the NEAR testnet anchor.">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <script src="scroll.js"></script>
+</head>
+<body class="docs-page">
+  <a class="skip" href="#content">Skip to content</a>
+
+  <header class="site-header">
+    <div class="wrap header-inner">
+      <a class="brand" href="index.html" aria-label="Hushmark home">
+        <svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true">
+          <rect x="3" y="3" width="26" height="26" rx="6" fill="none" stroke="currentColor" stroke-width="1.5"/>
+          <path d="M9 11h14M9 16h6M9 21h11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          <rect x="17" y="13.5" width="7" height="5" rx="1.5" class="brand-mark-hit"/>
+        </svg>
+        <span class="brand-name">hush<em>mark</em></span>
+      </a>
+      <nav class="nav" aria-label="Main">
+        <a href="index.html#how">How it works</a>
+        <a href="index.html#evidence">Evidence</a>
+        <a href="docs.html">Docs</a>
+        <a href="verify.html" aria-current="page">Verify</a>
+      </nav>
+      <a class="btn btn-dark btn-sm" href="https://github.com/Ritapossible/Hushmark">View on GitHub</a>
+    </div>
+  </header>
+
+  <main id="content" class="wrap verify-page">
+    <p class="eyebrow">// Verify</p>
+    <h1>Check a receipt yourself.</h1>
+    <p class="section-lead">Every Hushmark review leaves a receipt with hashes only, never code. Paste one here and your browser checks it without trusting Hushmark: the receipt's ID, its nonce, the signature made inside the NEAR AI Cloud TEE, and the anchor on NEAR testnet. Nothing you paste leaves this page.</p>
+
+    <form id="verify-form" class="verify-form">
+      <label for="receipt-input">Receipt, or the whole details text from a <code>Hushmark</code> check</label>
+      <textarea id="receipt-input" rows="9" spellcheck="false" placeholder='{"attestation_sha256":"…","key":{…},"v":1,…}' required></textarea>
+      <div class="verify-actions">
+        <button class="btn btn-dark btn-sm" type="submit">Verify</button>
+        <button class="btn btn-ghost btn-sm" type="button" id="load-example">Try a real receipt (PR #17)</button>
+      </div>
+    </form>
+
+    <section id="verify-result" class="verify-result" aria-live="polite" hidden></section>
+
+    <section class="verify-notes">
+      <h2>Where to find a receipt</h2>
+      <ul>
+        <li>On any pull request: open the <code>Hushmark</code> check, then <strong>Details</strong>. The receipt is the JSON block at the bottom; paste the whole text.</li>
+        <li>From the GitHub Action: the workflow artifact <code>hushmark-receipt-pr&lt;N&gt;</code> holds the receipt and its attestation report.</li>
+        <li>From an AI agent: the MCP server's <code>review</code> tool saves both under <code>~/.hushmark/receipts/</code>.</li>
+      </ul>
+      <h2>What this page checks, and what it cannot</h2>
+      <ul>
+        <li><strong>Receipt ID:</strong> the SHA-256 of the receipt's exact canonical bytes. Any edit changes it.</li>
+        <li><strong>Nonce:</strong> recomputed from the review's key and salt, so the TEE evidence was made for this review and cannot be replayed from another.</li>
+        <li><strong>TEE signature:</strong> the signed text must be <code>model:sha256(request):sha256(response)</code>, and the signature must recover to the TEE's signing address.</li>
+        <li><strong>NEAR anchor:</strong> the contract <code>anchor.hushmark.testnet</code> must hold this receipt's hash for this review's key. It accepts one receipt per key, so an anchored verdict cannot be swapped later.</li>
+        <li><strong>Not in the browser:</strong> Intel's TDX quote and NVIDIA's GPU verdict, which prove the signing key lives in genuine hardware. Run <code>hushmark-verify receipt.json attestation.json</code> (from the repository) with the attestation report to check those too.</li>
+      </ul>
+      <p>Same checks, same code path as the command and the MCP server's <code>verify_receipt</code>: <a href="https://github.com/Ritapossible/Hushmark/blob/main/hushmark/receipt_check.py">receipt_check.py</a>. Format: <a href="https://github.com/Ritapossible/Hushmark/blob/main/RECEIPT.md">RECEIPT.md</a>.</p>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap footer-base">
+      <p>© 2026 Hushmark · Built at NEAR HACKATHON · Apache-2.0 · <a href="index.html">Home</a></p>
+    </div>
+  </footer>
+  <script type="module" src="verify.js"></script>
+</body>
+</html>
