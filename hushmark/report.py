@@ -22,6 +22,8 @@ from hushmark.scan import Candidate
 
 CHECK_NAME = "Hushmark"
 VERIFY_URL = "https://tryhushmark.vercel.app/verify"
+TRUST_URL = "https://tryhushmark.vercel.app/trust"
+TRUST_LINE = f"[How to trust this result]({TRUST_URL})"
 MAX_ANNOTATIONS = 50  # GitHub accepts at most 50 per request; report.py stays under it
 
 REFUSAL_TEXT = {
@@ -121,7 +123,8 @@ def _ignored_note(files: tuple[str, ...]) -> str:
 def render(outcome: Outcome, config: Config) -> CheckOutput:
     out = _render(outcome, config)
     note = _ignored_note(_ignored(outcome))
-    return replace(out, summary=out.summary + note) if note else out
+    # Every check links to what is and is not proved (docs/UPGRADES.md #5).
+    return replace(out, summary=out.summary + note + "\n\n" + TRUST_LINE)
 
 
 def _ignored(outcome: Outcome) -> tuple[str, ...]:

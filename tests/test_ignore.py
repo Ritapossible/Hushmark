@@ -75,7 +75,8 @@ def test_check_summary_lists_what_was_skipped() -> None:
     out = render(NoCandidates(scan(VENDOR, ignore=["vendor/*"])), Config())
     assert out.conclusion == "success"
     assert "Not scanned (25 file(s)" in out.summary and "`vendor/lib/doc0.md`" in out.summary
-    assert out.summary.endswith("…")  # only the first ten are named
+    [note] = [p for p in out.summary.split("\n\n") if p.startswith("Not scanned")]
+    assert note.endswith("…")  # only the first ten are named
 
 
 @respx.mock

@@ -6,7 +6,7 @@ import pytest
 
 from hushmark.config import Config
 from hushmark.pipeline import NoCandidates, Refusal
-from hushmark.report import render
+from hushmark.report import TRUST_LINE, render
 from hushmark.scan import scan
 from tests.test_pipeline import replay
 from tests.test_scan import make_diff
@@ -69,7 +69,9 @@ def test_links_in_the_model_rationale_are_not_rendered() -> None:
     findings = tuple(replace(f, rationale=tricky) for f in outcome.grounded.findings)
     outcome = replace(outcome, grounded=replace(outcome.grounded, findings=findings))
     out = render(outcome, BLOCK)
-    shown = out.summary + "".join(a["message"] for a in out.annotations)
+    # Our own trust link is the only URL Hushmark itself adds; nothing from the model survives.
+    summary = out.summary.replace(TRUST_LINE, "")
+    shown = summary + "".join(a["message"] for a in out.annotations)
     for gone in ["http", "www.", "evil.example", "](", "<https"]:
         assert gone not in shown, gone
     assert "Hidden note. See link or link, link, link and link now." in out.summary
@@ -88,3 +90,16 @@ def test_receipt_is_published_in_the_check_details() -> None:
     assert hashlib.sha256(raw).hexdigest() == outcome.receipt.receipt_id
     assert json.loads(raw)["v"] == 1
     assert render(NoCandidates(scan("")), BLOCK).text == ""
+
+
+def test_every_check_links_to_how_to_trust_it() -> None:
+    """docs/UPGRADES.md #5: success, findings and refusals alike."""
+    outcome, _ = replay("r1")
+    outcomes = [
+        NoCandidates(scan("")),
+        outcome,
+        Refusal("tee_unavailable", "", outcome.candidates),
+    ]
+    for o in outcomes:
+        for config in (WARN, BLOCK):
+            assert render(o, config).summary.endswith(TRUST_LINE)
