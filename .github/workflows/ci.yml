@@ -21,3 +21,18 @@ jobs:
       - name: Anchor contract unit tests
         working-directory: contract
         run: cargo test --locked
+
+  app-image:
+    # The GitHub App server's image builds and answers its health check (ADR-0010).
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: docker build -t hushmark-app .
+      - name: Server starts and answers /healthz
+        run: |
+          openssl genpkey -algorithm RSA -pkeyopt rsa_keygen_bits:2048 -out /tmp/test-key.pem
+          docker run -d --name app -p 8000:8000 \
+            -e HUSHMARK_APP_ID=1 -e HUSHMARK_WEBHOOK_SECRET=test \
+            -e HUSHMARK_APP_PRIVATE_KEY="$(cat /tmp/test-key.pem)" hushmark-app
+          for i in $(seq 1 20); do curl -fsS http://127.0.0.1:8000/healthz && exit 0; sleep 1; done
+          docker logs app; exit 1

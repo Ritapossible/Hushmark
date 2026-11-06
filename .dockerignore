@@ -1,0 +1,8 @@
+# Only what the server needs goes into the image.
+*
+!pyproject.toml
+!uv.lock
+!README.md
+!hushmark/
+!prompts/
+**/__pycache__

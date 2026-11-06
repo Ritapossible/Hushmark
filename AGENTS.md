@@ -156,6 +156,11 @@ make verify-live   # (planned) re-verify recorded evidence online
 - **Weekend 7–8 November (ADR-0010):** GitHub App with a webhook server (`/hushmark` re-runs,
   one-click installs), and an MCP server so agents can call `scan`, `review` and
   `verify_receipt`. Then upgrades for team adoption.
+- **Upgrades (2026-11-06, `docs/UPGRADES.md`):** five, in order. #1 GitHub App built: `app.py`
+  (routing, `/hushmark` re-runs, in-memory daily budget), `server.py` (stdlib webhook server,
+  signature first, one background worker), `render.yaml`, `Dockerfile`, CI image job, set-up
+  guide `docs/github-app/README.md`. The receipt now also appears in the Check Run details.
+  179 tests. Deploying it needs Rita (App registration, Render account).
 - **Next week (all need Rita):** mainnet payout account, demo video, X post, make the repo
   public, submit before 14 November 23:59 UTC.
 
@@ -163,6 +168,9 @@ make verify-live   # (planned) re-verify recorded evidence online
 
 Newest first. One line each, with a link when there is an ADR.
 
+- 2026-11-06: Rita: build all five upgrades in `docs/UPGRADES.md`, starting with the GitHub
+  App. The App uses the standard library server (no web framework dependency) and Render's
+  free plan; use the App or the Action on a repository, not both.
 - 2026-11-03: Re-read the official HACKATHON.md: a hosted demo is a plus, so rule 10's "no
   deployment" is lifted for the GitHub App server and a local MCP server. Our agent rules
   now include "push". See [ADR-0010](docs/adr/0010-github-app-and-mcp-server.md).

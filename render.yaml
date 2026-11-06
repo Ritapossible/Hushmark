@@ -1,0 +1,28 @@
+# One-click deploy of the Hushmark GitHub App webhook server to Render (ADR-0010).
+# Secrets are entered in Render's dashboard ("sync: false"), never in this file.
+# Setup guide: docs/github-app/README.md
+services:
+  - type: web
+    name: hushmark-app
+    runtime: python
+    plan: free
+    buildCommand: pip install uv==0.11.32 && uv sync --locked --no-dev
+    startCommand: .venv/bin/python -m hushmark.server
+    healthCheckPath: /healthz
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.12.8"
+      - key: HUSHMARK_APP_ID
+        sync: false
+      - key: HUSHMARK_APP_PRIVATE_KEY
+        sync: false
+      - key: HUSHMARK_WEBHOOK_SECRET
+        sync: false
+      - key: NEARAI_API_KEY
+        sync: false
+      - key: NEAR_ANCHOR_ACCOUNT
+        value: anchor.hushmark.testnet
+      - key: NEAR_ANCHOR_KEY
+        sync: false
+      - key: HUSHMARK_DAILY_REVIEWS
+        value: "20"

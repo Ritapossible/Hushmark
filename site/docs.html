@@ -98,8 +98,9 @@
             <tr><td>Real recorded evidence, verified offline</td><td><span class="tag tag-live">built</span></td></tr>
             <tr><td>Pipeline, Check Run output and GitHub client (tested against a mocked GitHub API, and live on this repository)</td><td><span class="tag tag-live">built</span></td></tr>
             <tr><td>GitHub Action on every pull request (<code>pull_request_target</code>)</td><td><span class="tag tag-live">built</span></td></tr>
-            <tr><td>GitHub App client code: app token, webhook signature check, maintainer check for re-runs (tested)</td><td><span class="tag tag-live">built</span></td></tr>
-            <tr><td>GitHub App registration and webhook server (one-click installs, <code>/hushmark</code> re-runs)</td><td><span class="tag tag-planned">planned</span></td></tr>
+            <tr><td>GitHub App webhook server: one-click installs, <code>/hushmark</code> re-runs by maintainers, deploy files (tested)</td><td><span class="tag tag-live">built</span></td></tr>
+            <tr><td>GitHub App registered and deployed</td><td><span class="tag tag-planned">planned</span></td></tr>
+            <tr><td>MCP server for agents (<code>scan</code>, <code>review</code>, <code>verify_receipt</code>)</td><td><span class="tag tag-planned">planned</span></td></tr>
             <tr><td>NEAR anchor contract and the Action's anchor call</td><td><span class="tag tag-live">built</span></td></tr>
           </tbody>
         </table>
@@ -130,7 +131,7 @@ cd Hushmark</code></pre></li>
           <figcaption>Left to right: the whole pull request is scanned, only the hidden excerpt goes to the TEE, and the receipt (hashes only) is anchored on NEAR testnet.</figcaption>
         </figure>
         <ol class="pipeline">
-          <li><strong>Trigger.</strong> Every pull request event: opened, updated, reopened or edited, through the GitHub Action. <span class="tag tag-live">built</span> Maintainer re-runs with <code>/hushmark</code>. <span class="tag tag-planned">planned</span></li>
+          <li><strong>Trigger.</strong> Every pull request event: opened, updated, reopened or edited, through the GitHub Action. <span class="tag tag-live">built</span> Or through the GitHub App, where a maintainer can re-run with <code>/hushmark</code>. <span class="tag tag-live">built</span></li>
           <li><strong>Fetch.</strong> The diff between the pinned base and head commits, the title and the body. <code>.hushmark.yml</code> is read from the base commit only. <span class="tag tag-live">built</span></li>
           <li><strong>Scan.</strong> Deterministic <a href="#detectors">detectors</a> read every added line, the title and the body. No size limit, nothing executed. <span class="tag tag-live">built</span></li>
           <li><strong>Excerpt.</strong> Each flagged region plus up to ten lines of context. Invisible characters are written as tags such as <code>⟦U+200B⟧</code>. Only excerpts leave the service. <span class="tag tag-live">built</span></li>
@@ -222,7 +223,7 @@ cd Hushmark</code></pre></li>
 
       <section id="install" class="doc">
         <h2>Install <span class="tag tag-live">built</span></h2>
-        <p>In v0.1 Hushmark runs as a GitHub Action. No server, no app to install.</p>
+        <p>Two ways to run Hushmark, with the same review: the GitHub Action below (no server), or the GitHub App (one-click installs, see further down).</p>
         <ol>
           <li>Copy <a href="https://github.com/Ritapossible/Hushmark/blob/main/.github/workflows/hushmark.yml"><code>.github/workflows/hushmark.yml</code></a> into your repository's default branch.</li>
           <li>Add a NEAR AI Cloud API key as a repository secret named <code>NEARAI_API_KEY</code> (<em>Settings → Secrets and variables → Actions</em>).</li>
@@ -246,7 +247,8 @@ cd Hushmark</code></pre></li>
         <h3>Daily budget</h3>
         <p>A pull request with no hidden regions never calls the model and costs nothing. Reviews that do call the model are capped at <strong>50 per repository per day</strong> (set the repository variable <code>HUSHMARK_DAILY_REVIEWS</code> to change it). At GLM-5.3-flash's listed price the worst case is about $0.0025 a review, so about $0.13 a day. Over the cap, hidden content is shown as not verified (<code>budget_exceeded</code>) and no model call is made. The Action has no database, so it counts today's receipt artifacts, which needs <code>actions: read</code>.</p>
         <p>No write access to code, no comments. Without the secret, hidden content is reported as <em>not verified</em> (<code>tee_unavailable</code>), never as a finding. Each review's receipt and attestation report are kept as a workflow artifact for 90 days.</p>
-        <p><span class="tag tag-planned">planned</span> A GitHub App with a webhook server, for one-click installs across repositories and <code>/hushmark</code> re-runs. It runs the same code; its client code (app token, webhook signature, maintainer check) is already built and tested.</p>
+        <h3>GitHub App <span class="tag tag-live">built</span></h3>
+        <p>For one-click installs across repositories and <code>/hushmark</code> re-runs by an admin or maintainer. It runs the same review as the Action, so the check, receipt and anchor are identical; use one or the other on a repository, since both post a check named <code>Hushmark</code>. The server checks every webhook signature before reading it, answers GitHub at once and reviews in a background worker. Its permissions: checks write; contents, pull requests and metadata read. The receipt (hashes only) is shown in the check's details. The App is built and tested; registering and deploying it is the next step, with a step-by-step guide in <a href="https://github.com/Ritapossible/Hushmark/blob/main/docs/github-app/README.md">docs/github-app/README.md</a> and a Render blueprint (<code>render.yaml</code>) or <code>Dockerfile</code>.</p>
       </section>
 
       <section id="configuration" class="doc">
@@ -291,9 +293,9 @@ mode: warn   # warn (default) | block</code></pre>
             <tr><td><code>model_output_invalid</code></td><td>The model's answer does not match the schema</td></tr>
             <tr><td><code>tee_unavailable</code></td><td>NEAR AI Cloud, Intel or NVIDIA could not be reached</td></tr>
             <tr><td><code>internal_error</code></td><td>Hushmark itself failed before reviewing; the check is closed as not verified and the Actions job fails, so the error is visible</td></tr>
-            <tr><td><code>not_maintainer</code></td><td><code>/hushmark</code> from someone without admin or maintain permission</td></tr>
+            <tr><td><code>not_maintainer</code></td><td>GitHub App: <code>/hushmark</code> from someone without admin or maintain permission, or from a bot. Nothing is posted</td></tr>
             <tr><td><code>diff_unavailable</code></td><td>GitHub could not return the full diff</td></tr>
-            <tr><td><code>webhook_invalid</code></td><td>A webhook whose signature is not GitHub's</td></tr>
+            <tr><td><code>webhook_invalid</code></td><td>GitHub App: a webhook whose signature is not GitHub's, answered with 401</td></tr>
             <tr><td><code>budget_exceeded</code></td><td>The repository's daily review budget is spent (default 50 model-calling reviews a day)</td></tr>
           </tbody>
         </table>
@@ -321,7 +323,7 @@ mode: warn   # warn (default) | block</code></pre>
             </ul>
           </div>
         </div>
-        <p>Defended attackers include fork authors, replay attempts, tampering, and a hallucinating or injected model; for the planned GitHub App, also non-maintainer commenters, webhook forgers and other GitHub Apps. Details: <a href="https://github.com/Ritapossible/Hushmark/blob/main/THREAT_MODEL.md">THREAT_MODEL.md</a>.</p>
+        <p>Defended attackers include fork authors, replay attempts, tampering, and a hallucinating or injected model; for the GitHub App, also non-maintainer commenters, webhook forgers and other GitHub Apps. Details: <a href="https://github.com/Ritapossible/Hushmark/blob/main/THREAT_MODEL.md">THREAT_MODEL.md</a>.</p>
         <h3>Reporting a vulnerability</h3>
         <p>Use GitHub's private vulnerability reporting on the repository (<em>Security → Report a vulnerability</em>). Please do not open a public issue. See <a href="https://github.com/Ritapossible/Hushmark/blob/main/SECURITY.md">SECURITY.md</a>.</p>
       </section>
@@ -363,7 +365,8 @@ mode: warn   # warn (default) | block</code></pre>
         <p>Python 3.12 with <code>uv</code>; httpx; pydantic v2 in strict mode; <code>dcap-qvl</code> for Intel quotes; PyJWT for NVIDIA tokens; <code>eth-account</code> for EIP-191; ruff, <code>mypy --strict</code> and pytest. The NEAR contract is Rust with <code>near-sdk</code>, built with <code>cargo-near</code>.</p>
         <h3>Repository layout</h3>
 <pre><code>hushmark/        scan, excerpt, infer, nonce, receipt, config,
-                 pipeline, report, github, service, near, anchor, action
+                 pipeline, report, github, service, near, anchor, action,
+                 app, server (the GitHub App)
 contract/        the NEAR anchor contract (Rust, near-sdk)
 hushmark/verify/ attestation, nras, signature, grounding
 prompts/         the versioned system prompt
