@@ -103,6 +103,7 @@ class Worker:
             event="reviewed",
             conclusion=result.output.conclusion,
             refusal=getattr(outcome, "code", None),
+            refusal_detail=getattr(outcome, "detail", None),
             receipt_id=receipt_id,
             **ids,
         )

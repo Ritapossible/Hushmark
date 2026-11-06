@@ -47,11 +47,15 @@ class Grounded:
 
 def _answer_text(response_bytes: bytes) -> str:
     try:
-        content = json.loads(response_bytes)["choices"][0]["message"]["content"]
+        choice = json.loads(response_bytes)["choices"][0]
+        content = choice["message"]["content"]
     except (ValueError, KeyError, IndexError, TypeError) as e:
-        raise Refused("model_output_invalid", f"not a chat completion: {e}") from e
+        raise Refused("model_output_invalid", f"not a chat completion ({type(e).__name__})") from e
+    finish = str(choice.get("finish_reason"))
     if not isinstance(content, str):
-        raise Refused("model_output_invalid", "the model gave no answer")
+        raise Refused("model_output_invalid", f"no answer (finish_reason={finish})")
+    if finish == "length":
+        raise Refused("model_output_invalid", "answer cut off at max_tokens (finish_reason=length)")
     text = content.strip()
     if text.startswith("```"):  # tolerate one Markdown code fence around the JSON
         text = text.split("\n", 1)[1] if "\n" in text else ""
@@ -59,12 +63,26 @@ def _answer_text(response_bytes: bytes) -> str:
     return text
 
 
+def schema_errors(e: ValidationError) -> str:
+    """Where and how the answer broke the schema, never what it said (AGENTS.md rule 3).
+
+    For example `findings.0.rationale: string_too_long`. Safe to log.
+    """
+    parts = [
+        ".".join(str(p) for p in err["loc"]) + ": " + str(err["type"])
+        for err in e.errors(include_input=False, include_url=False)
+    ]
+    return (
+        "schema: " + "; ".join(parts[:5]) + (f" (+{len(parts) - 5} more)" if len(parts) > 5 else "")
+    )
+
+
 def ground(response_bytes: bytes, candidates: Sequence[Candidate]) -> Grounded:
     """Return the grounded findings. Raises `model_output_invalid` on a malformed answer."""
     try:
         answer = _ModelAnswer.model_validate_json(_answer_text(response_bytes))
     except ValidationError as e:
-        raise Refused("model_output_invalid", f"answer does not match the schema: {e}") from e
+        raise Refused("model_output_invalid", schema_errors(e)) from e
 
     by_id = {c.id: c for c in candidates}
     kept: dict[str, Finding] = {}
