@@ -9,6 +9,9 @@ leaves a receipt (hashes only) anchored on NEAR.
 > AI (primary), AI Security & Defense. Everything below works today unless marked
 > *(planned)*. Website: https://tryhushmark.vercel.app · Docs: https://tryhushmark.vercel.app/docs
 
+**Built at NEAR HACKATHON.** The repository was created on 1 November 2026; every line was
+written during the hackathon, much of it with Claude Code (see [Built with](#built-with)).
+
 ## The problem
 
 AI coding agents read everything in a repository: docs, PR descriptions, rules files. Text
@@ -199,7 +202,9 @@ testnet NEAR from the anchor key's 0.5 NEAR allowance.
 ## Limitations
 
 - v0.1 is a GitHub Action. The GitHub App with a webhook server (one-click installs,
-  `/hushmark` re-runs) is *(planned)*; its client code is built and tested.
+  `/hushmark` re-runs) and an MCP server for agents are being built on 7–8 November
+  ([ADR-0010](docs/adr/0010-github-app-and-mcp-server.md)); the App's client code is built
+  and tested.
 - The Action keeps no database, so a re-run of the same commit makes a new review and a new
   receipt instead of reusing the old one; the contract still refuses a second anchor for the
   same review key.
