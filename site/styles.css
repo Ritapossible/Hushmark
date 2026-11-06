@@ -264,3 +264,14 @@ pre code { background: none; padding: 0; color: inherit; font-size: inherit; }
 .verify-notes h2 { font-size: 1.6rem; margin: 32px 0 10px; }
 .verify-notes li { margin: 8px 0; color: #3d3a36; }
 .verify-notes code, .verify-form code { overflow-wrap: anywhere; }
+
+/* How to trust this (trust.html) */
+.trust-page h2 { font-size: clamp(1.7rem, 3vw, 2.1rem); margin: 44px 0 14px; }
+.table-scroll { overflow-x: auto; }
+.trust-table { width: 100%; border-collapse: collapse; background: var(--card); border: 1px solid var(--line); border-radius: 14px; font-size: 0.93rem; }
+.trust-table th { text-align: left; font: 500 0.75rem var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); background: #faf8f4; }
+.trust-table th, .trust-table td { padding: 12px 14px; border-bottom: 1px solid var(--line); vertical-align: top; }
+.trust-table td { color: #3d3a36; overflow-wrap: anywhere; }
+.trust-table a { color: var(--navy); }
+.trust-list li { margin: 10px 0; color: #3d3a36; }
+.trust-page code { overflow-wrap: anywhere; }

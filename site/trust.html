@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>How to trust Hushmark</title>
+  <meta name="description" content="For security reviewers: what Hushmark proves, what it does not, where your code goes, and the code and tests behind every claim.">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <script src="scroll.js"></script>
+</head>
+<body class="docs-page">
+  <a class="skip" href="#content">Skip to content</a>
+
+  <header class="site-header">
+    <div class="wrap header-inner">
+      <a class="brand" href="index.html" aria-label="Hushmark home">
+        <svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true">
+          <rect x="3" y="3" width="26" height="26" rx="6" fill="none" stroke="currentColor" stroke-width="1.5"/>
+          <path d="M9 11h14M9 16h6M9 21h11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          <rect x="17" y="13.5" width="7" height="5" rx="1.5" class="brand-mark-hit"/>
+        </svg>
+        <span class="brand-name">hush<em>mark</em></span>
+      </a>
+      <nav class="nav" aria-label="Main">
+        <a href="index.html#how">How it works</a>
+        <a href="index.html#evidence">Evidence</a>
+        <a href="docs.html">Docs</a>
+        <a href="verify.html">Verify</a>
+        <a href="trust.html" aria-current="page">Trust</a>
+      </nav>
+      <a class="btn btn-dark btn-sm" href="https://github.com/Ritapossible/Hushmark">View on GitHub</a>
+    </div>
+  </header>
+
+  <main id="content" class="wrap verify-page trust-page">
+    <p class="eyebrow">// Trust</p>
+    <h1>How to trust a Hushmark result.</h1>
+    <p class="section-lead">For security reviewers. What Hushmark proves, what it does not, where your code goes, and the code and tests behind every claim. Every link goes to the public source.</p>
+
+    <div class="callout">
+      <p class="callout-title">The claim, exactly</p>
+      <p>Hushmark's review code has no shell, so nothing in a pull request can make it run code. A finding is shown only if it was signed inside a NEAR AI Cloud TEE for that exact input. This is a claim about Hushmark's code, not about the machine it runs on.</p>
+    </div>
+
+    <h2>What is proved</h2>
+    <div class="table-scroll"><table class="trust-table">
+      <thead><tr><th>Claim</th><th>How</th><th>Backed by</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Nothing in a pull request can make Hushmark run code.</strong></td><td>Hushmark never checks out the pull request; the diff, title and body arrive as text through the GitHub API. The review code cannot start a process: a lint rule bans every process API, and every test runs under an audit hook that fails on any process start, from the first import. The model is never given tools.</td><td><a href="https://github.com/Ritapossible/Hushmark/blob/main/pyproject.toml"><code>pyproject.toml</code></a> (banned APIs) · <a href="https://github.com/Ritapossible/Hushmark/blob/main/tests/conftest.py"><code>tests/conftest.py</code></a> (audit hook) · <a href="https://github.com/Ritapossible/Hushmark/blob/main/tests/test_no_shell.py"><code>tests/test_no_shell.py</code></a> · <a href="https://github.com/Ritapossible/Hushmark/blob/main/tests/test_action.py"><code>tests/test_action.py</code></a> <code>test_workflow_never_checks_out_or_runs_the_pull_request</code> · <a href="https://github.com/Ritapossible/Hushmark/blob/main/tests/test_recordings.py"><code>tests/test_recordings.py</code></a> <code>test_request_carries_no_tools</code></td></tr>
+        <tr><td><strong>A finding is shown only if the model ran in an attested NEAR AI Cloud TEE, on exactly the request Hushmark sent.</strong></td><td>Checks a–f: Intel's TDX quote verified with <code>dcap-qvl</code>, the signing key and a fresh nonce bound into it, measurements replayed, NVIDIA's signed GPU verdict, and the TEE's signature over the exact request and response bytes. Any failure is a refusal and no model finding is shown.</td><td><a href="https://github.com/Ritapossible/Hushmark/blob/main/hushmark/verify/attestation.py"><code>hushmark/verify/attestation.py</code></a> · <a href="https://github.com/Ritapossible/Hushmark/blob/main/hushmark/verify/nras.py"><code>hushmark/verify/nras.py</code></a> · <a href="https://github.com/Ritapossible/Hushmark/blob/main/hushmark/verify/signature.py"><code>hushmark/verify/signature.py</code></a> · <a href="https://github.com/Ritapossible/Hushmark/blob/main/tests/test_attestation.py"><code>tests/test_attestation.py</code></a> · <a href="https://github.com/Ritapossible/Hushmark/blob/main/tests/test_nras.py"><code>tests/test_nras.py</code></a> · <a href="https://github.com/Ritapossible/Hushmark/blob/main/tests/test_recordings.py"><code>tests/test_recordings.py</code></a> (one changed byte, a swapped nonce, a removed attestation and a gateway signature are all refused)</td></tr>
+        <tr><td><strong>Every finding points at a region Hushmark found itself.</strong></td><td>The model may only name a candidate ID from this run; the file and line always come from Hushmark's own scan. An unknown ID is dropped and counted, and an answer that breaks the schema refuses the run.</td><td><a href="https://github.com/Ritapossible/Hushmark/blob/main/hushmark/verify/grounding.py"><code>hushmark/verify/grounding.py</code></a> · <a href="https://github.com/Ritapossible/Hushmark/blob/main/tests/test_grounding.py"><code>tests/test_grounding.py</code></a> (fixture 08)</td></tr>
+        <tr><td><strong>Only excerpts leave GitHub, and only to an attested TEE.</strong></td><td>The model receives the hidden regions with up to ten lines of context, never the full diff, title or body. A pull request with nothing hidden makes no model call at all.</td><td><a href="https://github.com/Ritapossible/Hushmark/blob/main/hushmark/excerpt.py"><code>hushmark/excerpt.py</code></a> · <a href="https://github.com/Ritapossible/Hushmark/blob/main/tests/test_excerpt.py"><code>tests/test_excerpt.py</code></a> <code>test_request_holds_excerpts_only_and_no_tools</code> · <a href="https://github.com/Ritapossible/Hushmark/blob/main/tests/test_action.py"><code>tests/test_action.py</code></a> <code>test_clean_pr_passes_without_a_key_or_model_call</code></td></tr>
+        <tr><td><strong>A pull request cannot change how it is judged.</strong></td><td><code>.hushmark.yml</code> (mode and ignores) is read from the base commit only, and the workflow runs Hushmark's code from the base branch. Agent rules files, the title and the body can never be ignored.</td><td><a href="https://github.com/Ritapossible/Hushmark/blob/main/tests/test_github.py"><code>tests/test_github.py</code></a> <code>test_config_comes_from_the_base_commit_only</code> · <a href="https://github.com/Ritapossible/Hushmark/blob/main/tests/test_ignore.py"><code>tests/test_ignore.py</code></a> · <a href="https://github.com/Ritapossible/Hushmark/blob/main/docs/adr/0009-github-action-pull-request-target.md"><code>ADR-0009</code></a> · <a href="https://github.com/Ritapossible/Hushmark/blob/main/docs/adr/0011-path-ignores.md"><code>ADR-0011</code></a></td></tr>
+        <tr><td><strong>Every review leaves a receipt anyone can check, and its anchored version cannot be swapped.</strong></td><td>The receipt holds hashes only. Its hash is anchored on the NEAR testnet contract <code>anchor.hushmark.testnet</code>, which accepts one receipt per review key and refuses a second.</td><td><a href="https://github.com/Ritapossible/Hushmark/blob/main/hushmark/receipt.py"><code>hushmark/receipt.py</code></a> · <a href="https://github.com/Ritapossible/Hushmark/blob/main/hushmark/receipt_check.py"><code>hushmark/receipt_check.py</code></a> · <a href="https://github.com/Ritapossible/Hushmark/blob/main/contract/src/lib.rs"><code>contract/src/lib.rs</code></a> · <a href="https://github.com/Ritapossible/Hushmark/blob/main/tests/test_receipt.py"><code>tests/test_receipt.py</code></a> · <a href="https://github.com/Ritapossible/Hushmark/blob/main/tests/test_receipt_check.py"><code>tests/test_receipt_check.py</code></a> · <a href="verify.html">check one yourself</a></td></tr>
+      </tbody>
+    </table></div>
+
+    <h2>What is not proved</h2>
+    <ul class="trust-list">
+          <li><strong>The host is not in a TEE.</strong> In v0.1 Hushmark runs on a GitHub Actions runner (or the App's server). It sees the full diff, as GitHub already does, and someone who compromised it could skip verification. The claim covers Hushmark's code, not the machine it runs on. Moving the service into a confidential VM is the first item on the roadmap.</li>
+          <li><strong>TEE trust is hardware trust.</strong> It holds only if Intel TDX and NVIDIA confidential computing are sound and NEAR AI Cloud's measurements match what it publishes.</li>
+          <li><strong>Detection is not complete.</strong> Hidden instructions in forms the detectors do not know are missed, and plain visible instructions outside agent rules files are not flagged.</li>
+          <li><strong>The model sees excerpts, not the whole change.</strong> It judges whether a hidden region is aimed at an agent, not what the pull request does.</li>
+          <li><strong>Files in <code>ignore</code> are not reviewed.</strong> The check names every file it skipped.</li>
+          <li><strong>Evidence is checked as of a moment.</strong> The browser verifier cannot check Intel's and NVIDIA's evidence; <code>hushmark-verify</code> checks them as of now, not as of the review.</li>
+    </ul>
+
+    <h2>Where your code goes</h2>
+    <div class="table-scroll"><table class="trust-table">
+      <thead><tr><th>Data</th><th>Where it goes</th></tr></thead>
+      <tbody>
+        <tr><td>Full diff, PR title and body</td><td>Read through the GitHub API by Hushmark on GitHub's own runner (or the App's server). Never sent to the model, never logged, never stored.</td></tr>
+        <tr><td>Hidden regions, with up to ten lines of context</td><td>Sent to the model inside the attested NEAR AI Cloud TEE. Nothing else is.</td></tr>
+        <tr><td>Findings</td><td>Shown on the pull request's <code>Hushmark</code> check, visible to whoever can see the repository. A model's explanation has any link replaced by the word "link".</td></tr>
+        <tr><td>Receipt</td><td>Hashes only: no code, no finding text, no repository name. Shown in the check's details and kept as a workflow artifact.</td></tr>
+        <tr><td>NEAR testnet</td><td>Two hashes: the review key's and the receipt's.</td></tr>
+        <tr><td>Logs</td><td>IDs and reason codes only. A refusal says where a model answer broke, never what it said.</td></tr>
+      </tbody>
+    </table></div>
+
+    <h2>Who it defends against</h2>
+    <div class="table-scroll"><table class="trust-table">
+      <thead><tr><th>Attacker</th><th>Defence</th></tr></thead>
+      <tbody>
+        <tr><td>Someone who opens a malicious pull request, including from a fork</td><td>Nothing is run. Hidden regions are found by fixed rules, so the model cannot hide one by saying nothing; an unverified run still shows them as unconfirmed.</td></tr>
+        <tr><td>The same person, trying to spend your credit</td><td>No model call without hidden regions; 20-region and 200-line caps; a daily review budget per repository.</td></tr>
+        <tr><td>The same person, trying to change the rules</td><td>Configuration comes from the base commit only.</td></tr>
+        <tr><td>A replay of old evidence</td><td>A fresh nonce per review is bound into the TEE's evidence, and the signature covers the exact bytes.</td></tr>
+        <tr><td>An injected or hallucinating model</td><td>It can only name candidates Hushmark found; links in its explanation are not rendered.</td></tr>
+        <tr><td>A forged webhook, or a stranger asking for a re-run (GitHub App)</td><td>Every webhook's signature is checked first; <code>/hushmark</code> works only for admins and maintainers, never bots.</td></tr>
+      </tbody>
+    </table></div>
+    <p>Full threat model: <a href="https://github.com/Ritapossible/Hushmark/blob/main/THREAT_MODEL.md"><code>THREAT_MODEL.md</code></a>. Every check, step by step: <a href="https://github.com/Ritapossible/Hushmark/blob/main/docs/ARCHITECTURE.md"><code>docs/ARCHITECTURE.md</code></a>.</p>
+
+    <h2>Check it yourself</h2>
+    <ul class="trust-list">
+      <li><strong>A receipt:</strong> paste it at <a href="verify.html">Verify</a>, or run <code>hushmark-verify receipt.json attestation.json</code> for Intel's and NVIDIA's evidence too.</li>
+      <li><strong>The whole test suite, offline, no key:</strong> <code>git clone https://github.com/Ritapossible/Hushmark &amp;&amp; cd Hushmark &amp;&amp; make install &amp;&amp; make verify</code>. It replays real NEAR AI Cloud evidence byte for byte.</li>
+      <li><strong>The contract:</strong> <a href="https://github.com/Ritapossible/Hushmark/blob/main/contract/README.md"><code>contract/README.md</code></a> gives the account and the on-chain code hash, which matches the build.</li>
+    </ul>
+
+    <h2>Report a vulnerability</h2>
+    <p>Use GitHub's private vulnerability reporting on the repository (Security → Report a vulnerability). Please do not open a public issue. See <a href="https://github.com/Ritapossible/Hushmark/blob/main/SECURITY.md"><code>SECURITY.md</code></a>.</p>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap footer-base">
+      <p>© 2026 Hushmark · Built at NEAR HACKATHON · Apache-2.0 · <a href="index.html">Home</a></p>
+    </div>
+  </footer>
+</body>
+</html>
