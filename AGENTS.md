@@ -174,6 +174,9 @@ make verify-live   # (planned) re-verify recorded evidence online
   (browser: ID, nonce, TEE signature via vendored @noble bundle, NEAR anchor; CSP allows the
   testnet RPC). Every check's details link to it. PR #17's live receipt is
   `fixtures/receipts/pr17.json` and verifies, anchor included. 228 tests.
+- **Upgrade #5 trust page (2026-11-06):** `site/trust.html`: proved / not proved / data flow /
+  attackers, every claim linked to code and tests; every check summary ends with a link to it.
+  All five upgrades built; the App still needs registering and deploying (Rita). 229 tests.
 - **Next week (all need Rita):** mainnet payout account, demo video, X post, make the repo
   public, submit before 14 November 23:59 UTC.
 
