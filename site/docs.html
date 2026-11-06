@@ -100,7 +100,7 @@
             <tr><td>GitHub Action on every pull request (<code>pull_request_target</code>)</td><td><span class="tag tag-live">built</span></td></tr>
             <tr><td>GitHub App webhook server: one-click installs, <code>/hushmark</code> re-runs by maintainers, deploy files (tested)</td><td><span class="tag tag-live">built</span></td></tr>
             <tr><td>GitHub App registered and deployed</td><td><span class="tag tag-planned">planned</span></td></tr>
-            <tr><td>MCP server for agents (<code>scan</code>, <code>review</code>, <code>verify_receipt</code>)</td><td><span class="tag tag-planned">planned</span></td></tr>
+            <tr><td>MCP server for agents (<code>scan</code>, <code>review</code>, <code>verify_receipt</code>), run locally</td><td><span class="tag tag-live">built</span></td></tr>
             <tr><td>NEAR anchor contract and the Action's anchor call</td><td><span class="tag tag-live">built</span></td></tr>
           </tbody>
         </table>
@@ -247,6 +247,10 @@ cd Hushmark</code></pre></li>
         <h3>Daily budget</h3>
         <p>A pull request with no hidden regions never calls the model and costs nothing. Reviews that do call the model are capped at <strong>50 per repository per day</strong> (set the repository variable <code>HUSHMARK_DAILY_REVIEWS</code> to change it). At GLM-5.3-flash's listed price the worst case is about $0.0025 a review, so about $0.13 a day. Over the cap, hidden content is shown as not verified (<code>budget_exceeded</code>) and no model call is made. The Action has no database, so it counts today's receipt artifacts, which needs <code>actions: read</code>.</p>
         <p>No write access to code, no comments. Without the secret, hidden content is reported as <em>not verified</em> (<code>tee_unavailable</code>), never as a finding. Each review's receipt and attestation report are kept as a workflow artifact for 90 days.</p>
+        <h3>For AI agents: the MCP server <span class="tag tag-live">built</span></h3>
+        <p>Agents can check what they are about to read (an issue, a README, a web page, another tool's output) before following instructions in it. The server runs locally; the agent starts it:</p>
+        <pre><code>claude mcp add hushmark -- uv run --directory /path/to/Hushmark hushmark-mcp</code></pre>
+        <p>Tools: <code>scan</code> (offline, free), <code>review</code> (only the hidden regions go to the NEAR AI Cloud TEE; checks a–g; a receipt; needs <code>NEARAI_API_KEY</code>) and <code>verify_receipt</code> (checks a receipt without trusting Hushmark). By default no hidden text is returned to the agent, only where it is and which detector fired; excerpts come only on request, fenced and labelled as untrusted. Set-up for Cursor and Claude Desktop: <a href="https://github.com/Ritapossible/Hushmark/blob/main/docs/mcp/README.md">docs/mcp/README.md</a>.</p>
         <h3>GitHub App <span class="tag tag-live">built</span></h3>
         <p>For one-click installs across repositories and <code>/hushmark</code> re-runs by an admin or maintainer. It runs the same review as the Action, so the check, receipt and anchor are identical; use one or the other on a repository, since both post a check named <code>Hushmark</code>. The server checks every webhook signature before reading it, answers GitHub at once and reviews in a background worker. Its permissions: checks write; contents, pull requests and metadata read. The receipt (hashes only) is shown in the check's details. The App is built and tested; registering and deploying it is the next step, with a step-by-step guide in <a href="https://github.com/Ritapossible/Hushmark/blob/main/docs/github-app/README.md">docs/github-app/README.md</a> and a Render blueprint (<code>render.yaml</code>) or <code>Dockerfile</code>.</p>
       </section>
@@ -366,7 +370,8 @@ mode: warn   # warn (default) | block</code></pre>
         <h3>Repository layout</h3>
 <pre><code>hushmark/        scan, excerpt, infer, nonce, receipt, config,
                  pipeline, report, github, service, near, anchor, action,
-                 app, server (the GitHub App)
+                 app, server (the GitHub App), mcp (for agents),
+                 receipt_check
 contract/        the NEAR anchor contract (Rust, near-sdk)
 hushmark/verify/ attestation, nras, signature, grounding
 prompts/         the versioned system prompt

@@ -21,7 +21,7 @@ class Excerpt:
     lines: tuple[tuple[int, bool, str], ...]  # (line number, inside the candidate, text)
 
 
-def _visible(text: str) -> str:
+def visible(text: str) -> str:
     out = []
     for ch in text:
         code = ord(ch)
@@ -35,7 +35,7 @@ def _visible(text: str) -> str:
 def _window(numbered: list[tuple[int, str]], c: Candidate) -> tuple[tuple[int, bool, str], ...]:
     lo, hi = c.line - CONTEXT_LINES, c.end_line + CONTEXT_LINES
     return tuple(
-        (n, c.line <= n <= c.end_line, _visible(text)) for n, text in numbered if lo <= n <= hi
+        (n, c.line <= n <= c.end_line, visible(text)) for n, text in numbered if lo <= n <= hi
     )
 
 

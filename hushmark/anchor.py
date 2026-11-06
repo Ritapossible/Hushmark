@@ -184,3 +184,33 @@ class NearAnchor:
         if "already anchored" in json.dumps(status):
             return AnchorResult("already_anchored", tx_hash)
         raise AnchorError(f"anchor transaction failed: {json.dumps(status)[:300]}")
+
+
+def lookup(
+    account_id: str, key_hash: str, rpc: str = TESTNET_RPC, http: httpx.Client | None = None
+) -> dict[str, Any] | None:
+    """Read the contract's `get(key_hash)`: the anchored receipt hash, or None. No key needed."""
+    client = http or httpx.Client(timeout=30)
+    r = client.post(
+        rpc,
+        json={
+            "jsonrpc": "2.0",
+            "id": "hushmark",
+            "method": "query",
+            "params": {
+                "request_type": "call_function",
+                "finality": "final",
+                "account_id": account_id,
+                "method_name": "get",
+                "args_base64": base64.b64encode(
+                    json.dumps({"key_hash": key_hash}).encode()
+                ).decode(),
+            },
+        },
+    )
+    r.raise_for_status()
+    body = r.json()
+    if "error" in body:
+        raise AnchorError(json.dumps(body["error"])[:500])
+    value = json.loads(bytes(body["result"]["result"]).decode() or "null")
+    return value if isinstance(value, dict) else None

@@ -7,7 +7,7 @@ Background: [ADR-0010](adr/0010-github-app-and-mcp-server.md).
 | # | Upgrade | Why a team needs it | Status |
 |---|---|---|---|
 | 1 | **One-click install: the GitHub App** | Teams install apps, not copied workflow files | built and tested (PR #14); deploy needs Rita |
-| 2 | **MCP server for agents** | Agents can check what they read before acting on it | not started |
+| 2 | **MCP server for agents** | Agents can check what they read before acting on it | built and tested (PR #15); connected in Claude Code |
 | 3 | **Path ignores in `.hushmark.yml`** | Big repositories (vendored code, generated docs) stop hitting the 20-region cap | not started |
 | 4 | **Public receipt verifier** | Anyone can check a receipt without trusting us; makes "verifiable" tangible | not started |
 | 5 | **"How to trust this" page** | Security reviewers get what is and is not proved in one page, linked from every check | not started |
@@ -34,8 +34,10 @@ least 25 November.
 
 - Run locally by the agent over stdio. Tools: `scan` (offline, free), `review` (excerpts
   only to the TEE, checks a–g, a receipt), `verify_receipt` (offline).
-- Never returns hidden text raw: locations, detector names, excerpts with invisible
-  characters as visible tags, links in a rationale shown as "link".
+- Never returns hidden text by default: locations, detector names and lengths only. Excerpts
+  (invisible characters as visible tags) only with `include_excerpts`, fenced and labelled as
+  untrusted; matched injection phrases likewise. Links in a rationale shown as "link".
+- `verify_receipt` is built on `hushmark/receipt_check.py`, which upgrade 4 reuses.
 - Install snippets for Claude Code and Cursor.
 
 **Done when:** an agent calls `scan` on R1's input and gets both regions; `verify_receipt`
