@@ -12,6 +12,7 @@ reviewer still knows where to look.
 
 from __future__ import annotations
 
+import re
 from dataclasses import dataclass, field
 from typing import Any
 
@@ -46,6 +47,22 @@ class CheckOutput:
     title: str
     summary: str
     annotations: list[dict[str, Any]] = field(default_factory=list)
+
+
+# The rationale is the model's sentence about attacker-written text, so it may carry a link the
+# attacker asked for. The file and line are the evidence; the sentence is only a hint. Any
+# Markdown link, autolink or bare URL becomes the word "link" (the 500-character cap stays in
+# grounding.py). Not a sanitizer: nothing else is rewritten.
+_LINKS = re.compile(
+    r"!?\[[^\]]*\]\([^)]*\)"  # [text](url) and ![alt](url)
+    r"|<[a-z][a-z0-9+.-]*:[^>\s]*>"  # <scheme:...>
+    r"|\b(?:[a-z][a-z0-9+.-]*://|www\.)\S+",  # bare URLs
+    re.IGNORECASE,
+)
+
+
+def _no_links(text: str) -> str:
+    return _LINKS.sub("link", text)
 
 
 def _where(c: Candidate) -> str:
@@ -117,10 +134,11 @@ def render(outcome: Outcome, config: Config) -> CheckOutput:
     annotations = []
     for f in findings:
         c = f.candidate
-        lines.append(f"- {_where(c)} ({f.severity}): {f.rationale}")
+        rationale = _no_links(f.rationale)
+        lines.append(f"- {_where(c)} ({f.severity}): {rationale}")
         if c.source == "diff":
             annotations.append(
-                _annotation(c, level, f"Instruction aimed at AI agents ({f.severity})", f.rationale)
+                _annotation(c, level, f"Instruction aimed at AI agents ({f.severity})", rationale)
             )
     if outcome.grounded.rejected_ungrounded:
         lines.append(f"\n{outcome.grounded.rejected_ungrounded} ungrounded answer(s) ignored.")

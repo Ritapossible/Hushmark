@@ -96,7 +96,7 @@
         <h2>How it works, <span class="accent">in five steps.</span></h2>
         <ol class="grid steps">
           <li class="card"><p class="card-tag">// 01</p><h3>Scan.</h3><p>Deterministic detectors read the whole diff, title and body for HTML comments, invisible and bidi characters, hidden HTML and agent rules files. Nothing is executed.</p></li>
-          <li class="card"><p class="card-tag">// 02</p><h3>Excerpt.</h3><p>Only the flagged lines and ten lines of context leave the service. Most pull requests have nothing hidden and cost nothing.</p></li>
+          <li class="card"><p class="card-tag">// 02</p><h3>Excerpt.</h3><p>Only the flagged lines and up to ten lines of context leave the service. Most pull requests have nothing hidden and cost nothing.</p></li>
           <li class="card"><p class="card-tag">// 03</p><h3>Review in a TEE.</h3><p>A model on NEAR AI Cloud decides whether each region is an instruction aimed at an AI agent. It runs inside Intel TDX and NVIDIA confidential computing.</p></li>
           <li class="card"><p class="card-tag">// 04</p><h3>Verify.</h3><p>The response signature, the Intel quote, NVIDIA's signed verdict and our fresh nonce are all checked. Any failure means no finding is shown.</p></li>
           <li class="card"><p class="card-tag">// 05</p><h3>Report.</h3><p>A <code>Hushmark</code> check on the pull request, with a note on each line, and a receipt whose hash is anchored on NEAR.</p></li>
@@ -133,7 +133,7 @@
           <article class="card">
             <h3>Not proved, yet.</h3>
             <ul class="crosses">
-              <li>The Hushmark server itself is not in a TEE in v0.1; it sees the full diff.</li>
+              <li>In v0.1 Hushmark runs on a GitHub Actions runner, which is not in a TEE; it sees the full diff.</li>
               <li>TEE trust is hardware trust in Intel and NVIDIA.</li>
               <li>Detection is not complete: forms the detectors do not know are missed.</li>
             </ul>
@@ -151,7 +151,7 @@
           <div><dt>NEAR AI Cloud</dt><dd>Model inference in Intel TDX and NVIDIA TEEs · attestation reports · per-response signatures</dd></div>
           <div><dt>Intel TDX</dt><dd>Quote verified with <code>dcap-qvl</code> · MRCONFIGID and RTMR3 replayed</dd></div>
           <div><dt>NVIDIA NRAS</dt><dd>Every GPU token's ES384 signature checked against NVIDIA's keys</dd></div>
-          <div><dt>NEAR contract</dt><dd>Receipt hashes anchored on testnet with a function-call key · in progress</dd></div>
+          <div><dt>NEAR contract</dt><dd>Receipt hashes anchored on testnet (<code>anchor.hushmark.testnet</code>) with a function-call key · live</dd></div>
         </dl>
       </div>
     </section>

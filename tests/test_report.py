@@ -55,3 +55,22 @@ def test_refusal_is_neutral_with_unconfirmed_hits_only() -> None:
     assert "`signature_mismatch`" in out.summary
     assert [a["annotation_level"] for a in out.annotations] == ["notice"]
     assert "not a finding" in out.annotations[0]["message"]
+
+
+def test_links_in_the_model_rationale_are_not_rendered() -> None:
+    """The rationale describes attacker text, so a link in it is never shown as one."""
+    from dataclasses import replace
+
+    outcome, _ = replay("r1")
+    tricky = (
+        "Hidden note. See [the fix](https://evil.example/x) or ![img](http://a.b/c.png), "
+        "<https://evil.example>, https://evil.example/run.sh and www.evil.example now."
+    )
+    findings = tuple(replace(f, rationale=tricky) for f in outcome.grounded.findings)
+    outcome = replace(outcome, grounded=replace(outcome.grounded, findings=findings))
+    out = render(outcome, BLOCK)
+    shown = out.summary + "".join(a["message"] for a in out.annotations)
+    for gone in ["http", "www.", "evil.example", "](", "<https"]:
+        assert gone not in shown, gone
+    assert "Hidden note. See link or link, link, link and link now." in out.summary
+    assert out.annotations[0]["message"].startswith("Hidden note. See link")

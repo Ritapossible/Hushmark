@@ -96,9 +96,10 @@
             <tr><td>Verification checks a–g</td><td><span class="tag tag-live">built</span></td></tr>
             <tr><td>Receipts</td><td><span class="tag tag-live">built</span></td></tr>
             <tr><td>Real recorded evidence, verified offline</td><td><span class="tag tag-live">built</span></td></tr>
-            <tr><td>Pipeline, Check Run output and GitHub client (tested against a mocked GitHub API)</td><td><span class="tag tag-live">built</span></td></tr>
+            <tr><td>Pipeline, Check Run output and GitHub client (tested against a mocked GitHub API, and live on this repository)</td><td><span class="tag tag-live">built</span></td></tr>
             <tr><td>GitHub Action on every pull request (<code>pull_request_target</code>)</td><td><span class="tag tag-live">built</span></td></tr>
-            <tr><td>GitHub App and webhook server (one-click installs, <code>/hushmark</code> re-runs)</td><td><span class="tag tag-planned">planned</span></td></tr>
+            <tr><td>GitHub App client code: app token, webhook signature check, maintainer check for re-runs (tested)</td><td><span class="tag tag-live">built</span></td></tr>
+            <tr><td>GitHub App registration and webhook server (one-click installs, <code>/hushmark</code> re-runs)</td><td><span class="tag tag-planned">planned</span></td></tr>
             <tr><td>NEAR anchor contract and the Action's anchor call</td><td><span class="tag tag-live">built</span></td></tr>
           </tbody>
         </table>
@@ -113,7 +114,7 @@
 cd Hushmark</code></pre></li>
           <li><p>Install the locked dependencies.</p>
 <pre><code>make install</code></pre></li>
-          <li><p>Run every check on the saved evidence. Expect all tests to pass in under a second.</p>
+          <li><p>Run every check on the saved evidence. Expect all tests to pass in a few seconds.</p>
 <pre><code>make verify</code></pre></li>
           <li><p>See a refusal: one changed byte in a recorded model answer is refused.</p>
 <pre><code>uv run pytest tests/test_recordings.py -k one_changed_response_byte -v</code></pre></li>
@@ -209,13 +210,13 @@ cd Hushmark</code></pre></li>
 
       <section id="near" class="doc">
         <h2>NEAR anchor <span class="tag tag-live">built</span></h2>
-        <p>A NEAR smart contract on testnet (<code>anchor.hushmark.testnet</code>) stores one receipt hash per review with <code>anchor(key_hash, receipt_hash)</code>, and refuses a second anchor for the same key, so one input is reviewed once. Anyone can look an anchor up with <code>get(key_hash)</code>. Source: <a href="https://github.com/Ritapossible/Hushmark/tree/main/contract"><code>contract/</code></a>. Deployed: <a href="https://testnet.nearblocks.io/address/anchor.hushmark.testnet"><code>anchor.hushmark.testnet</code></a>; its on-chain code hash matches the built wasm (<code>A1QKAEQS…PpTZ</code>).</p>
+        <p>A NEAR smart contract on testnet (<code>anchor.hushmark.testnet</code>) stores one receipt hash per review with <code>anchor(key_hash, receipt_hash)</code>, and refuses a second anchor for the same key, so one input is anchored once. Re-running the check on the same commit makes a new review and receipt, and the check says the anchor was refused. Anyone can look an anchor up with <code>get(key_hash)</code>. Source: <a href="https://github.com/Ritapossible/Hushmark/tree/main/contract"><code>contract/</code></a>. Deployed: <a href="https://testnet.nearblocks.io/address/anchor.hushmark.testnet"><code>anchor.hushmark.testnet</code></a>; its on-chain code hash matches the built wasm (<code>A1QKAEQS…PpTZ</code>).</p>
         <p>The first anchor is demo PR #6's real receipt: <a href="https://testnet.nearblocks.io/txns/6UQaEH9gvmeaCLYs2rVomtWjWoekH6edzqtmSxs4EmB9">anchored</a>. Sending the same anchor again was <a href="https://testnet.nearblocks.io/txns/EH33MVqn6PsFWrGWJ1ebYd2u8eWV2amcNyBnq81yEKoe">refused by the contract</a>: <em>"this review key is already anchored"</em>.</p>
         <ul>
           <li>The contract lives on its own sub-account.</li>
-          <li>The service calls it with a function-call access key limited to <code>anchor</code>, with zero deposit. A stolen server key can add anchors but cannot move funds.</li>
+          <li>The GitHub Action calls it with a function-call access key limited to <code>anchor</code>, with zero deposit. A stolen key can add anchors but cannot move funds.</li>
           <li>Only hashes go on chain: no repository names or usernames.</li>
-          <li>A failed anchor never blocks the report; it is retried.</li>
+          <li>A failed anchor never blocks the report: the check says it was not recorded this time, and the receipt stays valid. It is not retried.</li>
         </ul>
       </section>
 
@@ -245,7 +246,7 @@ cd Hushmark</code></pre></li>
         <h3>Daily budget</h3>
         <p>A pull request with no hidden regions never calls the model and costs nothing. Reviews that do call the model are capped at <strong>50 per repository per day</strong> (set the repository variable <code>HUSHMARK_DAILY_REVIEWS</code> to change it). At GLM-5.3-flash's listed price the worst case is about $0.0025 a review, so about $0.13 a day. Over the cap, hidden content is shown as not verified (<code>budget_exceeded</code>) and no model call is made. The Action has no database, so it counts today's receipt artifacts, which needs <code>actions: read</code>.</p>
         <p>No write access to code, no comments. Without the secret, hidden content is reported as <em>not verified</em> (<code>tee_unavailable</code>), never as a finding. Each review's receipt and attestation report are kept as a workflow artifact for 90 days.</p>
-        <p><span class="tag tag-planned">planned</span> A GitHub App with a webhook server, for one-click installs across repositories and <code>/hushmark</code> re-runs. It runs the same code.</p>
+        <p><span class="tag tag-planned">planned</span> A GitHub App with a webhook server, for one-click installs across repositories and <code>/hushmark</code> re-runs. It runs the same code; its client code (app token, webhook signature, maintainer check) is already built and tested.</p>
       </section>
 
       <section id="configuration" class="doc">
@@ -269,6 +270,7 @@ mode: warn   # warn (default) | block</code></pre>
           </tbody>
         </table>
         <p>Findings in the PR title or body cannot be line annotations, so they appear in the check summary.</p>
+        <p>Each finding carries the model's one-sentence explanation. It describes attacker-written text, so any link or URL in it is shown as the word "link". The file and line are the evidence; the sentence is only a hint.</p>
       </section>
 
       <section id="refusals" class="doc">
@@ -312,14 +314,14 @@ mode: warn   # warn (default) | block</code></pre>
           <div class="card">
             <h3>Not proved</h3>
             <ul class="crosses">
-              <li>The Hushmark server is not in a TEE in v0.1. It sees the full diff, and a compromised server could skip verification.</li>
+              <li>In v0.1 Hushmark runs on a GitHub Actions runner, which is not in a TEE. It sees the full diff (as GitHub already does), and a compromised runner could skip verification.</li>
               <li>TEE trust is hardware trust in Intel TDX and NVIDIA confidential computing.</li>
               <li>Detection is incomplete: unknown hiding techniques are missed.</li>
               <li>Offline verification checks evidence as of the time it was recorded.</li>
             </ul>
           </div>
         </div>
-        <p>Defended attackers include fork authors, non-maintainer commenters, replay attempts, tampering, a hallucinating or injected model, webhook forgers and other GitHub Apps. Details: <a href="https://github.com/Ritapossible/Hushmark/blob/main/THREAT_MODEL.md">THREAT_MODEL.md</a>.</p>
+        <p>Defended attackers include fork authors, replay attempts, tampering, and a hallucinating or injected model; for the planned GitHub App, also non-maintainer commenters, webhook forgers and other GitHub Apps. Details: <a href="https://github.com/Ritapossible/Hushmark/blob/main/THREAT_MODEL.md">THREAT_MODEL.md</a>.</p>
         <h3>Reporting a vulnerability</h3>
         <p>Use GitHub's private vulnerability reporting on the repository (<em>Security → Report a vulnerability</em>). Please do not open a public issue. See <a href="https://github.com/Ritapossible/Hushmark/blob/main/SECURITY.md">SECURITY.md</a>.</p>
       </section>
@@ -329,7 +331,7 @@ mode: warn   # warn (default) | block</code></pre>
         <table>
           <thead><tr><th>Data</th><th>Where it goes</th></tr></thead>
           <tbody>
-            <tr><td>Full diff, title, body</td><td>Read by the Hushmark service; never sent to the model, never logged, never stored</td></tr>
+            <tr><td>Full diff, title, body</td><td>Read through the GitHub API by the Action on GitHub's runner; never sent to the model, never logged, never stored</td></tr>
             <tr><td>Excerpts around hidden regions</td><td>Sent only to the attested NEAR AI Cloud TEE</td></tr>
             <tr><td>Findings</td><td>Shown on the pull request's Check Run, visible to whoever can see the repository</td></tr>
             <tr><td>Receipts</td><td>Hashes only</td></tr>
@@ -426,7 +428,7 @@ docs/            architecture, plan, fixtures, decision records</code></pre>
       <section id="faq" class="doc">
         <h2>FAQ</h2>
         <details class="faq"><summary>Does Hushmark run the code in my pull request?</summary><p>No. It reads text only. The review code cannot start a process; a lint rule and a test-wide audit hook enforce that, and the model is never given tools.</p></details>
-        <details class="faq"><summary>Does my code go to an AI model?</summary><p>Only the lines around hidden regions, plus ten lines of context, and only to a model running in an attested NEAR AI Cloud TEE. Most pull requests send nothing at all.</p></details>
+        <details class="faq"><summary>Does my code go to an AI model?</summary><p>Only the lines around hidden regions, plus up to ten lines of context, and only to a model running in an attested NEAR AI Cloud TEE. Most pull requests send nothing at all.</p></details>
         <details class="faq"><summary>What does it cost?</summary><p>Pull requests without hidden regions make no model call. A review with a few regions costs a fraction of a cent at current NEAR AI Cloud prices.</p></details>
         <details class="faq"><summary>Why not just use GitHub's hidden-character warning?</summary><p>GitHub warns about some invisible characters when you view a file. Hushmark also covers HTML comments, hidden HTML and agent rules files, judges whether the text targets an agent, runs as a required check, and gives a verifiable receipt.</p></details>
         <details class="faq"><summary>What if the model is wrong or manipulated?</summary><p>It can only name candidates Hushmark found, so it cannot invent locations. A malformed answer refuses the run. Harmless notes and ordinary rules files produced no findings in the recorded controls (R2 and R4).</p></details>

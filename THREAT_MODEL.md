@@ -37,11 +37,14 @@ Scope: v0.1, the hackathon build (ADR-0007).
    we sent, for that input (checks a–f in `docs/ARCHITECTURE.md`).
 3. Every shown finding refers to a hidden region Hushmark found itself (check g).
 4. Only excerpts around hidden regions leave Hushmark, and only to an attested TEE.
-5. One input is reviewed once; the NEAR anchor shows the receipt existed at that time.
+5. One input is anchored once; the NEAR anchor shows the receipt existed at that time. (A
+   re-run of the same commit is a new model call and a new receipt; the contract refuses its
+   anchor.)
 
 ## What is not proved
 
-- **The Hushmark server is not in a TEE.** It receives the full diff. Someone who compromises
+- **The Hushmark server is not in a TEE.** In v0.1 the "server" is a GitHub Actions runner.
+  It receives the full diff. Someone who compromises
   it can read code and could skip verification. The claim covers the review code, not its
   host. Moving the service into a confidential VM is ROADMAP v0.2.
 - **TEE trust is hardware trust.** It holds only if Intel TDX and NVIDIA confidential

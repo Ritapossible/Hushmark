@@ -69,7 +69,7 @@ Every receipt and attestation report from the Action is kept as a workflow artif
 ```sh
 make install   # uv sync --locked
 make lint      # ruff, ruff format --check, mypy --strict
-make test      # all 149 Python tests, offline, about 2 seconds
+make test      # all 150 Python tests, offline, about 2 seconds
 make verify    # the same suite, as CI runs it: no API key, no network
 cd contract && cargo test   # 5 contract tests
 ```
@@ -78,7 +78,7 @@ CI (`.github/workflows/ci.yml`) runs lint, every Python test and the contract te
 push and pull request. The Python tests run under an audit hook that fails the run if any
 process is started, from the first import onwards.
 
-**Python: 149 tests, all passing.**
+**Python: 150 tests, all passing.**
 
 | File | Tests | What it proves |
 |---|---:|---|
@@ -93,7 +93,7 @@ process is started, from the first import onwards.
 | `test_pipeline.py` | 9 | The whole review replayed byte for byte from the recordings; no candidates means no model call; an unreachable TEE is a refusal |
 | `test_config.py` | 9 | `.hushmark.yml`: `warn`, `block`, unknown keys and bad values are `config_invalid` |
 | `test_excerpt.py` | 8 | Excerpts hold context and mark the region, invisible characters are written as visible tags, the line cap holds, the request holds excerpts only and no tools, the nonce is fresh, canonical JSON refuses floats |
-| `test_report.py` | 7 | Check Run output for every outcome in `warn` and `block` mode; refusals show scanner hits only as *unconfirmed* |
+| `test_report.py` | 8 | Check Run output for every outcome in `warn` and `block` mode; refusals show scanner hits only as *unconfirmed*; links in the model's explanation are shown as the word "link" |
 | `test_receipt.py` | 4 | A receipt's ID is the SHA-256 of its canonical bytes, the same inputs give the same receipt, it has exactly the v1 fields, and it holds no content |
 | `test_no_shell.py` | 3 | Hard rule 1: the audit hook blocks shell and subprocess calls, and the crypto dependencies load without starting a process |
 | `test_site.py` | 2 | The website's evidence matches the verified recordings and is inserted as text only |
@@ -112,7 +112,7 @@ No account, no API key, no network after install.
 | Do | See |
 |---|---|
 | `git clone https://github.com/Ritapossible/Hushmark && cd Hushmark && make install` | the locked dependencies |
-| `make verify` | 149 passed, from real recorded NEAR AI Cloud evidence |
+| `make verify` | 150 passed, from real recorded NEAR AI Cloud evidence |
 | `uv run pytest tests/test_recordings.py -k one_changed_response_byte -v` | one changed byte in a model answer is refused (`signature_mismatch`) |
 | open `fixtures/recordings/r1/` | the exact request and response bytes, signature, attestation report, Intel collateral and NVIDIA response |
 | *(planned)* `make verify-live` | a fresh attestation checked against Intel and NVIDIA online |
@@ -173,6 +173,9 @@ App, `not_maintainer` and `webhook_invalid`. Meanings:
 - **No code stored.** Receipts and logs hold hashes, never code or finding text.
 - **Nothing readable on chain.** The NEAR anchor holds two hashes: the review key and the
   receipt.
+- **No links from the model.** The model's one-sentence explanation describes attacker-written
+  text, so any link or URL in it is shown as the word "link". The file and line are the
+  evidence; the sentence is only a hint.
 - **Not claimed:** the Actions runner is outside a TEE (GitHub already hosts your code), and
   the TEE guarantee rests on Intel's and NVIDIA's attestation.
 
@@ -221,7 +224,7 @@ hushmark/verify/   attestation, nras, signature, grounding (checks a–g)
 contract/          the NEAR anchor contract (Rust, near-sdk)
 prompts/           the versioned system prompt
 fixtures/          inputs, real recordings, attestation reports, NVIDIA keys
-tests/             149 tests, including byte-for-byte replays of the recordings
+tests/             150 tests, including byte-for-byte replays of the recordings
 scripts/           recording and site-data scripts
 site/              the website and docs page (Vercel)
 docs/              architecture, plan, fixtures, decision records

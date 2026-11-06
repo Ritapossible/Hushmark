@@ -129,13 +129,17 @@ make verify-live   # (planned) re-verify recorded evidence online
   malformed anchor key no longer crashes the check (PR #10).
 - **README review (2026-11-03):** every test file reported; GitHub errors before the review
   now close the Check Run (`diff_unavailable` or new code `internal_error`) instead of
-  leaving it in progress. 149 tests.
+  leaving it in progress. PR #11.
+- **Links (Grok review):** any URL or Markdown link in the model's rationale is rendered as
+  the word "link" (`report.py`); the 500-character cap stays. 150 tests.
 - **Next:** demo video, X post draft, make the repo public, submit (all need Rita).
 
 ## Decision log
 
 Newest first. One line each, with a link when there is an ADR.
 
+- 2026-11-03: Grok review: re-runs stay as they are (a new model call is a new receipt; the
+  contract refuses a second anchor); no database, since that means hosting.
 - 2026-11-03: This repository runs Hushmark in `mode: block` (`.hushmark.yml` on `main`), so a
   verified finding fails the check. Demo PR #8 shows it; PR #6 stays open too.
 - 2026-11-02: Grok review: stop site work; deploy the anchor (done, second anchor refused on
