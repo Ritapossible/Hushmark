@@ -107,7 +107,9 @@ class DailyBudget:
             self._counts[key] = used + 1
 
 
-class _BudgetedTee:
+class SpendingTee:
+    """Counts each model call against the daily budget, refusing before the call when spent."""
+
     def __init__(self, tee: Tee, budget: DailyBudget, repo_id: int) -> None:
         self.tee, self.budget, self.repo_id = tee, budget, repo_id
 
@@ -160,7 +162,7 @@ class HushmarkApp:
             repo_id=job.repo_id,
             number=job.number,
             model=self.model,
-            tee=_BudgetedTee(self.tee, self.budget, job.repo_id),
+            tee=SpendingTee(self.tee, self.budget, job.repo_id),
             sources=self.sources,
             now=lambda: int(time.time()),
             anchor=self.anchor,

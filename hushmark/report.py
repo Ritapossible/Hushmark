@@ -62,7 +62,7 @@ _LINKS = re.compile(
 )
 
 
-def _no_links(text: str) -> str:
+def no_links(text: str) -> str:
     return _LINKS.sub("link", text)
 
 
@@ -146,7 +146,7 @@ def render(outcome: Outcome, config: Config) -> CheckOutput:
     annotations = []
     for f in findings:
         c = f.candidate
-        rationale = _no_links(f.rationale)
+        rationale = no_links(f.rationale)
         lines.append(f"- {_where(c)} ({f.severity}): {rationale}")
         if c.source == "diff":
             annotations.append(
