@@ -74,3 +74,17 @@ def test_links_in_the_model_rationale_are_not_rendered() -> None:
         assert gone not in shown, gone
     assert "Hidden note. See link or link, link, link and link now." in out.summary
     assert out.annotations[0]["message"].startswith("Hidden note. See link")
+
+
+def test_receipt_is_published_in_the_check_details() -> None:
+    """Hashes only, so it is safe to show; anyone can then verify it (RECEIPT.md)."""
+    import hashlib
+    import json
+
+    outcome, _ = replay("r1")
+    text = render(outcome, BLOCK).text
+    raw = text.split("```json\n", 1)[1].rsplit("\n```", 1)[0].encode()
+    assert raw == outcome.receipt.body
+    assert hashlib.sha256(raw).hexdigest() == outcome.receipt.receipt_id
+    assert json.loads(raw)["v"] == 1
+    assert render(NoCandidates(scan("")), BLOCK).text == ""
