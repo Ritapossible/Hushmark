@@ -29,6 +29,7 @@
         <a href="index.html#how">How it works</a>
         <a href="index.html#evidence">Evidence</a>
         <a href="docs.html" aria-current="page">Docs</a>
+        <a href="verify.html">Verify</a>
       </nav>
       <a class="btn btn-dark btn-sm" href="https://github.com/Ritapossible/Hushmark">View on GitHub</a>
     </div>
@@ -206,7 +207,13 @@ cd Hushmark</code></pre></li>
           <li>Check <code>signature.text</code> and recover the EIP-191 signer; it must equal <code>signing_address</code>.</li>
           <li>Optionally compare the receipt hash anchored on NEAR for <code>SHA-256(JCS(key))</code>.</li>
         </ol>
-        <p>Full specification: <a href="https://github.com/Ritapossible/Hushmark/blob/main/RECEIPT.md">RECEIPT.md</a>.</p>
+        <p>Three ways to do it, all running the same checks <span class="tag tag-live">built</span>:</p>
+        <ul>
+          <li><strong>In your browser:</strong> paste a receipt (or a check's whole details text) at <a href="verify.html">tryhushmark.vercel.app/verify</a>. It checks the receipt ID, the nonce, the TEE signature and the NEAR anchor; nothing you paste leaves the page.</li>
+          <li><strong>From the command line:</strong> <code>hushmark-verify receipt.json attestation.json</code> also checks Intel's quote and NVIDIA's GPU verdict, as of now. Exit status 0 means verified.</li>
+          <li><strong>From an AI agent:</strong> the MCP server's <code>verify_receipt</code> tool.</li>
+        </ul>
+        <p>Every <code>Hushmark</code> check shows its receipt in the check's details. Full specification: <a href="https://github.com/Ritapossible/Hushmark/blob/main/RECEIPT.md">RECEIPT.md</a>.</p>
       </section>
 
       <section id="near" class="doc">

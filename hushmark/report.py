@@ -21,6 +21,7 @@ from hushmark.pipeline import NoCandidates, Outcome, Refusal, Reviewed
 from hushmark.scan import Candidate
 
 CHECK_NAME = "Hushmark"
+VERIFY_URL = "https://tryhushmark.vercel.app/verify"
 MAX_ANNOTATIONS = 50  # GitHub accepts at most 50 per request; report.py stays under it
 
 REFUSAL_TEXT = {
@@ -102,7 +103,8 @@ def _unconfirmed(candidates: tuple[Candidate, ...]) -> list[dict[str, Any]]:
 def _receipt_text(outcome: Reviewed) -> str:
     """The receipt itself (hashes only, RECEIPT.md), so anyone can verify it from the check."""
     return (
-        "Receipt (hashes only; see RECEIPT.md to verify it):\n\n```json\n"
+        "Receipt (hashes only). Check it yourself: paste this text at "
+        f"{VERIFY_URL}, or run `hushmark-verify`.\n\n```json\n"
         + outcome.receipt.body.decode()
         + "\n```"
     )

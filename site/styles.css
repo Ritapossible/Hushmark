@@ -239,3 +239,28 @@ pre code { background: none; padding: 0; color: inherit; font-size: inherit; }
   .docs-toc summary { margin: 0; }
   .docs-toc:not([open]) nav { display: none; }
 }
+
+/* Receipt verifier (verify.html) */
+.verify-page { padding: 56px 0 96px; max-width: 880px; }
+.verify-page h1 { font-size: clamp(2.2rem, 5vw, 3.2rem); margin: 10px 0 0; }
+.verify-form { margin-top: 32px; display: grid; gap: 10px; }
+.verify-form label { font: 500 0.85rem var(--mono); color: var(--muted); }
+.verify-form textarea { width: 100%; box-sizing: border-box; font: 0.85rem/1.5 var(--mono); padding: 14px 16px; border: 1px solid var(--line); border-radius: 14px; background: var(--card); color: var(--ink); resize: vertical; }
+.verify-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+.verify-result { margin-top: 28px; background: var(--card); border: 1px solid var(--line); border-radius: 18px; padding: 24px 26px; }
+.verify-verdict { font: 500 1.5rem var(--serif); margin: 0 0 6px; }
+.verify-verdict.is-ok { color: var(--ok); }
+.verify-verdict.is-bad { color: #9a3b2e; }
+.verify-facts { color: var(--muted); margin: 0 0 16px; font-size: 0.95rem; }
+.verify-checks { list-style: none; padding: 0; margin: 0; display: grid; gap: 12px; }
+.verify-check { display: grid; grid-template-columns: 84px 1fr; gap: 2px 14px; align-items: baseline; }
+.verify-check strong { grid-column: 2; }
+.verify-detail { grid-column: 2; color: var(--muted); font-size: 0.93rem; overflow-wrap: anywhere; }
+.verify-tag { grid-row: span 2; font: 500 0.72rem var(--mono); letter-spacing: 0.04em; text-transform: uppercase; padding: 3px 9px; border-radius: 999px; text-align: center; }
+.verify-check.is-pass .verify-tag { background: #e5efe8; color: var(--ok); }
+.verify-check.is-fail .verify-tag { background: #f6e3df; color: #9a3b2e; }
+.verify-check.is-skipped .verify-tag { background: #f3ece0; color: #8a5a20; }
+.verify-notes { margin-top: 48px; }
+.verify-notes h2 { font-size: 1.6rem; margin: 32px 0 10px; }
+.verify-notes li { margin: 8px 0; color: #3d3a36; }
+.verify-notes code, .verify-form code { overflow-wrap: anywhere; }
