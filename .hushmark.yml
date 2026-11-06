@@ -1,3 +1,8 @@
 # Hushmark settings, read from the default branch only (a pull request cannot change them).
 # block: a verified finding fails the Hushmark check. warn (the default): it is neutral.
 mode: block
+# Test code and recorded fixtures contain hidden instructions on purpose. Agent rules files,
+# the PR title and the PR body are scanned anyway (ADR-0011).
+ignore:
+  - tests/*
+  - fixtures/*
