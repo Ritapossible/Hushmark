@@ -170,6 +170,10 @@ make verify-live   # (planned) re-verify recorded evidence online
 - **Upgrade #3 path ignores (2026-11-06, ADR-0011):** `ignore:` in `.hushmark.yml` (base
   commit only, max 50 fnmatch patterns); rules files, title and body never ignored; skipped
   files named in the summary. This repo ignores `tests/*` and `fixtures/*`. 222 tests.
+- **Upgrade #4 receipt verifier (2026-11-06):** `hushmark-verify` (CLI) and `site/verify.html`
+  (browser: ID, nonce, TEE signature via vendored @noble bundle, NEAR anchor; CSP allows the
+  testnet RPC). Every check's details link to it. PR #17's live receipt is
+  `fixtures/receipts/pr17.json` and verifies, anchor included. 228 tests.
 - **Next week (all need Rita):** mainnet payout account, demo video, X post, make the repo
   public, submit before 14 November 23:59 UTC.
 
