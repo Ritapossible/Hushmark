@@ -28,8 +28,9 @@ These are not up for debate during the hackathon. Changing one needs an ADR in `
 2. **Never send `tools` to the model.** No tool use, no function calling.
 3. **Never store or log the diff, or the text of findings.** Receipts and logs hold hashes only.
 4. **Fail closed.** If any verification check fails, nothing is published.
-5. **Refuse, never truncate.** Detectors scan everything. Over 20 candidates or 200 excerpt
-   lines, refuse with `too_many_candidates`. If GitHub cannot return the full diff, refuse
+5. **Refuse, never truncate.** Detectors scan everything, except files the base branch's
+   `ignore` skips (never agent rules files, the title or the body; ADR-0011). Over 20
+   candidates or 200 excerpt lines, refuse with `too_many_candidates`. If GitHub cannot return the full diff, refuse
    with `diff_unavailable`.
 6. **Never mock a signature or attestation in a fixture that claims to be real.** Fixtures
    built from recorded evidence say so. Tampered fixtures say exactly what was changed.
@@ -166,6 +167,9 @@ make verify-live   # (planned) re-verify recorded evidence online
   `hushmark/receipt_check.py` (checks a receipt without trusting us; reused by upgrade #4).
   `hushmark-mcp` command; `claude mcp list` shows it connected. Guide `docs/mcp/README.md`.
   205 tests.
+- **Upgrade #3 path ignores (2026-11-06, ADR-0011):** `ignore:` in `.hushmark.yml` (base
+  commit only, max 50 fnmatch patterns); rules files, title and body never ignored; skipped
+  files named in the summary. This repo ignores `tests/*` and `fixtures/*`. 222 tests.
 - **Next week (all need Rita):** mainnet payout account, demo video, X post, make the repo
   public, submit before 14 November 23:59 UTC.
 

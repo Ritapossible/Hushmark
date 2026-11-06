@@ -8,7 +8,7 @@ Background: [ADR-0010](adr/0010-github-app-and-mcp-server.md).
 |---|---|---|---|
 | 1 | **One-click install: the GitHub App** | Teams install apps, not copied workflow files | built and tested (PR #14); deploy needs Rita |
 | 2 | **MCP server for agents** | Agents can check what they read before acting on it | built and tested (PR #15); connected in Claude Code |
-| 3 | **Path ignores in `.hushmark.yml`** | Big repositories (vendored code, generated docs) stop hitting the 20-region cap | not started |
+| 3 | **Path ignores in `.hushmark.yml`** | Big repositories (vendored code, generated docs) stop hitting the 20-region cap | built and tested (PR #17, ADR-0011) |
 | 4 | **Public receipt verifier** | Anyone can check a receipt without trusting us; makes "verifiable" tangible | not started |
 | 5 | **"How to trust this" page** | Security reviewers get what is and is not proved in one page, linked from every check | not started |
 
@@ -46,8 +46,10 @@ passes R1's receipt and refuses a tampered one.
 ## 3. Path ignores
 
 - `.hushmark.yml` gains `ignore:` (glob patterns), still read from the base commit only.
-- Agent rules files can never be ignored: an ignore pattern that matches one is
-  `config_invalid`, so a PR cannot hide a rules-file change behind a broad pattern.
+- Agent rules files can never be ignored: they are scanned whatever the patterns say, so a
+  PR cannot hide a rules-file change behind a broad pattern (decided in ADR-0011 instead of
+  refusing such patterns, so `ignore: ["*"]` still works).
+- Skipped files are named in the check summary.
 - The PR title and body are always scanned.
 
 **Done when:** a diff with 25 hidden regions under `vendor/` passes with `ignore: [vendor/**]`,

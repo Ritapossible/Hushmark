@@ -8,7 +8,7 @@ agents, and hands them to the model as candidates (docs/ARCHITECTURE.md step 3).
 from __future__ import annotations
 
 import re
-from collections.abc import Iterable, Iterator
+from collections.abc import Iterable, Iterator, Sequence
 from dataclasses import dataclass, field
 from fnmatch import fnmatchcase
 from typing import Literal
@@ -81,6 +81,7 @@ class Candidate:
 class ScanResult:
     files: tuple[FileDiff, ...]
     candidates: tuple[Candidate, ...]
+    ignored_files: tuple[str, ...] = ()  # skipped by the base branch's `ignore` patterns
 
 
 _HUNK = re.compile(r"^@@ -\d+(?:,(\d+))? \+(\d+)(?:,(\d+))? @@")
@@ -214,13 +215,28 @@ def _region_text(
     return [ln.text for ln in files[file].lines if start <= ln.number <= end] if file else []
 
 
-def scan(diff: str, title: str = "", body: str = "") -> ScanResult:
-    """Find every candidate region. Never truncates; the cap is enforced separately."""
+def is_ignored(path: str, ignore: Sequence[str]) -> bool:
+    """True when the base branch's `.hushmark.yml` skips this file (ADR-0011).
+
+    Agent rules files are never skipped, whatever the patterns say: a pull request must not be
+    able to hide a rules-file change behind a broad pattern such as `**`.
+    """
+    return not _is_rules_file(path) and any(fnmatchcase(path, p) for p in ignore)
+
+
+def scan(diff: str, title: str = "", body: str = "", ignore: Sequence[str] = ()) -> ScanResult:
+    """Find every candidate region. Never truncates; the cap is enforced separately.
+
+    `ignore` (from the base branch's config only) skips matching files; the title, the body
+    and agent rules files are always scanned.
+    """
     files = parse_diff(diff)
     by_path = {f.path: f for f in files}
     hits: list[Hit] = [*_scan_text("pr_title", title), *_scan_text("pr_body", body)]
+    ignored = tuple(f.path for f in files if is_ignored(f.path, ignore))
     for f in files:
-        hits.extend(_scan_file(f))
+        if f.path not in ignored:
+            hits.extend(_scan_file(f))
 
     candidates = []
     for n, (source, file, start, end, detectors) in enumerate(hits, start=1):
@@ -236,7 +252,7 @@ def scan(diff: str, title: str = "", body: str = "") -> ScanResult:
                 signals=_signals(text),
             )
         )
-    return ScanResult(files=files, candidates=tuple(candidates))
+    return ScanResult(files=files, candidates=tuple(candidates), ignored_files=ignored)
 
 
 def ensure_within_cap(result: ScanResult) -> None:

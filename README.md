@@ -72,7 +72,7 @@ Every receipt and attestation report from the Action is kept as a workflow artif
 ```sh
 make install   # uv sync --locked
 make lint      # ruff, ruff format --check, mypy --strict
-make test      # all 207 Python tests, offline, about 2 seconds
+make test      # all 222 Python tests, offline, about 2 seconds
 make verify    # the same suite, as CI runs it: no API key, no network
 cd contract && cargo test   # 5 contract tests
 ```
@@ -81,7 +81,7 @@ CI (`.github/workflows/ci.yml`) runs lint, every Python test and the contract te
 push and pull request. The Python tests run under an audit hook that fails the run if any
 process is started, from the first import onwards.
 
-**Python: 207 tests, all passing.**
+**Python: 222 tests, all passing.**
 
 | File | Tests | What it proves |
 |---|---:|---|
@@ -97,6 +97,7 @@ process is started, from the first import onwards.
 | `test_app.py` | 28 | The GitHub App: which deliveries start a review, `/hushmark` re-runs only by an admin or maintainer and never a bot, the in-memory daily budget, the installation token, and the webhook server (forged deliveries get 401, a redelivery or a PR already waiting is not queued twice, a failing review does not stop the worker) |
 | `test_action.py` | 9 | The workflow never checks out the PR and has only the four permissions; no key means `tee_unavailable`; the daily budget refuses before any model call; a GitHub error closes the check as not verified instead of leaving it in progress |
 | `test_pipeline.py` | 9 | The whole review replayed byte for byte from the recordings; no candidates means no model call; an unreachable TEE is a refusal |
+| `test_ignore.py` | 15 | Path ignores (ADR-0011): 25 hidden regions under `vendor/` pass with `ignore: [vendor/*]` instead of refusing; agent rules files in any folder are never ignored, even by `*`; the title and body are always scanned; bad lists are `config_invalid`; the summary names skipped files; ignores come from the base commit only |
 | `test_config.py` | 9 | `.hushmark.yml`: `warn`, `block`, unknown keys and bad values are `config_invalid` |
 | `test_excerpt.py` | 8 | Excerpts hold context and mark the region, invisible characters are written as visible tags, the line cap holds, the request holds excerpts only and no tools, the nonce is fresh, canonical JSON refuses floats |
 | `test_report.py` | 9 | Check Run output for every outcome in `warn` and `block` mode; refusals show scanner hits only as *unconfirmed*; the receipt is published in the check's details; links in the model's explanation are shown as the word "link" |
@@ -118,7 +119,7 @@ No account, no API key, no network after install.
 | Do | See |
 |---|---|
 | `git clone https://github.com/Ritapossible/Hushmark && cd Hushmark && make install` | the locked dependencies |
-| `make verify` | 207 passed, from real recorded NEAR AI Cloud evidence |
+| `make verify` | 222 passed, from real recorded NEAR AI Cloud evidence |
 | `uv run pytest tests/test_recordings.py -k one_changed_response_byte -v` | one changed byte in a model answer is refused (`signature_mismatch`) |
 | open `fixtures/recordings/r1/` | the exact request and response bytes, signature, attestation report, Intel collateral and NVIDIA response |
 | *(planned)* `make verify-live` | a fresh attestation checked against Intel and NVIDIA online |
@@ -183,7 +184,19 @@ Permissions: `contents: read`, `pull-requests: read`, `checks: write`, `actions:
 | Refused (any reason code) | `neutral`, scanner hits shown as *unconfirmed* | `neutral` |
 
 `.hushmark.yml` is read from the base commit only, so a pull request cannot change its own
-mode.
+mode or ignores:
+
+```yaml
+mode: block          # warn (default) | block
+ignore:              # optional: files not to scan, at most 50 patterns; * also matches folders
+  - vendor/*
+  - tests/fixtures/*
+```
+
+`ignore` stops vendored code, generated docs and test fixtures from costing model calls or
+hitting the 20-region cap. Agent rules files, the PR title and the PR body are **never**
+ignored, and the check summary names every file it did not scan
+([ADR-0011](docs/adr/0011-path-ignores.md)).
 
 **Refusal codes.** A refusal never shows a model finding.
 `too_many_candidates` (over 20 regions or 200 excerpt lines), `diff_unavailable`,
@@ -257,7 +270,7 @@ hushmark/verify/   attestation, nras, signature, grounding (checks a–g)
 contract/          the NEAR anchor contract (Rust, near-sdk)
 prompts/           the versioned system prompt
 fixtures/          inputs, real recordings, attestation reports, NVIDIA keys
-tests/             207 tests, including byte-for-byte replays of the recordings
+tests/             222 tests, including byte-for-byte replays of the recordings
 scripts/           recording and site-data scripts
 site/              the website and docs page (Vercel)
 docs/              architecture, plan, fixtures, decision records

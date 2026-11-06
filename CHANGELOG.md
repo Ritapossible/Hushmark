@@ -11,6 +11,8 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versions follo
 - `docs/UPGRADES.md`: the five upgrades for team adoption, in order.
 - MCP server for agents (`hushmark/mcp.py`, `hushmark-mcp`): `scan`, `review`,
   `verify_receipt`; no hidden text returned by default.
+- `ignore:` path patterns in `.hushmark.yml` (ADR-0011); agent rules files, title and body
+  are never ignored, and skipped files are named in the check.
 - `hushmark/receipt_check.py`: check a receipt without trusting Hushmark, including the NEAR
   anchor lookup (`anchor.lookup`).
 - Design documents for review: architecture, threat model, receipt format v1, fixtures,

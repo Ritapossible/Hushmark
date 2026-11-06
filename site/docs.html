@@ -259,8 +259,12 @@ cd Hushmark</code></pre></li>
         <h2>Configuration</h2>
         <p>One optional file on the default branch, read from the <strong>base commit only</strong>, so a pull request can never change how it is judged.</p>
 <pre><code># .hushmark.yml
-mode: warn   # warn (default) | block</code></pre>
-        <p>Missing or empty file means <code>warn</code>. Any other key or value refuses the run with <code>config_invalid</code>. Path ignores and per-path modes are on the <a href="#roadmap">roadmap</a>.</p>
+mode: warn        # warn (default) | block
+ignore:           # optional: files not to scan (at most 50 patterns)
+  - vendor/*      # * also matches folders, so this covers vendor/a/b/c.md
+  - docs/generated/*</code></pre>
+        <p>Missing or empty file means <code>warn</code> and no ignores. Any other key or value refuses the run with <code>config_invalid</code>.</p>
+        <p><strong><code>ignore</code></strong> <span class="tag tag-live">built</span> skips matching files, so vendored code, generated docs and test fixtures stop costing model calls or hitting the 20-region cap. Three things can never be ignored: <strong>agent rules files</strong> (<code>AGENTS.md</code>, <code>CLAUDE.md</code>, <code>.cursorrules</code> and the rest, in any folder), the <strong>PR title</strong> and the <strong>PR body</strong>. Nothing is skipped silently: the check summary names the files it did not scan. Because the file is read from the base commit, a pull request cannot widen <code>ignore</code> for itself. Decision: <a href="https://github.com/Ritapossible/Hushmark/blob/main/docs/adr/0011-path-ignores.md">ADR-0011</a>. Per-path modes are on the <a href="#roadmap">roadmap</a>.</p>
       </section>
 
       <section id="results" class="doc">
@@ -415,7 +419,7 @@ docs/            architecture, plan, fixtures, decision records</code></pre>
             <ul>
               <li>Scan more of what agents read: issues and comments, linked docs, dependency READMEs.</li>
               <li>An API and middleware that check MCP tool results before an agent reads them.</li>
-              <li>Path ignores and per-path modes in <code>.hushmark.yml</code>.</li>
+              <li>Per-path modes in <code>.hushmark.yml</code> (path ignores are built).</li>
             </ul>
             <p class="rm-gate">Gate: one design partner with an internal AI agent rollout, using it weekly.</p>
           </li>

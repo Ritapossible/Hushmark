@@ -13,7 +13,7 @@ reviewer still knows where to look.
 from __future__ import annotations
 
 import re
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from typing import Any
 
 from hushmark.config import Config
@@ -108,7 +108,27 @@ def _receipt_text(outcome: Reviewed) -> str:
     )
 
 
+def _ignored_note(files: tuple[str, ...]) -> str:
+    """Say what was skipped, so an ignore pattern can never hide something silently."""
+    if not files:
+        return ""
+    shown = ", ".join(f"`{f}`" for f in files[:10]) + (" …" if len(files) > 10 else "")
+    return f"\n\nNot scanned ({len(files)} file(s), `ignore` in `.hushmark.yml`): {shown}"
+
+
 def render(outcome: Outcome, config: Config) -> CheckOutput:
+    out = _render(outcome, config)
+    note = _ignored_note(_ignored(outcome))
+    return replace(out, summary=out.summary + note) if note else out
+
+
+def _ignored(outcome: Outcome) -> tuple[str, ...]:
+    if isinstance(outcome, NoCandidates):
+        return outcome.scan.ignored_files
+    return outcome.ignored_files
+
+
+def _render(outcome: Outcome, config: Config) -> CheckOutput:
     if isinstance(outcome, NoCandidates):
         return CheckOutput(
             "success", "No hidden content", "No hidden regions found. No model call was made."

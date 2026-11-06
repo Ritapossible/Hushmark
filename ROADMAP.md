@@ -32,7 +32,7 @@ of v0.3 forward.
 
 - Scan more of what agents read: issues and issue comments, linked docs, dependency READMEs.
 - API and middleware that check MCP tool results before an agent reads them.
-- `.hushmark.yml`: path ignores and per-path modes.
+- `.hushmark.yml`: per-path modes (path ignores were built in v0.1, ADR-0011).
 
 **Gate:** one design partner, a company with an internal AI agent rollout, using it weekly.
 
