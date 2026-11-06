@@ -72,7 +72,7 @@ Every receipt and attestation report from the Action is kept as a workflow artif
 ```sh
 make install   # uv sync --locked
 make lint      # ruff, ruff format --check, mypy --strict
-make test      # all 205 Python tests, offline, about 2 seconds
+make test      # all 207 Python tests, offline, about 2 seconds
 make verify    # the same suite, as CI runs it: no API key, no network
 cd contract && cargo test   # 5 contract tests
 ```
@@ -81,14 +81,14 @@ CI (`.github/workflows/ci.yml`) runs lint, every Python test and the contract te
 push and pull request. The Python tests run under an audit hook that fails the run if any
 process is started, from the first import onwards.
 
-**Python: 205 tests, all passing.**
+**Python: 207 tests, all passing.**
 
 | File | Tests | What it proves |
 |---|---:|---|
 | `test_scan.py` | 20 | Every detector (HTML comments in Markdown, invisible and bidi characters in any file, hidden HTML, long alt text, rules files) on the diff, title and body; comments in code, removed lines and deleted files are not candidates; a 2,000-line clean PR has no candidates (fixture 11); over the cap refuses with `too_many_candidates` (fixture 09) |
 | `test_recordings.py` | 18 | The four real recordings verify end to end, offline. R1 has 2 findings (01), R2 none (07), R3 one (10), R4 none (13). Refused: attestation removed (04), one response byte changed (05), another nonce (06), the gateway's signature instead of the TEE's, another signing key. The request carries no `tools`. |
 | `test_attestation.py` | 13 | Checks a–e on two real reports: quote verified by `dcap-qvl` against saved Intel collateral, signer and nonce bound in the report data, measurements replayed. Refused: another nonce, no attestation, unknown signer, a flipped quote byte, expired collateral, a TCB status outside the allowlist, a changed app compose or event log, GPU evidence for another nonce |
-| `test_grounding.py` | 13 | Check g: a finding must name a candidate the scanner found (fixture 08), malformed output is `model_output_invalid` |
+| `test_grounding.py` | 15 | Check g: a finding must name a candidate the scanner found (fixture 08), malformed output is `model_output_invalid`; a refusal names where the answer broke (for example `findings.0.rationale: string_too_long`, or cut off at `max_tokens`) without repeating what it said |
 | `test_github.py` | 13 | App JWT, webhook HMAC, `.hushmark.yml` read from the base commit only (fixture 12), re-runs need admin or maintain and never a bot (fixture 02), a diff GitHub cannot return is refused, a full Check Run for R1 in block mode, the anchor note never blocks the check |
 | `test_anchor.py` | 11 | Base58, Borsh transaction layout and Ed25519 signature, one signed call carrying our hashes, a second anchor reported (not raised), a key pasted with whitespace, a malformed key is an anchor failure and never a crash |
 | `test_nras.py` | 10 | Check e: NVIDIA's ES384 tokens against pinned keys; a swapped token, wrong nonce or expired verdict is refused |
@@ -118,7 +118,7 @@ No account, no API key, no network after install.
 | Do | See |
 |---|---|
 | `git clone https://github.com/Ritapossible/Hushmark && cd Hushmark && make install` | the locked dependencies |
-| `make verify` | 205 passed, from real recorded NEAR AI Cloud evidence |
+| `make verify` | 207 passed, from real recorded NEAR AI Cloud evidence |
 | `uv run pytest tests/test_recordings.py -k one_changed_response_byte -v` | one changed byte in a model answer is refused (`signature_mismatch`) |
 | open `fixtures/recordings/r1/` | the exact request and response bytes, signature, attestation report, Intel collateral and NVIDIA response |
 | *(planned)* `make verify-live` | a fresh attestation checked against Intel and NVIDIA online |
@@ -257,7 +257,7 @@ hushmark/verify/   attestation, nras, signature, grounding (checks a–g)
 contract/          the NEAR anchor contract (Rust, near-sdk)
 prompts/           the versioned system prompt
 fixtures/          inputs, real recordings, attestation reports, NVIDIA keys
-tests/             205 tests, including byte-for-byte replays of the recordings
+tests/             207 tests, including byte-for-byte replays of the recordings
 scripts/           recording and site-data scripts
 site/              the website and docs page (Vercel)
 docs/              architecture, plan, fixtures, decision records

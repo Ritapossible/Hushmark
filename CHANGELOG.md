@@ -36,6 +36,8 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versions follo
 - Refusal code `internal_error`.
 
 ### Fixed
+- `model_output_invalid` now says where the answer broke (schema location and error type, or
+  `finish_reason`) without its content, and the Action and App print refusal details.
 - Links in the model's rationale are no longer rendered in the check (shown as "link").
 - A GitHub error before the review no longer leaves the `Hushmark` check in progress.
 - A malformed `NEAR_ANCHOR_KEY` no longer crashes the check.

@@ -84,3 +84,29 @@ def test_malformed_answer_refuses_the_run(content: object) -> None:
     with pytest.raises(Refused) as e:
         ground(answer(content), candidates("r1"))
     assert e.value.code == "model_output_invalid"
+
+
+def refusal(response: bytes) -> str:
+    with pytest.raises(Refused) as e:
+        ground(response, candidates("r1"))
+    assert e.value.code == "model_output_invalid"
+    return e.value.detail
+
+
+def test_refusal_reasons_name_the_problem_but_never_the_answer() -> None:
+    """The detail is printed in logs, so it says where the answer broke, not what it said."""
+    secret = "SECRET-RATIONALE " * 40  # over the 500-character cap
+    detail = refusal(answer(json.dumps({"findings": [{**finding("c1"), "rationale": secret}]})))
+    assert detail == "schema: findings.0.rationale: string_too_long"
+    assert "SECRET" not in detail
+    detail = refusal(answer(json.dumps({"findings": [{**finding("c1"), "kind": "SECRET"}]})))
+    assert detail.startswith("schema: findings.0.kind:") and "SECRET" not in detail
+
+
+def test_cut_off_or_missing_answers_say_why() -> None:
+    cut = json.dumps(
+        {"choices": [{"message": {"content": '{"findings": ['}, "finish_reason": "length"}]}
+    ).encode()
+    assert "finish_reason=length" in refusal(cut)
+    empty = json.dumps({"choices": [{"message": {"content": None}, "finish_reason": "length"}]})
+    assert refusal(empty.encode()) == "no answer (finish_reason=length)"

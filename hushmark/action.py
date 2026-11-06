@@ -23,7 +23,7 @@ from hushmark.github import GitHubClient
 from hushmark.infer import Completion
 from hushmark.near import LiveEvidence, NearAiCloud
 from hushmark.nonce import key_hash
-from hushmark.pipeline import EvidenceSources, Reviewed, Tee
+from hushmark.pipeline import EvidenceSources, Refusal, Reviewed, Tee
 from hushmark.refusal import Refused
 from hushmark.service import CheckResult, run_check
 
@@ -138,6 +138,9 @@ def main() -> int:
     event = json.loads(Path(os.environ["GITHUB_EVENT_PATH"]).read_text())
     result = run(event, os.environ)
     print(f"Hushmark: {result.output.conclusion}: {result.output.title}")
+    if isinstance(result.outcome, Refusal):
+        # Codes and content-free details only: never diff text or the model's words (rule 3).
+        print(f"Refused: {result.outcome.code}: {result.outcome.detail}")
     # The Check Run carries the verdict; the job itself only fails if Hushmark itself failed.
     return 0
 
