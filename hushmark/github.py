@@ -140,6 +140,7 @@ class GitHubClient:
                 "output": {
                     "title": out.title,
                     "summary": out.summary,
+                    "text": out.text,
                     "annotations": out.annotations,
                 },
             },

@@ -5,6 +5,10 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versions follo
 ## [Unreleased]
 
 ### Added
+- GitHub App webhook server (`hushmark/app.py`, `hushmark/server.py`): one-click installs,
+  `/hushmark` re-runs by maintainers, Render blueprint, Dockerfile, set-up guide.
+- The receipt (hashes only) is shown in the Check Run details.
+- `docs/UPGRADES.md`: the five upgrades for team adoption, in order.
 - Design documents for review: architecture, threat model, receipt format v1, fixtures,
   build plan, roadmap, ADRs 0001–0005, open questions, agent memory (`AGENTS.md`).
 - Project tooling: uv, ruff with banned process APIs, mypy --strict, pytest audit hook, CI.

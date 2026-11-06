@@ -47,6 +47,7 @@ class CheckOutput:
     title: str
     summary: str
     annotations: list[dict[str, Any]] = field(default_factory=list)
+    text: str = ""  # the Check Run's details section
 
 
 # The rationale is the model's sentence about attacker-written text, so it may carry a link the
@@ -98,6 +99,15 @@ def _unconfirmed(candidates: tuple[Candidate, ...]) -> list[dict[str, Any]]:
     ][:MAX_ANNOTATIONS]
 
 
+def _receipt_text(outcome: Reviewed) -> str:
+    """The receipt itself (hashes only, RECEIPT.md), so anyone can verify it from the check."""
+    return (
+        "Receipt (hashes only; see RECEIPT.md to verify it):\n\n```json\n"
+        + outcome.receipt.body.decode()
+        + "\n```"
+    )
+
+
 def render(outcome: Outcome, config: Config) -> CheckOutput:
     if isinstance(outcome, NoCandidates):
         return CheckOutput(
@@ -123,7 +133,9 @@ def render(outcome: Outcome, config: Config) -> CheckOutput:
             f"{len(outcome.candidates)} hidden region(s) reviewed inside a NEAR AI Cloud TEE; "
             f"none is aimed at AI agents. Signature and attestation verified.\n\n{receipt}"
         )
-        return CheckOutput("success", "No instructions aimed at agents", summary)
+        return CheckOutput(
+            "success", "No instructions aimed at agents", summary, text=_receipt_text(outcome)
+        )
 
     level = "failure" if config.mode == "block" else "warning"
     lines = [
@@ -145,4 +157,10 @@ def render(outcome: Outcome, config: Config) -> CheckOutput:
     lines += ["", receipt]
     conclusion = "failure" if config.mode == "block" else "neutral"
     title = f"{len(findings)} instruction(s) aimed at AI agents"
-    return CheckOutput(conclusion, title, "\n".join(lines), annotations[:MAX_ANNOTATIONS])
+    return CheckOutput(
+        conclusion,
+        title,
+        "\n".join(lines),
+        annotations[:MAX_ANNOTATIONS],
+        text=_receipt_text(outcome),
+    )

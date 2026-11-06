@@ -34,18 +34,19 @@ docs and from checks run on 2026-11-01 (links at the end). Anything not confirme
 
 ## 2. Pipeline
 
-### Step 1: Trigger (`hushmark/trigger.py`)
+### Step 1: Trigger (`.github/workflows/hushmark.yml`, or the App: `hushmark/app.py`, `hushmark/server.py`)
 - **Automatic:** `pull_request` events `opened`, `synchronize`, `reopened`, `edited`
-  (`edited` because the title and body are scanned). Also `check_run` `rerequested`.
-- **Manual re-run:** an `issue_comment` on a pull request whose body is exactly `/hushmark`.
+  (`edited` because the title and body are scanned). (`check_run` `rerequested` is not
+  handled yet; use `/hushmark`.)
+- **Manual re-run (GitHub App):** an `issue_comment` on a pull request whose body is exactly `/hushmark`.
   Only `role_name ∈ {admin, maintain}` from
   `GET /repos/{owner}/{repo}/collaborators/{login}/permission`; bots rejected.
   Refusal: `not_maintainer`, no model call.
-- Verify `X-Hub-Signature-256` with a constant-time compare. Reject a reused
-  `X-GitHub-Delivery` ID.
+- App: verify `X-Hub-Signature-256` with a constant-time compare (401 `webhook_invalid`).
+  A redelivered `X-GitHub-Delivery` ID is acknowledged but not reviewed again.
 - Immediately create the Check Run `Hushmark` on the head SHA with status `in_progress`.
 
-### Step 2: Fetch (`hushmark/fetch.py`)
+### Step 2: Fetch (`hushmark/github.py`, `hushmark/service.py`)
 - Read `base.sha`, `head.sha`, `title` and `body` from the pull request.
 - Diff: `GET /repos/{owner}/{repo}/compare/{base_sha}...{head_sha}` with
   `Accept: application/vnd.github.diff`. Both SHAs pinned at trigger time.
@@ -220,6 +221,10 @@ hushmark/
   github.py      GitHub App auth, webhook HMAC, diff, config at base, Check Run calls
   service.py     one pull request from Check Run start to finish
   near.py        live NEAR AI Cloud, Intel PCS and NVIDIA NRAS adapters
+  anchor.py      NEAR testnet anchor: Borsh transaction, Ed25519 signing, RPC
+  action.py      the GitHub Action entry point
+  app.py         the GitHub App: which delivery starts which review, re-runs, budget
+  server.py      the App's webhook server (standard library, one background worker)
   verify/  attestation.py  nras.py  signature.py  grounding.py
 prompts/v1.txt
 fixtures/   inputs/ recordings/ attestation/ nvidia/
