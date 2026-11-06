@@ -72,7 +72,7 @@ Every receipt and attestation report from the Action is kept as a workflow artif
 ```sh
 make install   # uv sync --locked
 make lint      # ruff, ruff format --check, mypy --strict
-make test      # all 179 Python tests, offline, about 2 seconds
+make test      # all 205 Python tests, offline, about 2 seconds
 make verify    # the same suite, as CI runs it: no API key, no network
 cd contract && cargo test   # 5 contract tests
 ```
@@ -81,7 +81,7 @@ CI (`.github/workflows/ci.yml`) runs lint, every Python test and the contract te
 push and pull request. The Python tests run under an audit hook that fails the run if any
 process is started, from the first import onwards.
 
-**Python: 179 tests, all passing.**
+**Python: 205 tests, all passing.**
 
 | File | Tests | What it proves |
 |---|---:|---|
@@ -92,6 +92,8 @@ process is started, from the first import onwards.
 | `test_github.py` | 13 | App JWT, webhook HMAC, `.hushmark.yml` read from the base commit only (fixture 12), re-runs need admin or maintain and never a bot (fixture 02), a diff GitHub cannot return is refused, a full Check Run for R1 in block mode, the anchor note never blocks the check |
 | `test_anchor.py` | 11 | Base58, Borsh transaction layout and Ed25519 signature, one signed call carrying our hashes, a second anchor reported (not raised), a key pasted with whitespace, a malformed key is an anchor failure and never a crash |
 | `test_nras.py` | 10 | Check e: NVIDIA's ES384 tokens against pinned keys; a swapped token, wrong nonce or expired verdict is refused |
+| `test_mcp.py` | 15 | The MCP server: protocol (version negotiation, notifications, errors, stdio framing); `scan` returns locations but never the hidden text or matched phrases unless asked, and then fenced as untrusted; a file path applies that file's rules; `review` makes no model call on clean text and refuses without a key; a verified review saves its receipt and strips links |
+| `test_receipt_check.py` | 11 | Checking a receipt without trusting Hushmark, on the real R1 recording: every check passes offline; a reformatted receipt, a changed salt, a changed response hash, a gateway signature or another attestation report each fails its named check; the NEAR anchor lookup passes, fails on another receipt, and is skipped (never failed) when absent or unreachable |
 | `test_app.py` | 28 | The GitHub App: which deliveries start a review, `/hushmark` re-runs only by an admin or maintainer and never a bot, the in-memory daily budget, the installation token, and the webhook server (forged deliveries get 401, a redelivery or a PR already waiting is not queued twice, a failing review does not stop the worker) |
 | `test_action.py` | 9 | The workflow never checks out the PR and has only the four permissions; no key means `tee_unavailable`; the daily budget refuses before any model call; a GitHub error closes the check as not verified instead of leaving it in progress |
 | `test_pipeline.py` | 9 | The whole review replayed byte for byte from the recordings; no candidates means no model call; an unreachable TEE is a refusal |
@@ -116,10 +118,24 @@ No account, no API key, no network after install.
 | Do | See |
 |---|---|
 | `git clone https://github.com/Ritapossible/Hushmark && cd Hushmark && make install` | the locked dependencies |
-| `make verify` | 179 passed, from real recorded NEAR AI Cloud evidence |
+| `make verify` | 205 passed, from real recorded NEAR AI Cloud evidence |
 | `uv run pytest tests/test_recordings.py -k one_changed_response_byte -v` | one changed byte in a model answer is refused (`signature_mismatch`) |
 | open `fixtures/recordings/r1/` | the exact request and response bytes, signature, attestation report, Intel collateral and NVIDIA response |
 | *(planned)* `make verify-live` | a fresh attestation checked against Intel and NVIDIA online |
+
+## Use it from an AI agent (MCP)
+
+Agents can check what they are about to read (an issue, a README, a web page, another tool's
+output) with Hushmark's MCP server, which runs locally:
+
+```sh
+claude mcp add hushmark -- uv run --directory /path/to/Hushmark hushmark-mcp
+```
+
+Tools: `scan` (offline, free), `review` (excerpts only to the NEAR AI Cloud TEE, checks a–g,
+a receipt; needs `NEARAI_API_KEY`) and `verify_receipt`. By default no hidden text is returned
+to the agent, only where it is. Set-up for Cursor and Claude Desktop:
+[`docs/mcp/README.md`](docs/mcp/README.md).
 
 ## Install on your repositories
 
@@ -212,11 +228,13 @@ testnet NEAR from the anchor key's 0.5 NEAR allowance.
 ## Limitations
 
 - The GitHub App server is built and tested but not deployed yet; until it is, the Action is
-  how Hushmark runs. The MCP server for agents is next
-  ([ADR-0010](docs/adr/0010-github-app-and-mcp-server.md), [`docs/UPGRADES.md`](docs/UPGRADES.md)).
-- Neither the Action nor the App keeps a database, so a re-run of the same commit makes a new review and a new
-  receipt instead of reusing the old one; the contract still refuses a second anchor for the
-  same review key.
+  how Hushmark runs ([ADR-0010](docs/adr/0010-github-app-and-mcp-server.md),
+  [`docs/UPGRADES.md`](docs/UPGRADES.md)).
+- Neither the Action nor the App keeps a database, so a re-run of the same commit makes a new
+  review and a new receipt instead of reusing the old one; the contract still refuses a second
+  anchor for the same review key.
+- The MCP server's `review` keeps its daily count only while it runs, and its receipts are not
+  anchored (they are not tied to a pull request).
 - One finding kind: instructions aimed at AI agents. More are in [`ROADMAP.md`](ROADMAP.md).
 
 ## Built with
@@ -233,12 +251,13 @@ testnet NEAR from the anchor key's 0.5 NEAR allowance.
 
 ```
 hushmark/          scan, excerpt, infer, nonce, receipt, config, pipeline, report,
-                   github, service, near, anchor, action, app, server
+                   github, service, near, anchor, action, app, server, mcp,
+                   receipt_check
 hushmark/verify/   attestation, nras, signature, grounding (checks a–g)
 contract/          the NEAR anchor contract (Rust, near-sdk)
 prompts/           the versioned system prompt
 fixtures/          inputs, real recordings, attestation reports, NVIDIA keys
-tests/             179 tests, including byte-for-byte replays of the recordings
+tests/             205 tests, including byte-for-byte replays of the recordings
 scripts/           recording and site-data scripts
 site/              the website and docs page (Vercel)
 docs/              architecture, plan, fixtures, decision records
@@ -257,6 +276,7 @@ docs/              architecture, plan, fixtures, decision records
 | [`SECURITY.md`](SECURITY.md) | How to report a vulnerability |
 | [`docs/UPGRADES.md`](docs/UPGRADES.md) | The five upgrades for team adoption, in build order, with status |
 | [`docs/github-app/README.md`](docs/github-app/README.md) | Set up and deploy the GitHub App |
+| [`docs/mcp/README.md`](docs/mcp/README.md) | Use Hushmark from an AI agent (MCP) |
 | [`docs/PLAN.md`](docs/PLAN.md) | The 14-day build plan |
 | [`ROADMAP.md`](ROADMAP.md) | What comes after the hackathon |
 | [`docs/adr/`](docs/adr/) | Architecture decision records |

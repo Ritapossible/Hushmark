@@ -161,6 +161,11 @@ make verify-live   # (planned) re-verify recorded evidence online
   signature first, one background worker), `render.yaml`, `Dockerfile`, CI image job, set-up
   guide `docs/github-app/README.md`. The receipt now also appears in the Check Run details.
   179 tests. Deploying it needs Rita (App registration, Render account).
+- **Upgrade #2 MCP server (2026-11-06):** `hushmark/mcp.py` (stdlib JSON-RPC over stdio;
+  `scan`, `review`, `verify_receipt`; no hidden text returned by default) and
+  `hushmark/receipt_check.py` (checks a receipt without trusting us; reused by upgrade #4).
+  `hushmark-mcp` command; `claude mcp list` shows it connected. Guide `docs/mcp/README.md`.
+  205 tests.
 - **Next week (all need Rita):** mainnet payout account, demo video, X post, make the repo
   public, submit before 14 November 23:59 UTC.
 
