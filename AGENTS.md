@@ -180,6 +180,11 @@ make verify-live   # (planned) re-verify recorded evidence online
 - **Feature freeze (2026-11-07, Grok review):** no new features. The Action is the demo; the
   submission must not depend on the App being hosted. Only fixes, the video, the X post and the
   submission remain.
+- **App demo (Grok, 2026-11-07):** deploy the App and prove it on a repository Rita does not
+  own: block-mode failure with a new testnet anchor, a maintainer `/hushmark` re-run, and a
+  `not_maintainer` refusal (guide part 4). Put the two URLs in the README. If it is not up by
+  Monday 9 November, drop the App from the pitch and submit the Action. Guide fixed: the App
+  needs **Issues: Read-only** or GitHub never sends `/hushmark` comments.
 - **Next week (all need Rita):** mainnet payout account, demo video, X post, make the repo
   public, submit before 14 November 23:59 UTC.
 
