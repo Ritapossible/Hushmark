@@ -13,6 +13,7 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versions follo
   `verify_receipt`; no hidden text returned by default.
 - `ignore:` path patterns in `.hushmark.yml` (ADR-0011); agent rules files, title and body
   are never ignored, and skipped files are named in the check.
+- "How to trust a result" page for security reviewers, linked from every check.
 - Receipt verifier: `hushmark-verify` command and a verify page on the website; every check's
   details say where to verify its receipt.
 - `hushmark/receipt_check.py`: check a receipt without trusting Hushmark, including the NEAR
