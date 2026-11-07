@@ -12,7 +12,7 @@ Background: [ADR-0010](adr/0010-github-app-and-mcp-server.md).
 | 4 | **Public receipt verifier** | Anyone can check a receipt without trusting us; makes "verifiable" tangible | built and tested (PR #18): page, command, MCP tool |
 | 5 | **"How to trust this" page** | Security reviewers get what is and is not proved in one page, linked from every check | built and tested (PR #19) |
 
-Feature freeze: **Monday 9 November**. Submission: before **14 November 23:59 UTC**.
+Feature freeze: **in effect since 7 November** (all five merged; Grok review). Submission: before **14 November 23:59 UTC**.
 
 ## 1. One-click install: the GitHub App
 
