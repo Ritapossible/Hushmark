@@ -41,6 +41,8 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versions follo
 - Refusal code `internal_error`.
 
 ### Fixed
+- The App server answered HEAD requests with 501, so uptime monitors reported it down and
+  stopped keeping Render's free instance awake. `/` now says what the server is.
 - A fresh NVIDIA verdict stamped a few seconds after Hushmark's verification time was refused
   as `gpu_evidence_invalid`; `nbf` now allows 120 s of clock skew (expiry is still strict).
 - Reviews of several hidden regions no longer refuse with `model_output_invalid`: the model

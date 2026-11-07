@@ -39,6 +39,11 @@ from hushmark.github import GitHubApp, verify_webhook
 from hushmark.pipeline import Reviewed
 from hushmark.refusal import Refused
 
+HOME = (
+    "Hushmark GitHub App webhook server.\n"
+    "GitHub sends pull request events to /webhook; /healthz says ok.\n"
+    "About Hushmark: https://tryhushmark.vercel.app\n"
+)
 MAX_BODY = 25 * 1024 * 1024  # GitHub caps webhook payloads at 25 MB
 SEEN_DELIVERIES = 10_000
 
@@ -120,22 +125,33 @@ def make_handler(
         server_version = "Hushmark"
         sys_version = ""
 
-        def _reply(self, status: int, body: str) -> None:
+        def _reply(self, status: int, body: str, head: bool = False) -> None:
             data = body.encode()
             self.send_response(status)
             self.send_header("Content-Type", "text/plain; charset=utf-8")
             self.send_header("Content-Length", str(len(data)))
             self.end_headers()
-            self.wfile.write(data)
+            if not head:
+                self.wfile.write(data)
 
         def log_message(self, format: str, *args: Any) -> None:
             pass  # our own JSON log instead; the default one would print request lines
 
-        def do_GET(self) -> None:
+        def _get(self, head: bool) -> None:
             if self.path == "/healthz":
-                self._reply(200, "ok\n")
+                self._reply(200, "ok\n", head)
+            elif self.path == "/":
+                self._reply(200, HOME, head)
             else:
-                self._reply(404, "not found\n")
+                self._reply(404, "not found\n", head)
+
+        def do_GET(self) -> None:
+            self._get(head=False)
+
+        def do_HEAD(self) -> None:
+            # Uptime monitors (UptimeRobot's free plan) check with HEAD; without this the
+            # standard library answers 501 and the monitor reports the server as down.
+            self._get(head=True)
 
         def do_POST(self) -> None:
             if self.path != "/webhook":
