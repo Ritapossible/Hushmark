@@ -41,6 +41,8 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versions follo
 - Refusal code `internal_error`.
 
 ### Fixed
+- A fresh NVIDIA verdict stamped a few seconds after Hushmark's verification time was refused
+  as `gpu_evidence_invalid`; `nbf` now allows 120 s of clock skew (expiry is still strict).
 - Reviews of several hidden regions no longer refuse with `model_output_invalid`: the model
   had no tokens left to answer after reasoning (`max_tokens` 4,096 → 16,384; timeout 600 s).
 - `model_output_invalid` now says where the answer broke (schema location and error type, or

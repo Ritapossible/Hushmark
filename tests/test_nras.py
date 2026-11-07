@@ -72,3 +72,22 @@ def test_unknown_signing_key_is_refused() -> None:
 def test_unexpected_layout_is_refused() -> None:
     _, nonce, at = load("r1")
     assert code_of({"not": "nras"}, nonce, at) == "gpu_evidence_invalid"
+
+
+def _latest_nbf(response: Any) -> int:
+    import jwt
+
+    tokens = [response[0][1], *response[1].values()]
+    return max(int(jwt.decode(t, options={"verify_signature": False})["nbf"]) for t in tokens)
+
+
+def test_fresh_verdict_from_a_slightly_faster_clock_is_accepted() -> None:
+    """NRAS stamps nbf just after our verification time; PR #21's live check refused that."""
+    response, nonce, _ = load("r1")
+    nbf = _latest_nbf(response)
+    assert verify_nras(response, nonce, JWKS, nbf - 30)["x-nvidia-overall-att-result"] is True
+
+
+def test_verdict_far_in_the_future_is_still_refused() -> None:
+    response, nonce, _ = load("r1")
+    assert code_of(response, nonce, _latest_nbf(response) - 600) == "gpu_evidence_invalid"
