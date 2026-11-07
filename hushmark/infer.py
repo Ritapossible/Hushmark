@@ -18,8 +18,10 @@ from hushmark.excerpt import Excerpt, render
 
 BASE_URL = "https://cloud-api.near.ai/v1"
 PROMPT_PATH = Path(__file__).resolve().parent.parent / "prompts" / "v1.txt"
-# A reasoning model spends tokens thinking before the JSON answer; leave room for both.
-MAX_TOKENS = 4096
+# A reasoning model spends tokens thinking before the JSON answer; leave room for both. At 4,096
+# GLM-5.3-flash ran out while still reasoning about 3 regions (PR #20: finish_reason=length,
+# no answer), so the review refused. Only the tokens used are billed.
+MAX_TOKENS = 16384
 
 
 @dataclass(frozen=True)
@@ -35,7 +37,12 @@ def load_prompt() -> tuple[str, str]:
     return raw.decode(), hashlib.sha256(raw).hexdigest()
 
 
-def build_request(model: str, excerpts: tuple[Excerpt, ...], boundary: str | None = None) -> bytes:
+def build_request(
+    model: str,
+    excerpts: tuple[Excerpt, ...],
+    boundary: str | None = None,
+    max_tokens: int = MAX_TOKENS,
+) -> bytes:
     prompt, _ = load_prompt()
     boundary = boundary or secrets.token_hex(8)
     body = {
@@ -45,7 +52,7 @@ def build_request(model: str, excerpts: tuple[Excerpt, ...], boundary: str | Non
             {"role": "user", "content": render(excerpts, boundary)},
         ],
         "temperature": 0,
-        "max_tokens": MAX_TOKENS,
+        "max_tokens": max_tokens,
         "stream": False,
     }
     return json.dumps(body, ensure_ascii=False, separators=(",", ":")).encode()

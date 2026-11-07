@@ -239,8 +239,10 @@ posted) and `webhook_invalid` (a delivery not signed by GitHub; answered with 40
 ## Cost
 
 A pull request with no hidden regions costs nothing. A model review costs at most about
-$0.0025 at GLM-5.3-flash's listed price; reviews are capped per repository per day
-(`HUSHMARK_DAILY_REVIEWS`, default 50, about $0.13 a day at most). Anchoring is paid in
+$0.01 at GLM-5.3-flash's listed price (up to 16,384 output tokens, so the reasoning model has
+room to answer; only the tokens used are billed, and most reviews use far fewer). Reviews are
+capped per repository per day (`HUSHMARK_DAILY_REVIEWS`, default 50, about $0.50 a day at
+most). Anchoring is paid in
 testnet NEAR from the anchor key's 0.5 NEAR allowance.
 
 ## NEAR technology used

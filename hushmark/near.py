@@ -24,7 +24,7 @@ class NearAiCloud:
         self.http = http or httpx.Client(
             base_url=BASE_URL,
             headers={"Authorization": f"Bearer {api_key}", "Accept-Encoding": "identity"},
-            timeout=httpx.Timeout(300, connect=30),
+            timeout=httpx.Timeout(600, connect=30),  # long reasoning answers take minutes
         )
 
     def complete(self, request_bytes: bytes) -> Completion:

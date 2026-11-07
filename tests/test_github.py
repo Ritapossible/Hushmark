@@ -131,6 +131,7 @@ def test_full_check_run_for_r1_in_block_mode() -> None:
         now=lambda: rec.meta["fetched_at"],
         salt=rec.salt(),
         boundary=rec.boundary(),
+        max_tokens=rec.max_tokens(),
     ).output
     assert out.conclusion == "failure"
     assert json.loads(start.calls.last.request.content) == {
@@ -170,6 +171,7 @@ def test_anchor_note_is_added_and_never_blocks(anchor_result: object, expected: 
         client(), owner=OWNER, repo=REPO, repo_id=pr.repo_id, number=2,
         model="z-ai/glm-5.3-flash", tee=RecordedTee(rec), sources=RecordedEvidence(rec),
         now=lambda: rec.meta["fetched_at"], salt=rec.salt(), boundary=rec.boundary(),
+        max_tokens=rec.max_tokens(),
         anchor=anchor_result,  # type: ignore[arg-type]
     ).output  # fmt: skip
     assert out.conclusion == "success"

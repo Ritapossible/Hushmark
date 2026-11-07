@@ -15,7 +15,7 @@ from typing import Any, Protocol
 import httpx
 
 from hushmark.excerpt import build_excerpts
-from hushmark.infer import Completion, build_request, load_prompt
+from hushmark.infer import MAX_TOKENS, Completion, build_request, load_prompt
 from hushmark.nonce import IdempotencyKey, derive_nonce, input_sha256
 from hushmark.receipt import Receipt, build_receipt
 from hushmark.refusal import Refused
@@ -89,13 +89,14 @@ def review(
     now: Callable[[], int],
     salt: bytes | None = None,
     boundary: str | None = None,
+    max_tokens: int = MAX_TOKENS,
 ) -> Outcome:
-    """Run one review. `salt` and `boundary` are fixed only when replaying a recording."""
+    """Run one review. `salt`, `boundary` and `max_tokens` are fixed only to replay a recording."""
     result = scan(pr.diff, pr.title, pr.body, pr.ignore)
     if not result.candidates:
         return NoCandidates(result)  # rule 13: no model call, no cost
     try:
-        return _verified_review(pr, result, model, tee, sources, now, salt, boundary)
+        return _verified_review(pr, result, model, tee, sources, now, salt, boundary, max_tokens)
     except Refused as e:
         return Refusal(e.code, e.detail, result.candidates, result.ignored_files)
     except (httpx.HTTPError, ValueError, KeyError) as e:
@@ -112,6 +113,7 @@ def _verified_review(
     now: Callable[[], int],
     salt: bytes | None,
     boundary: str | None,
+    max_tokens: int,
 ) -> Reviewed:
     ensure_within_cap(result)
     excerpts = build_excerpts(result, pr.title, pr.body)
@@ -126,7 +128,7 @@ def _verified_review(
         prompt_hash=prompt_hash,
     )
 
-    completion = tee.complete(build_request(model, excerpts, boundary))
+    completion = tee.complete(build_request(model, excerpts, boundary, max_tokens))
     signature = tee.signature(completion.chat_id)
     signer = check_signature(  # check f
         signature, model, completion.request_bytes, completion.response_bytes

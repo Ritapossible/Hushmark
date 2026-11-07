@@ -28,8 +28,9 @@ from hushmark.refusal import Refused
 from hushmark.service import CheckResult, run_check
 
 DEFAULT_MODEL = "z-ai/glm-5.3-flash"
-# Worst case per review at GLM-5.3-flash's listed price: 200 excerpt lines in, 4,096 tokens out,
-# about $0.0025. 50 a day caps a repository at about $0.13 a day. Clean PRs never count.
+# Worst case per review at GLM-5.3-flash's listed price: 200 excerpt lines in, 16,384 tokens out
+# (infer.MAX_TOKENS), about $0.01; most reviews use far fewer. 50 a day caps a repository at
+# about $0.50 a day. Clean PRs never count.
 DEFAULT_DAILY_REVIEWS = 50
 RECEIPT_ARTIFACT_PREFIX = "hushmark-receipt-"
 
