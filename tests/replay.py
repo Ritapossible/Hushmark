@@ -43,6 +43,11 @@ class Recording:
         assert len(found) == 1
         return str(found[0])
 
+    def max_tokens(self) -> int:
+        """The cap the recording was made with (4,096 then; the live default is higher)."""
+        value: int = json.loads(self.request)["max_tokens"]
+        return value
+
     def salt(self) -> bytes:
         return bytes.fromhex(self.meta["nonce_salt"])
 

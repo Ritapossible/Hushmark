@@ -192,6 +192,12 @@ make verify-live   # (planned) re-verify recorded evidence online
 
 Newest first. One line each, with a link when there is an ADR.
 
+- 2026-11-07: PR #21's check refused with `gpu_evidence_invalid: NRAS token outside its
+  validity window`: NVIDIA stamps `nbf` just after our verification time. 120 s leeway on `nbf`
+  only (`verify/nras.py`); expired verdicts are still refused. A fix, allowed in the freeze.
+- 2026-11-07: PR #20's check refused with `no answer (finish_reason=length)`: GLM spent all
+  4,096 tokens reasoning about 3 regions. `max_tokens` is now 16,384 and the TEE timeout 600 s
+  (replays pin the recorded 4,096). Worst case about $0.01 a review. A fix, allowed in the freeze.
 - 2026-11-07: Grok review: freeze now (all five upgrades merged, PRs #14–#19). The Action is
   the demo; the App's hosting is optional. MCP keeps returning locations only by default.
   The video is the work that changes the score.

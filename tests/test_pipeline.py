@@ -26,6 +26,7 @@ def replay(name: str, response: bytes | None = None) -> tuple[Any, RecordedTee]:
         now=lambda: rec.meta["fetched_at"],
         salt=rec.salt(),
         boundary=rec.boundary(),
+        max_tokens=rec.max_tokens(),
     )
     return outcome, tee
 

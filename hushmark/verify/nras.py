@@ -18,6 +18,10 @@ import jwt
 from hushmark.refusal import Refused
 
 ISSUER = "https://nras.attestation.nvidia.com"
+# NRAS stamps its verdict a moment after Hushmark takes its verification time, on a different
+# clock. Without leeway a fresh, valid verdict can look "not yet valid" (PR #21's live check:
+# gpu_evidence_invalid). The leeway applies only to `nbf`; an expired verdict is still refused.
+CLOCK_SKEW_SECS = 120
 
 
 def _verify_token(token: str, keys: Mapping[str, Any], now_secs: int) -> dict[str, Any]:
@@ -35,7 +39,7 @@ def _verify_token(token: str, keys: Mapping[str, Any], now_secs: int) -> dict[st
         )
     except jwt.PyJWTError as e:
         raise Refused("gpu_evidence_invalid", f"bad NRAS token: {e}") from e
-    if not claims.get("nbf", 0) <= now_secs <= claims.get("exp", 0):
+    if not claims.get("nbf", 0) - CLOCK_SKEW_SECS <= now_secs <= claims.get("exp", 0):
         raise Refused("gpu_evidence_invalid", "NRAS token outside its validity window")
     return claims
 

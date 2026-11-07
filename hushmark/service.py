@@ -9,6 +9,7 @@ import httpx
 
 from hushmark.config import Config, parse_config
 from hushmark.github import GitHubClient
+from hushmark.infer import MAX_TOKENS
 from hushmark.pipeline import (
     EvidenceSources,
     Outcome,
@@ -54,13 +55,14 @@ def run_check(
     now: Callable[[], int],
     salt: bytes | None = None,
     boundary: str | None = None,
+    max_tokens: int = MAX_TOKENS,
     anchor: Callable[[Reviewed], str] | None = None,
 ) -> CheckResult:
     """Start the Check Run first, so the PR shows Hushmark is working, then finish it.
 
-    `salt` and `boundary` are fixed only when replaying a recording. `anchor`, if given, records
-    a verified review's receipt on NEAR and returns a line for the summary; it never blocks the
-    check (ADR-0004).
+    `salt`, `boundary` and `max_tokens` are fixed only when replaying a recording. `anchor`, if
+    given, records a verified review's receipt on NEAR and returns a line for the summary; it
+    never blocks the check (ADR-0004).
     """
     pull = gh.pull(owner, repo, number)
     base_sha, head_sha = str(pull["base"]["sha"]), str(pull["head"]["sha"])
@@ -78,7 +80,14 @@ def run_check(
             ignore=config.ignore,
         )
         outcome = review(
-            pr, model=model, tee=tee, sources=sources, now=now, salt=salt, boundary=boundary
+            pr,
+            model=model,
+            tee=tee,
+            sources=sources,
+            now=now,
+            salt=salt,
+            boundary=boundary,
+            max_tokens=max_tokens,
         )
     except Refused as e:  # before review: config or diff
         outcome, config = Refusal(e.code, e.detail, ()), Config()

@@ -88,3 +88,13 @@ def test_canonical_json_is_sorted_and_refuses_floats() -> None:
     assert canonical_json({"b": 1, "a": "é"}) == '{"a":"é","b":1}'.encode()
     with pytest.raises(TypeError):
         canonical_json({"x": 1.5})
+
+
+def test_reasoning_model_gets_room_for_its_answer() -> None:
+    """PR #20 refused with finish_reason=length at 4,096 tokens on 3 regions."""
+    import json
+
+    from hushmark.infer import MAX_TOKENS, build_request
+
+    assert MAX_TOKENS >= 16384
+    assert json.loads(build_request("m", ()))["max_tokens"] == MAX_TOKENS
