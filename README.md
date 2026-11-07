@@ -255,9 +255,13 @@ testnet NEAR from the anchor key's 0.5 NEAR allowance.
 
 ## Limitations
 
-- The GitHub App server is built and tested but not deployed yet; until it is, the Action is
-  how Hushmark runs ([ADR-0010](docs/adr/0010-github-app-and-mcp-server.md),
-  [`docs/UPGRADES.md`](docs/UPGRADES.md)).
+- **The GitHub Action is the demo.** It runs on this repository today (see
+  [Live results](#live-results)) and needs no server. The GitHub App server is built and
+  tested but not deployed; if it is deployed and its free host goes down, nothing else
+  changes, because the App runs the same review as the Action
+  ([ADR-0010](docs/adr/0010-github-app-and-mcp-server.md)).
+- The MCP server returns only where hidden text is, by default. Asking for excerpts puts the
+  hidden instruction into the agent's own context, so that is opt-in and labelled untrusted.
 - Neither the Action nor the App keeps a database, so a re-run of the same commit makes a new
   review and a new receipt instead of reusing the old one; the contract still refuses a second
   anchor for the same review key.

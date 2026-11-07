@@ -177,6 +177,14 @@ make verify-live   # (planned) re-verify recorded evidence online
 - **Upgrade #5 trust page (2026-11-06):** `site/trust.html`: proved / not proved / data flow /
   attackers, every claim linked to code and tests; every check summary ends with a link to it.
   All five upgrades built; the App still needs registering and deploying (Rita). 229 tests.
+- **Feature freeze (2026-11-07, Grok review):** no new features. The Action is the demo; the
+  submission must not depend on the App being hosted. Only fixes, the video, the X post and the
+  submission remain.
+- **App demo (Grok, 2026-11-07):** deploy the App and prove it on a repository Rita does not
+  own: block-mode failure with a new testnet anchor, a maintainer `/hushmark` re-run, and a
+  `not_maintainer` refusal (guide part 4). Put the two URLs in the README. If it is not up by
+  Monday 9 November, drop the App from the pitch and submit the Action. Guide fixed: the App
+  needs **Issues: Read-only** or GitHub never sends `/hushmark` comments.
 - **Next week (all need Rita):** mainnet payout account, demo video, X post, make the repo
   public, submit before 14 November 23:59 UTC.
 
@@ -184,6 +192,9 @@ make verify-live   # (planned) re-verify recorded evidence online
 
 Newest first. One line each, with a link when there is an ADR.
 
+- 2026-11-07: Grok review: freeze now (all five upgrades merged, PRs #14–#19). The Action is
+  the demo; the App's hosting is optional. MCP keeps returning locations only by default.
+  The video is the work that changes the score.
 - 2026-11-06: Rita: build all five upgrades in `docs/UPGRADES.md`, starting with the GitHub
   App. The App uses the standard library server (no web framework dependency) and Render's
   free plan; use the App or the Action on a repository, not both.
