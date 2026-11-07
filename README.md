@@ -1,16 +1,45 @@
 # Hushmark
 
-A GitHub check that stops hidden instructions aimed at AI agents from being merged into your
-repository. Hidden regions in a pull request are reviewed by a model inside a NEAR AI Cloud
-TEE, a finding is shown only if the TEE's attestation and signature verify, and every review
-leaves a receipt (hashes only) anchored on NEAR.
+**A GitHub check that stops hidden instructions aimed at AI agents from being merged.**
+Hidden regions in a pull request are reviewed by a model inside a NEAR AI Cloud TEE; a finding
+is shown only if the TEE's attestation and signature verify; and every review leaves a receipt
+(hashes only) anchored on NEAR.
+
+[![CI](https://github.com/Ritapossible/Hushmark/actions/workflows/ci.yml/badge.svg)](https://github.com/Ritapossible/Hushmark/actions/workflows/ci.yml)
+[![License: Apache-2.0](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
+[![Built at NEAR HACKATHON](https://img.shields.io/badge/built%20at-NEAR%20HACKATHON-black.svg)](#built-at-near-hackathon)
+
+**[Website](https://tryhushmark.vercel.app)** ·
+**[Docs](https://tryhushmark.vercel.app/docs)** ·
+**[Verify a receipt](https://tryhushmark.vercel.app/verify)** ·
+**[How to trust a result](https://tryhushmark.vercel.app/trust)** ·
+**[Live demo: PR #8](https://github.com/Ritapossible/Hushmark/pull/8)**
 
 > **Status: v0.1, built for NEAR HACKATHON (1–14 November 2026).** Tracks: Privacy & Private
 > AI (primary), AI Security & Defense. Everything below works today unless marked
-> *(planned)*. Website: https://tryhushmark.vercel.app · Docs: https://tryhushmark.vercel.app/docs
+> *(planned)*.
 
-**Built at NEAR HACKATHON.** The repository was created on 1 November 2026; every line was
-written during the hackathon, much of it with Claude Code (see [Built with](#built-with)).
+![Hushmark drawn as a bench machine: fanfold paper (the whole pull request) feeds under a scanner; one hidden region is punched out as a chip (the excerpt), the rest drops into a slot and never leaves; the chip rides into a vault marked TEE, a press signs it, and a receipt slides onto the newest block of a chain (the NEAR testnet anchor).](site/img/hushmark-anatomy.png)
+
+*Left to right: the whole pull request is scanned, only the hidden excerpt goes to the TEE,
+and the receipt (hashes only) is anchored on NEAR testnet.*
+
+## Contents
+
+- [The problem](#the-problem)
+- [How it works](#how-it-works)
+- [Quick start](#quick-start)
+- [Configuration](#configuration)
+- [Live results](#live-results)
+- [Verify a receipt yourself](#verify-a-receipt-yourself)
+- [Security and privacy](#security-and-privacy)
+- [Cost](#cost)
+- [NEAR technology used](#near-technology-used)
+- [Development and tests](#development-and-tests)
+- [Limitations](#limitations)
+- [Built at NEAR HACKATHON](#built-at-near-hackathon)
+- [Documentation](#documentation)
+- [License](#license)
 
 ## The problem
 
@@ -23,12 +52,7 @@ still give those agents instructions. Once merged, it affects every agent sessio
 - GitHub MCP prompt injection (Invariant Labs, 2025): a malicious public issue made an agent
   leak private repository data.
 
-## What Hushmark does
-
-![Hushmark drawn as a bench machine: fanfold paper (the whole pull request) feeds under a scanner; one hidden region is punched out as a chip (the excerpt), the rest drops into a slot and never leaves; the chip rides into a vault marked TEE, a press signs it, and a receipt slides onto the newest block of a chain (the NEAR testnet anchor).](site/img/hushmark-anatomy.png)
-
-*Left to right: the whole pull request is scanned, only the hidden excerpt goes to the TEE,
-and the receipt (hashes only) is anchored on NEAR testnet.*
+## How it works
 
 1. Runs on every pull request (opened, updated, reopened, edited). It never checks out or
    runs the pull request's code.
@@ -46,14 +70,92 @@ and the receipt (hashes only) is anchored on NEAR testnet.*
 7. Results appear as the `Hushmark` check on the pull request, with an annotation on each
    line. In `block` mode, a finding fails the check.
 
-For security reviewers: [how to trust a Hushmark result](https://tryhushmark.vercel.app/trust),
-with every claim linked to the code and tests behind it.
+## Quick start
 
-**What is proved, exactly:** the review code has no shell, so nothing in a pull request can
-make it run code; and a finding is shown only if it was signed inside a NEAR AI Cloud TEE
-for that exact input. This is about Hushmark's code, not the machine it runs on: in v0.1
-Hushmark runs on a GitHub Actions runner, which is outside a TEE. See
-[`THREAT_MODEL.md`](THREAT_MODEL.md).
+Two ways, with the same review. Use one per repository: both post a check named `Hushmark`.
+
+### GitHub Action (no server)
+
+| Do | See |
+|---|---|
+| Copy `.github/workflows/hushmark.yml` to your default branch | the workflow |
+| Add the repository secret `NEARAI_API_KEY` (Settings → Secrets and variables → Actions) | model reviews enabled |
+| Open a PR with a hidden comment telling AI agents to do something | the check finishes `neutral` with an annotation on that line |
+| Add `.hushmark.yml` containing `mode: block` to the default branch | the same PR now fails the check |
+| In branch protection, require `Hushmark` with GitHub Actions as the source | a finding blocks merging |
+
+Settings the workflow reads:
+
+| Name | Kind | Required | Value |
+|---|---|---|---|
+| `NEARAI_API_KEY` | secret | yes | A NEAR AI Cloud API key. Without it, hidden content is shown as not verified (`tee_unavailable`), never as a finding. |
+| `NEAR_ANCHOR_ACCOUNT` | variable | no | The anchor contract account, e.g. `anchor.hushmark.testnet` |
+| `NEAR_ANCHOR_KEY` | secret | no | `ed25519:...`, a function-call key that can only call `anchor` on that account |
+| `HUSHMARK_DAILY_REVIEWS` | variable | no | Model-calling reviews per day for the repository (default 50) |
+
+Why `pull_request_target` is safe here: the workflow runs Hushmark's code from your base
+branch, so a pull request cannot change how it is reviewed, and it never checks out or runs
+the pull request; the diff, title and body are read through the GitHub API as text. A test
+fails if the workflow ever checks out the pull request. See
+[ADR-0009](docs/adr/0009-github-action-pull-request-target.md).
+
+Permissions: `contents: read`, `pull-requests: read`, `checks: write`, `actions: read`
+(to count today's receipts). No write access to code, no comments.
+
+### GitHub App (one-click install, `/hushmark` re-runs)
+
+The same review as the Action, behind a webhook server that checks GitHub's signature before
+reading anything. It is built and tested; the hosted instance is not running yet, so for now the
+Action is how Hushmark runs. To run your own: create the App with the permissions in
+[`docs/github-app/README.md`](docs/github-app/README.md), deploy `render.yaml` (Render's free
+plan) or the `Dockerfile` anywhere, then share the App's install link.
+
+### For AI agents (MCP)
+
+Agents can check what they are about to read (an issue, a README, a web page, another tool's
+output) with Hushmark's MCP server, which runs locally:
+
+```sh
+claude mcp add hushmark -- uv run --directory /path/to/Hushmark hushmark-mcp
+```
+
+Tools: `scan` (offline, free), `review` (excerpts only to the NEAR AI Cloud TEE, checks a–g,
+a receipt; needs `NEARAI_API_KEY`) and `verify_receipt`. By default no hidden text is returned
+to the agent, only where it is. Set-up for Cursor and Claude Desktop:
+[`docs/mcp/README.md`](docs/mcp/README.md).
+
+## Configuration
+
+`.hushmark.yml` is read from the base commit only, so a pull request cannot change its own
+mode or ignores:
+
+```yaml
+mode: block          # warn (default) | block
+ignore:              # optional: files not to scan, at most 50 patterns; * also matches folders
+  - vendor/*
+  - tests/fixtures/*
+```
+
+`ignore` stops vendored code, generated docs and test fixtures from costing model calls or
+hitting the 20-region cap. Agent rules files, the PR title and the PR body are **never**
+ignored, and the check summary names every file it did not scan
+([ADR-0011](docs/adr/0011-path-ignores.md)).
+
+| Outcome | `mode: warn` (default) | `mode: block` |
+|---|---|---|
+| No hidden regions | `success` | `success` |
+| Reviewed, nothing aimed at agents | `success` | `success` |
+| Verified findings | `neutral` | `failure` |
+| Refused (any reason code) | `neutral`, scanner hits shown as *unconfirmed* | `neutral` |
+
+**Refusal codes.** A refusal never shows a model finding.
+`too_many_candidates` (over 20 regions or 200 excerpt lines), `diff_unavailable`,
+`config_invalid`, `budget_exceeded`, `tee_unavailable`, `no_attestation`, `quote_invalid`,
+`signer_not_bound`, `nonce_mismatch`, `measurement_mismatch`, `gpu_evidence_invalid`,
+`signature_mismatch`, `model_output_invalid`, `internal_error`; and for the GitHub App,
+`not_maintainer` (a `/hushmark` re-run by someone without admin or maintain; nothing is
+posted) and `webhook_invalid` (a delivery not signed by GitHub; answered with 401). Meanings:
+[docs, refusal codes](https://tryhushmark.vercel.app/docs#refusals).
 
 ## Live results
 
@@ -70,7 +172,60 @@ Hushmark runs on this repository, in `block` mode.
 Every receipt and attestation report from the Action is kept as a workflow artifact
 (`hushmark-receipt-pr<N>`) for 90 days. They contain hashes only.
 
-## Tests
+## Verify a receipt yourself
+
+Every `Hushmark` check shows its receipt (hashes only) in the check's details. Anyone can check
+it without trusting Hushmark:
+
+| Do | See |
+|---|---|
+| Paste the check's details at https://tryhushmark.vercel.app/verify | receipt ID, nonce, TEE signature and NEAR anchor checked in your browser |
+| `uv run hushmark-verify fixtures/receipts/pr17.json` | the same checks for PR #17's real receipt, ending `VERIFIED` (anchored at block 276,529,085) |
+| `uv run hushmark-verify receipt.json attestation.json` | also Intel's TDX quote and NVIDIA's GPU verdict, using the Action's `hushmark-receipt-pr<N>` artifact |
+
+## Security and privacy
+
+For security reviewers: [how to trust a Hushmark result](https://tryhushmark.vercel.app/trust),
+with every claim linked to the code and tests behind it.
+
+**What is proved, exactly:** the review code has no shell, so nothing in a pull request can
+make it run code; and a finding is shown only if it was signed inside a NEAR AI Cloud TEE
+for that exact input. This is about Hushmark's code, not the machine it runs on: in v0.1
+Hushmark runs on a GitHub Actions runner, which is outside a TEE. See
+[`THREAT_MODEL.md`](THREAT_MODEL.md).
+
+- **Excerpts only.** The full diff, title and body never leave GitHub. Only the flagged lines,
+  with up to ten lines of context, go to the model, and only to an enclave whose attestation
+  and signature are verified.
+- **No code stored.** Receipts and logs hold hashes, never code or finding text.
+- **Nothing readable on chain.** The NEAR anchor holds two hashes: the review key and the
+  receipt.
+- **No links from the model.** The model's one-sentence explanation describes attacker-written
+  text, so any link or URL in it is shown as the word "link". The file and line are the
+  evidence; the sentence is only a hint.
+- **Not claimed:** the Actions runner is outside a TEE (GitHub already hosts your code), and
+  the TEE guarantee rests on Intel's and NVIDIA's attestation.
+
+## Cost
+
+A pull request with no hidden regions costs nothing. A model review costs at most about
+$0.01 at GLM-5.3-flash's listed price (up to 16,384 output tokens, so the reasoning model has
+room to answer; only the tokens used are billed, and most reviews use far fewer). Reviews are
+capped per repository per day (`HUSHMARK_DAILY_REVIEWS`, default 50, about $0.50 a day at
+most). Anchoring is paid in
+testnet NEAR from the anchor key's 0.5 NEAR allowance.
+
+## NEAR technology used
+
+- **NEAR AI Cloud:** model inference inside Intel TDX and NVIDIA confidential-computing TEEs,
+  attestation reports and per-response signatures.
+- **NEAR smart contract (testnet):** `anchor.hushmark.testnet` stores one receipt hash per
+  review and refuses a second one for the same key. Its on-chain code hash matches the build
+  in `contract/`.
+- **Function-call access key:** the Action can only call `anchor`; it cannot move funds.
+- **Sub-account:** the contract lives on its own sub-account of `hushmark.testnet`.
+
+## Development and tests
 
 ```sh
 make install   # uv sync --locked
@@ -79,6 +234,20 @@ make test      # all 229 Python tests, offline, about 2 seconds
 make verify    # the same suite, as CI runs it: no API key, no network
 cd contract && cargo test   # 5 contract tests
 ```
+
+### Try it offline
+
+No account, no API key, no network after install.
+
+| Do | See |
+|---|---|
+| `git clone https://github.com/Ritapossible/Hushmark && cd Hushmark && make install` | the locked dependencies |
+| `make verify` | 229 passed, from real recorded NEAR AI Cloud evidence |
+| `uv run pytest tests/test_recordings.py -k one_changed_response_byte -v` | one changed byte in a model answer is refused (`signature_mismatch`) |
+| open `fixtures/recordings/r1/` | the exact request and response bytes, signature, attestation report, Intel collateral and NVIDIA response |
+| *(planned)* `make verify-live` | a fresh attestation checked against Intel and NVIDIA online |
+
+### Test suite
 
 CI (`.github/workflows/ci.yml`) runs lint, every Python test and the contract tests on every
 push and pull request. The Python tests run under an audit hook that fails the run if any
@@ -116,144 +285,21 @@ SHA-256 hex is rejected (two tests).
 The numbered fixtures are described in [`docs/FIXTURES.md`](docs/FIXTURES.md). Real evidence
 is never edited; derived fixtures say exactly what was changed.
 
-## Verify a receipt yourself
+### Repository layout
 
-Every `Hushmark` check shows its receipt (hashes only) in the check's details. Anyone can check
-it without trusting Hushmark:
-
-| Do | See |
-|---|---|
-| Paste the check's details at https://tryhushmark.vercel.app/verify | receipt ID, nonce, TEE signature and NEAR anchor checked in your browser |
-| `uv run hushmark-verify fixtures/receipts/pr17.json` | the same checks for PR #17's real receipt, ending `VERIFIED` (anchored at block 276,529,085) |
-| `uv run hushmark-verify receipt.json attestation.json` | also Intel's TDX quote and NVIDIA's GPU verdict, using the Action's `hushmark-receipt-pr<N>` artifact |
-
-## Try it offline
-
-No account, no API key, no network after install.
-
-| Do | See |
-|---|---|
-| `git clone https://github.com/Ritapossible/Hushmark && cd Hushmark && make install` | the locked dependencies |
-| `make verify` | 229 passed, from real recorded NEAR AI Cloud evidence |
-| `uv run pytest tests/test_recordings.py -k one_changed_response_byte -v` | one changed byte in a model answer is refused (`signature_mismatch`) |
-| open `fixtures/recordings/r1/` | the exact request and response bytes, signature, attestation report, Intel collateral and NVIDIA response |
-| *(planned)* `make verify-live` | a fresh attestation checked against Intel and NVIDIA online |
-
-## Use it from an AI agent (MCP)
-
-Agents can check what they are about to read (an issue, a README, a web page, another tool's
-output) with Hushmark's MCP server, which runs locally:
-
-```sh
-claude mcp add hushmark -- uv run --directory /path/to/Hushmark hushmark-mcp
 ```
-
-Tools: `scan` (offline, free), `review` (excerpts only to the NEAR AI Cloud TEE, checks a–g,
-a receipt; needs `NEARAI_API_KEY`) and `verify_receipt`. By default no hidden text is returned
-to the agent, only where it is. Set-up for Cursor and Claude Desktop:
-[`docs/mcp/README.md`](docs/mcp/README.md).
-
-## Install on your repositories
-
-Two ways, with the same review. Use one per repository: both post a check named `Hushmark`.
-
-**GitHub App (one-click install, `/hushmark` re-runs):** built and tested, not deployed yet.
-Whoever runs the server follows [`docs/github-app/README.md`](docs/github-app/README.md):
-create the App, deploy `render.yaml` (or the `Dockerfile`), then share the install link.
-
-**GitHub Action (no server):**
-
-| Do | See |
-|---|---|
-| Copy `.github/workflows/hushmark.yml` to your default branch | the workflow |
-| Add the repository secret `NEARAI_API_KEY` (Settings → Secrets and variables → Actions) | model reviews enabled |
-| Open a PR with a hidden comment telling AI agents to do something | the check finishes `neutral` with an annotation on that line |
-| Add `.hushmark.yml` containing `mode: block` to the default branch | the same PR now fails the check |
-| In branch protection, require `Hushmark` with GitHub Actions as the source | a finding blocks merging |
-
-Settings the workflow reads:
-
-| Name | Kind | Required | Value |
-|---|---|---|---|
-| `NEARAI_API_KEY` | secret | yes | A NEAR AI Cloud API key. Without it, hidden content is shown as not verified (`tee_unavailable`), never as a finding. |
-| `NEAR_ANCHOR_ACCOUNT` | variable | no | The anchor contract account, e.g. `anchor.hushmark.testnet` |
-| `NEAR_ANCHOR_KEY` | secret | no | `ed25519:...`, a function-call key that can only call `anchor` on that account |
-| `HUSHMARK_DAILY_REVIEWS` | variable | no | Model-calling reviews per day for the repository (default 50) |
-
-Why `pull_request_target` is safe here: the workflow runs Hushmark's code from your base
-branch, so a pull request cannot change how it is reviewed, and it never checks out or runs
-the pull request; the diff, title and body are read through the GitHub API as text. A test
-fails if the workflow ever checks out the pull request. See
-[ADR-0009](docs/adr/0009-github-action-pull-request-target.md).
-
-Permissions: `contents: read`, `pull-requests: read`, `checks: write`, `actions: read`
-(to count today's receipts). No write access to code, no comments.
-
-## Check results
-
-| Outcome | `mode: warn` (default) | `mode: block` |
-|---|---|---|
-| No hidden regions | `success` | `success` |
-| Reviewed, nothing aimed at agents | `success` | `success` |
-| Verified findings | `neutral` | `failure` |
-| Refused (any reason code) | `neutral`, scanner hits shown as *unconfirmed* | `neutral` |
-
-`.hushmark.yml` is read from the base commit only, so a pull request cannot change its own
-mode or ignores:
-
-```yaml
-mode: block          # warn (default) | block
-ignore:              # optional: files not to scan, at most 50 patterns; * also matches folders
-  - vendor/*
-  - tests/fixtures/*
+hushmark/          scan, excerpt, infer, nonce, receipt, config, pipeline, report,
+                   github, service, near, anchor, action, app, server, mcp,
+                   receipt_check, verify_receipt
+hushmark/verify/   attestation, nras, signature, grounding (checks a–g)
+contract/          the NEAR anchor contract (Rust, near-sdk)
+prompts/           the versioned system prompt
+fixtures/          inputs, real recordings, attestation reports, NVIDIA keys
+tests/             229 tests, including byte-for-byte replays of the recordings
+scripts/           recording and site-data scripts
+site/              the website and docs page (Vercel)
+docs/              architecture, plan, fixtures, decision records
 ```
-
-`ignore` stops vendored code, generated docs and test fixtures from costing model calls or
-hitting the 20-region cap. Agent rules files, the PR title and the PR body are **never**
-ignored, and the check summary names every file it did not scan
-([ADR-0011](docs/adr/0011-path-ignores.md)).
-
-**Refusal codes.** A refusal never shows a model finding.
-`too_many_candidates` (over 20 regions or 200 excerpt lines), `diff_unavailable`,
-`config_invalid`, `budget_exceeded`, `tee_unavailable`, `no_attestation`, `quote_invalid`,
-`signer_not_bound`, `nonce_mismatch`, `measurement_mismatch`, `gpu_evidence_invalid`,
-`signature_mismatch`, `model_output_invalid`, `internal_error`; and for the GitHub App,
-`not_maintainer` (a `/hushmark` re-run by someone without admin or maintain; nothing is
-posted) and `webhook_invalid` (a delivery not signed by GitHub; answered with 401). Meanings:
-[docs, refusal codes](https://tryhushmark.vercel.app/docs#refusals).
-
-## Privacy
-
-- **Excerpts only.** The full diff, title and body never leave GitHub. Only the flagged lines,
-  with up to ten lines of context, go to the model, and only to an enclave whose attestation
-  and signature are verified.
-- **No code stored.** Receipts and logs hold hashes, never code or finding text.
-- **Nothing readable on chain.** The NEAR anchor holds two hashes: the review key and the
-  receipt.
-- **No links from the model.** The model's one-sentence explanation describes attacker-written
-  text, so any link or URL in it is shown as the word "link". The file and line are the
-  evidence; the sentence is only a hint.
-- **Not claimed:** the Actions runner is outside a TEE (GitHub already hosts your code), and
-  the TEE guarantee rests on Intel's and NVIDIA's attestation.
-
-## Cost
-
-A pull request with no hidden regions costs nothing. A model review costs at most about
-$0.01 at GLM-5.3-flash's listed price (up to 16,384 output tokens, so the reasoning model has
-room to answer; only the tokens used are billed, and most reviews use far fewer). Reviews are
-capped per repository per day (`HUSHMARK_DAILY_REVIEWS`, default 50, about $0.50 a day at
-most). Anchoring is paid in
-testnet NEAR from the anchor key's 0.5 NEAR allowance.
-
-## NEAR technology used
-
-- **NEAR AI Cloud:** model inference inside Intel TDX and NVIDIA confidential-computing TEEs,
-  attestation reports and per-response signatures.
-- **NEAR smart contract (testnet):** `anchor.hushmark.testnet` stores one receipt hash per
-  review and refuses a second one for the same key. Its on-chain code hash matches the build
-  in `contract/`.
-- **Function-call access key:** the Action can only call `anchor`; it cannot move funds.
-- **Sub-account:** the contract lives on its own sub-account of `hushmark.testnet`.
 
 ## Limitations
 
@@ -271,7 +317,10 @@ testnet NEAR from the anchor key's 0.5 NEAR allowance.
   anchored (they are not tied to a pull request).
 - One finding kind: instructions aimed at AI agents. More are in [`ROADMAP.md`](ROADMAP.md).
 
-## Built with
+## Built at NEAR HACKATHON
+
+The repository was created on 1 November 2026; every line was written during the hackathon.
+Tracks: Privacy & Private AI (primary), AI Security & Defense.
 
 - [`dcap-qvl`](https://pypi.org/project/dcap-qvl/) for Intel TDX quote verification
 - NVIDIA NRAS for GPU attestation, its tokens verified with PyJWT against pinned keys
@@ -280,22 +329,6 @@ testnet NEAR from the anchor key's 0.5 NEAR allowance.
 - Rust `near-sdk` 5.30 and `cargo-near` for the contract
 - **AI-generated code:** much of this repository is written with Claude Code, under human
   direction and review. Commits carry a `Co-Authored-By` line.
-
-## Repository layout
-
-```
-hushmark/          scan, excerpt, infer, nonce, receipt, config, pipeline, report,
-                   github, service, near, anchor, action, app, server, mcp,
-                   receipt_check, verify_receipt
-hushmark/verify/   attestation, nras, signature, grounding (checks a–g)
-contract/          the NEAR anchor contract (Rust, near-sdk)
-prompts/           the versioned system prompt
-fixtures/          inputs, real recordings, attestation reports, NVIDIA keys
-tests/             229 tests, including byte-for-byte replays of the recordings
-scripts/           recording and site-data scripts
-site/              the website and docs page (Vercel)
-docs/              architecture, plan, fixtures, decision records
-```
 
 ## Documentation
 
