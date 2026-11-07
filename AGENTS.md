@@ -185,6 +185,12 @@ make verify-live   # (planned) re-verify recorded evidence online
   `not_maintainer` refusal (guide part 4). Put the two URLs in the README. If it is not up by
   Monday 9 November, drop the App from the pitch and submit the Action. Guide fixed: the App
   needs **Issues: Read-only** or GitHub never sends `/hushmark` comments.
+- **App live (2026-11-07):** App "Hushmark Check" (ID 5657630) on Render (`hushmark-app.onrender.com`),
+  installed on `Ritapossible/hushmark-demo` (block mode). PR #1 there: check failed with 1
+  verified finding, receipt `144b8d26…` anchored at block 276,657,517 (verified with
+  `hushmark-verify`); Rita's `/hushmark` re-ran it (contract refused a second anchor); a bot's
+  `/hushmark` was refused. Gap vs Grok's ask: the demo repo is Rita's own, not a stranger's.
+  Keep Render up until 25 November (UptimeRobot on `/healthz`).
 - **Next week (all need Rita):** mainnet payout account, demo video, X post, make the repo
   public, submit before 14 November 23:59 UTC.
 

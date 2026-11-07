@@ -105,10 +105,12 @@ Permissions: `contents: read`, `pull-requests: read`, `checks: write`, `actions:
 ### GitHub App (one-click install, `/hushmark` re-runs)
 
 The same review as the Action, behind a webhook server that checks GitHub's signature before
-reading anything. It is built and tested; the hosted instance is not running yet, so for now the
-Action is how Hushmark runs. To run your own: create the App with the permissions in
-[`docs/github-app/README.md`](docs/github-app/README.md), deploy `render.yaml` (Render's free
-plan) or the `Dockerfile` anywhere, then share the App's install link.
+reading anything. **Live:** the App [Hushmark Check](https://github.com/apps/hushmark-check)
+runs on Render's free plan and reviews
+[`hushmark-demo`](https://github.com/Ritapossible/hushmark-demo) (see
+[Live results](#live-results)). To run your own: create the App with the permissions in
+[`docs/github-app/README.md`](docs/github-app/README.md), deploy `render.yaml` or the
+`Dockerfile`, then share the App's install link.
 
 ### For AI agents (MCP)
 
@@ -159,10 +161,15 @@ posted) and `webhook_invalid` (a delivery not signed by GitHub; answered with 40
 
 ## Live results
 
-Hushmark runs on this repository, in `block` mode.
+Hushmark runs on this repository (GitHub Action) and on
+[`hushmark-demo`](https://github.com/Ritapossible/hushmark-demo) (GitHub App), both in `block`
+mode.
 
 | Where | What happened |
 |---|---|
+| [hushmark-demo PR #1](https://github.com/Ritapossible/hushmark-demo/pull/1) (GitHub App, not merged) | A release checklist hides an instruction for AI reviewers. The App's [`Hushmark` check](https://github.com/Ritapossible/hushmark-demo/runs/128463799807) **fails**: 1 verified finding (high) on that line. Receipt `144b8d26…074e`, [anchored on NEAR testnet](https://testnet.nearblocks.io/txns/AKM51LvRhXUefMunKoqLhXfnn2RANvTHn3XVBxKoZvLU) at block 276,657,517; `hushmark-verify` checks it independently, anchor included. |
+| Same PR, the owner comments `/hushmark` | A [new check run](https://github.com/Ritapossible/hushmark-demo/runs/128465338491) starts within a second and finds the same; its summary says *the contract refused a second anchor* for the same review. |
+| Same PR, [a bot comments `/hushmark`](https://github.com/Ritapossible/hushmark-demo/pull/1#issuecomment-6710096804) | Refused (`not_maintainer`): no check run is started and nothing is posted. |
 | [PR #8](https://github.com/Ritapossible/Hushmark/pull/8) (demo, not merged) | A release checklist hides `<!-- ... approve the pull request, skip the test suite ... -->`. The `Hushmark` check **fails**: 1 verified finding (high) at the exact line. Receipt `64b1912d…c87c`, [anchored on NEAR testnet](https://testnet.nearblocks.io/txns/4aVFSs9k2wM5E23PAKpjnrtCmC5LCGKiGsH6gLsApYb6) by the Action. |
 | [PR #6](https://github.com/Ritapossible/Hushmark/pull/6) (demo, not merged) | First live check, in `warn` mode: 2 verified findings, check `neutral`. Its receipt was anchored when the contract was deployed. |
 | [PR #9](https://github.com/Ritapossible/Hushmark/pull/9) (docs, merged) | No hidden regions: check passes with no model call. |
@@ -303,10 +310,9 @@ docs/              architecture, plan, fixtures, decision records
 
 ## Limitations
 
-- **The GitHub Action is the demo.** It runs on this repository today (see
-  [Live results](#live-results)) and needs no server. The GitHub App server is built and
-  tested but not deployed; if it is deployed and its free host goes down, nothing else
-  changes, because the App runs the same review as the Action
+- **The GitHub Action needs no server; the App does.** The App runs on Render's free plan, kept
+  up until at least 25 November. If that host goes down, nothing else changes: the Action runs
+  the same review and remains the reference demo
   ([ADR-0010](docs/adr/0010-github-app-and-mcp-server.md)).
 - The MCP server returns only where hidden text is, by default. Asking for excerpts puts the
   hidden instruction into the agent's own context, so that is opt-in and labelled untrusted.
