@@ -253,3 +253,20 @@ def test_worker_runs_jobs_and_survives_errors() -> None:
     assert job is not None and worker.submit(job, "d1")
     worker.run_one()  # logs review_failed, does not raise
     assert seen == [1] and worker.submit(job, "d2")  # no longer pending, so queued again
+
+
+def test_head_requests_are_answered_for_uptime_monitors(server: tuple[str, Worker]) -> None:
+    """UptimeRobot's free plan checks with HEAD; the standard library answered 501."""
+    url, _ = server
+    with httpx.Client(trust_env=False) as c:
+        r = c.head(f"{url}/healthz")
+        assert r.status_code == 200 and r.content == b""
+        assert c.head(f"{url}/").status_code == 200
+        assert c.head(f"{url}/nope").status_code == 404
+
+
+def test_home_page_says_what_this_is(server: tuple[str, Worker]) -> None:
+    url, _ = server
+    with httpx.Client(trust_env=False) as c:
+        r = c.get(f"{url}/")
+    assert r.status_code == 200 and "Hushmark GitHub App webhook server" in r.text
