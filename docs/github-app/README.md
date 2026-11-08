@@ -58,7 +58,9 @@ The repository includes `render.yaml`, a Render blueprint.
 | `NEAR_ANCHOR_KEY` | The anchor key from `NEAR_ANCHOR_KEY.txt` (optional; without it, nothing is anchored) |
 
 `NEAR_ANCHOR_ACCOUNT` (`anchor.hushmark.testnet`) and `HUSHMARK_DAILY_REVIEWS` (`20`) are
-already set by the blueprint.
+already set by the blueprint. Every installation spends the same NEAR AI key, so the server
+also caps all repositories together at 100 model-calling reviews a day (about $1); set
+`HUSHMARK_TOTAL_DAILY_REVIEWS` to change it.
 
 4. Click **Apply**. When the deploy finishes, open `https://<your-service>.onrender.com/healthz`.
    It should say `ok`.

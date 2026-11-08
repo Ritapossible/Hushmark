@@ -28,6 +28,8 @@ from hushmark.refusal import Refused
 from hushmark.service import CheckResult, may_rerun, run_check
 
 PULL_REQUEST_ACTIONS = frozenset({"opened", "synchronize", "reopened", "edited"})
+# All installations share one NEAR AI key: about $1 a day at most (action.DEFAULT_DAILY_REVIEWS).
+DEFAULT_TOTAL_DAILY_REVIEWS = 100
 RERUN_COMMAND = "/hushmark"
 
 
@@ -84,14 +86,20 @@ def route(event: str, payload: Mapping[str, Any]) -> Job | None:
 
 
 class DailyBudget:
-    """Model-calling reviews per repository per UTC day, kept in memory.
+    """Model-calling reviews per repository, and in total, per UTC day, kept in memory.
 
     The App keeps no database (ADR-0010), so the count starts again if the server restarts.
-    Clean pull requests never reach the model, so they never count.
+    Clean pull requests never reach the model, so they never count. Every installation spends
+    the same NEAR AI key, so `total_limit` caps all repositories together.
     """
 
-    def __init__(self, limit: int, today: Callable[[], str] | None = None) -> None:
-        self.limit = limit
+    def __init__(
+        self,
+        limit: int,
+        today: Callable[[], str] | None = None,
+        total_limit: int | None = None,
+    ) -> None:
+        self.limit, self.total_limit = limit, total_limit
         self._today = today or (lambda: time.strftime("%Y-%m-%d", time.gmtime()))
         self._counts: dict[tuple[str, int], int] = {}
         self._lock = threading.Lock()
@@ -100,10 +108,13 @@ class DailyBudget:
         """Count one model call, or refuse with `budget_exceeded` before it is made."""
         key = (self._today(), repo_id)
         with self._lock:
+            self._counts = {k: v for k, v in self._counts.items() if k[0] == key[0]}
             used = self._counts.get(key, 0)
             if used >= self.limit:
                 raise Refused("budget_exceeded", f"{used} reviews today, limit {self.limit}")
-            self._counts = {k: v for k, v in self._counts.items() if k[0] == key[0]}
+            total = sum(self._counts.values())
+            if self.total_limit is not None and total >= self.total_limit:
+                raise Refused("budget_exceeded", f"{total} reviews today across repositories")
             self._counts[key] = used + 1
 
 
@@ -141,7 +152,8 @@ class HushmarkApp:
         self.tee: Tee = tee or (NearAiCloud(key, self.model) if key else NoKeyTee())
         self.sources = sources or LiveEvidence()
         self.budget = budget or DailyBudget(
-            int(env.get("HUSHMARK_DAILY_REVIEWS") or DEFAULT_DAILY_REVIEWS)
+            int(env.get("HUSHMARK_DAILY_REVIEWS") or DEFAULT_DAILY_REVIEWS),
+            total_limit=int(env.get("HUSHMARK_TOTAL_DAILY_REVIEWS") or DEFAULT_TOTAL_DAILY_REVIEWS),
         )
         self.anchor = near_anchor(env)
 
