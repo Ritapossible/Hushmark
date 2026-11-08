@@ -242,13 +242,48 @@ testnet NEAR from the anchor key's 0.5 NEAR allowance.
 
 ## NEAR technology used
 
-- **NEAR AI Cloud:** model inference inside Intel TDX and NVIDIA confidential-computing TEEs,
-  attestation reports and per-response signatures.
-- **NEAR smart contract (testnet):** `anchor.hushmark.testnet` stores one receipt hash per
-  review and refuses a second one for the same key. Its on-chain code hash matches the build
-  in `contract/`.
-- **Function-call access key:** the Action can only call `anchor`; it cannot move funds.
-- **Sub-account:** the contract lives on its own sub-account of `hushmark.testnet`.
+Hushmark uses NEAR in two places, each for what it does best: **NEAR AI Cloud** does the private
+review, and a **NEAR smart contract** keeps a record of every verdict that cannot be rewritten.
+The chain deliberately holds very little. That is a privacy choice, explained below.
+
+**NEAR AI Cloud: the private review.** The flagged excerpts, and nothing else from the pull
+request, go to `z-ai/glm-5.3-flash` running inside a NEAR AI Cloud TEE (Intel TDX with NVIDIA
+confidential-computing GPUs). For every review Hushmark fetches the TEE's attestation report
+with a fresh nonce and checks Intel's quote, NVIDIA's signed GPU verdict and the TEE's
+signature over the exact request and response bytes (checks a–g). Without NEAR AI Cloud there
+is no private, verifiable review: this is where most of Hushmark's NEAR work happens.
+
+**NEAR smart contract: a record that cannot be rewritten.** `anchor.hushmark.testnet`
+(Rust, `near-sdk` 5.30, source in [`contract/`](contract/); its on-chain code hash matches the
+build) stores one entry per review: `key_hash → receipt_hash`, with the block height and time.
+
+- **What it guarantees:** one review key, one anchored verdict. The contract refuses a second
+  anchor for the same key, so a verdict cannot be swapped for a friendlier one later; a
+  re-run's receipt is reported as "not the anchored receipt". The block gives the verdict a
+  public timestamp.
+- **Who can check it:** anyone, without trusting Hushmark. Both verifiers
+  ([`hushmark-verify`](hushmark/verify_receipt.py) and the
+  [browser verifier](https://tryhushmark.vercel.app/verify)) read the anchor back through NEAR's
+  public RPC and compare it with the receipt.
+- **What it does not prove:** that the review ran in a TEE. The attestation proves that; the
+  anchor proves the record of it has not changed since.
+
+**Why the chain holds only two hashes.** Hushmark's first promise is privacy: your code never
+leaves GitHub except as excerpts to an attested TEE. Putting code, file names, repository names
+or findings on a public chain would break that promise for every private repository. Two
+SHA-256 hashes reveal nothing about the code, yet anyone holding the receipt can prove it is the
+one anchored at that block. Payments and policy on chain are deliberately left for later
+(prepaid review credits in NEAR are on the [roadmap](ROADMAP.md), as are mainnet anchors).
+
+**Keys and accounts: least privilege.**
+
+- The contract lives on its own sub-account of `hushmark.testnet`, and only that account may
+  write to it.
+- The GitHub Action and App hold only a **function-call access key** limited to `anchor`, with
+  zero deposit and a 0.5 NEAR gas allowance. A stolen key can add anchors but cannot move funds
+  or call anything else.
+- A failed anchor never blocks the check: the review is still published, and the check says
+  the anchor was not recorded this time.
 
 ## Development and tests
 

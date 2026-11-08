@@ -43,6 +43,8 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versions follo
 - Refusal code `internal_error`.
 
 ### Fixed
+- README: the NEAR section explains what each piece does and why the chain holds only two
+  hashes (privacy), what the anchor guarantees and what it does not.
 - Roadmap: v0.1 lists what shipped; the public verifier (already built) left v0.2; the
   audit's deferred detectors, `make verify-live` and durable App state are planned; the docs
   page mirrors `ROADMAP.md`.
