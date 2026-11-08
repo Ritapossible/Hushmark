@@ -204,6 +204,9 @@ make verify-live   # (planned) re-verify recorded evidence online
   email, team size (`1`, `2 - 4`, `4 - 6`, `6 - 8`, `8+`), tracks (`privacy`, `security`),
   mainnet payout account (Rita creates it), repo URL, X post URL, description (20–2,000
   characters), consent. One submission per repository; fixes go through request-changes.
+- **Public rules-file scan (2026-11-08):** 2,076 files from awesome-cursorrules and
+  github/awesome-copilot, 145 with hidden text, 0 attacks; false-positive classes (code-fenced
+  comments, emoji joiners) are on the roadmap. `docs/findings/public-rules-scan.md`. 281 tests.
 - **Next (all need Rita):** mainnet payout account, demo video, X post, then the submission
   before 14 November 23:59 UTC.
 

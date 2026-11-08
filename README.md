@@ -15,6 +15,16 @@ is shown only if the TEE's attestation and signature verify; and every review le
 **[How to trust a result](https://tryhushmark.vercel.app/trust)** ·
 **[Live demo: PR #8](https://github.com/Ritapossible/Hushmark/pull/8)**
 
+> **Try it in two minutes, nothing to install:**
+> 1. Open [demo PR #8](https://github.com/Ritapossible/Hushmark/pull/8) → its `Hushmark` check
+>    **fails** on the hidden instruction at the exact line, reviewed inside a NEAR AI Cloud TEE.
+> 2. Paste that check's details at [tryhushmark.vercel.app/verify](https://tryhushmark.vercel.app/verify)
+>    → the receipt's signature and its NEAR testnet anchor are checked in your browser.
+> 3. Read [what Hushmark found in 2,076 public agent rules files](docs/findings/public-rules-scan.md)
+>    → 145 hold hidden text, none of it an attack.
+>
+> With a terminal: `make install && make verify` replays real TEE evidence offline (no key).
+
 > **Status: v0.1, built for NEAR HACKATHON (1–14 November 2026).** Tracks: Privacy & Private
 > AI (primary), AI Security & Defense. Everything below works today unless marked
 > *(planned)*.
@@ -190,6 +200,18 @@ mode.
 Every receipt and attestation report from the Action is kept as a workflow artifact
 (`hushmark-receipt-pr<N>`) for 90 days. They contain hashes only.
 
+## What Hushmark finds in public rules files
+
+We ran the scanner (no model calls) over the two largest public collections of agent rules
+files: 257 Cursor rules from `PatrickJS/awesome-cursorrules` and 1,819 agent, instruction and
+skill files from `github/awesome-copilot`. **145 of 2,076 files (7%) hold text a reviewer
+would not see; none of it is an attack.** Most is template placeholders, lint directives and
+HTML examples in code blocks, but authors also hide real instructions for agents in comments,
+which is why Hushmark judges intent with a model instead of failing every comment. The scan
+also found two false-positive classes to remove (comments inside code blocks, and emoji
+joiners). Method, numbers and how to reproduce:
+[`docs/findings/public-rules-scan.md`](docs/findings/public-rules-scan.md).
+
 ## Verify a receipt yourself
 
 Every `Hushmark` check shows its receipt (hashes only) in the check's details. Anyone can check
@@ -290,7 +312,7 @@ one anchored at that block. Payments and policy on chain are deliberately left f
 ```sh
 make install   # uv sync --locked
 make lint      # ruff, ruff format --check, mypy --strict
-make test      # all 279 Python tests, offline, about 2 seconds
+make test      # all 281 Python tests, offline, about 2 seconds
 make verify    # the same suite, as CI runs it: no API key, no network
 cd contract && cargo test   # 5 contract tests
 ```
@@ -302,7 +324,7 @@ No account, no API key, no network after install.
 | Do | See |
 |---|---|
 | `git clone https://github.com/Ritapossible/Hushmark && cd Hushmark && make install` | the locked dependencies |
-| `make verify` | 279 passed, from real recorded NEAR AI Cloud evidence |
+| `make verify` | 281 passed, from real recorded NEAR AI Cloud evidence |
 | `uv run pytest tests/test_recordings.py -k one_changed_response_byte -v` | one changed byte in a model answer is refused (`signature_mismatch`) |
 | open `fixtures/recordings/r1/` | the exact request and response bytes, signature, attestation report, Intel collateral and NVIDIA response |
 | *(planned)* `make verify-live` | a fresh attestation checked against Intel and NVIDIA online |
@@ -313,7 +335,7 @@ CI (`.github/workflows/ci.yml`) runs lint, every Python test and the contract te
 push and pull request. The Python tests run under an audit hook that fails the run if any
 process is started, from the first import onwards.
 
-**Python: 279 tests, all passing.**
+**Python: 281 tests, all passing.**
 
 | File | Tests | What it proves |
 |---|---:|---|
@@ -336,6 +358,7 @@ process is started, from the first import onwards.
 | `test_report.py` | 15 | Check Run output for every outcome in `warn` and `block` mode; refusals show scanner hits only as *unconfirmed*, and in block mode every refusal fails; the receipt is published in the check's details, with where to verify it; links in the model's explanation are shown as the word "link"; every check links to how to trust it |
 | `test_receipt.py` | 4 | A receipt's ID is the SHA-256 of its canonical bytes, the same inputs give the same receipt, it has exactly the v1 fields, and it holds no content |
 | `test_no_shell.py` | 3 | Hard rule 1: the audit hook blocks shell and subprocess calls, and the crypto dependencies load without starting a process |
+| `test_scan_rules_corpus.py` | 2 | The public rules-file scan script counts hidden regions and returns file names and lines only, never text; the published results match the write-up |
 | `test_site.py` | 3 | The website's evidence matches the verified recordings and is inserted as text only; the verify page never says "Verified", since it cannot check the TEE |
 
 **Contract: 5 tests, all passing** (`contract/src/lib.rs`): anchors once and reads back; a
@@ -355,7 +378,7 @@ hushmark/verify/   attestation, nras, signature, grounding (checks a–g)
 contract/          the NEAR anchor contract (Rust, near-sdk)
 prompts/           the versioned system prompt
 fixtures/          inputs, real recordings, attestation reports, NVIDIA keys
-tests/             279 tests, including byte-for-byte replays of the recordings
+tests/             281 tests, including byte-for-byte replays of the recordings
 scripts/           recording and site-data scripts
 site/              the website and docs page (Vercel)
 docs/              architecture, plan, fixtures, decision records

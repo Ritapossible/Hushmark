@@ -5,6 +5,10 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versions follo
 ## [Unreleased]
 
 ### Added
+- `docs/findings/public-rules-scan.md`: Hushmark's scanner over 2,076 public agent rules
+  files (awesome-cursorrules, github/awesome-copilot): 145 hold hidden text, none an attack;
+  two false-positive classes found. Script `scripts/scan_rules_corpus.py`.
+- README opens with a two-minute way to try Hushmark without installing anything.
 - GitHub App webhook server (`hushmark/app.py`, `hushmark/server.py`): one-click installs,
   `/hushmark` re-runs by maintainers, Render blueprint, Dockerfile, set-up guide.
 - The receipt (hashes only) is shown in the Check Run details.
