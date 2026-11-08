@@ -196,13 +196,24 @@ make verify-live   # (planned) re-verify recorded evidence online
   hid the rest of a hunk, and the verifier said "Verified" for any self-signed receipt. Also
   whole HTML comments are one candidate, a global App cap, and the threat model no longer
   implies measurements are pinned. 279 tests.
-- **Next week (all need Rita):** mainnet payout account, demo video, X post, make the repo
-  public, submit before 14 November 23:59 UTC.
+- **Public (seen 2026-11-08):** `Ritapossible/Hushmark` and `Ritapossible/hushmark-demo` are
+  public. Keep both public through judging (results by 18 November). The NEAR Builders $10
+  NEAR AI credit has arrived; it is the operating budget for live reviews until 25 November.
+- **HACKATHON.md re-read 2026-11-08:** README lists every library, service and the AI code;
+  the no-key path is linked from Quick start. Submission fields: project name, lead name,
+  email, team size (`1`, `2 - 4`, `4 - 6`, `6 - 8`, `8+`), tracks (`privacy`, `security`),
+  mainnet payout account (Rita creates it), repo URL, X post URL, description (20–2,000
+  characters), consent. One submission per repository; fixes go through request-changes.
+- **Next (all need Rita):** mainnet payout account, demo video, X post, then the submission
+  before 14 November 23:59 UTC.
 
 ## Decision log
 
 Newest first. One line each, with a link when there is an ADR.
 
+- 2026-11-08: Re-read HACKATHON.md against the repo: completed the README's library list
+  (`@noble/*`, `esbuild`, `cffi`, fonts, hosting), linked the offline path from Quick start.
+  Suggested lowering `HUSHMARK_DAILY_REVIEWS` to 20 now that the repo is public.
 - 2026-11-08: Grok review of the self-audit: in block mode any refusal fails (a review that
   could not finish is not a clean review); split diffs on `\n` only; "Verified" only when the
   attestation passed; flag whole HTML comments; keep one anchor per key and say so for

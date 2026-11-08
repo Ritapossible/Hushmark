@@ -43,6 +43,8 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versions follo
 - Refusal code `internal_error`.
 
 ### Fixed
+- README: every library, service and tool is listed (HACKATHON.md Q-005), and Quick start
+  points judges without a NEAR AI key to the offline path.
 - Audit 2026-11-08, block mode: a refusal ended `neutral`, which GitHub counts as passing, so an
   author could merge by provoking one (twenty harmless comments gave `too_many_candidates`).
   In block mode every refusal now fails, and an unreadable config is treated as block.

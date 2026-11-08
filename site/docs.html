@@ -426,7 +426,7 @@ ignore:           # optional: files not to scan (at most 50 patterns)
       <section id="development" class="doc">
         <h2>Development</h2>
         <h3>Stack</h3>
-        <p>Python 3.12 with <code>uv</code>; httpx; pydantic v2 in strict mode; <code>dcap-qvl</code> for Intel quotes; PyJWT for NVIDIA tokens; <code>eth-account</code> for EIP-191; ruff, <code>mypy --strict</code> and pytest. The NEAR contract is Rust with <code>near-sdk</code>, built with <code>cargo-near</code>.</p>
+        <p>Python 3.12 with <code>uv</code>; httpx; pydantic v2 in strict mode; <code>dcap-qvl</code> for Intel quotes; PyJWT for NVIDIA tokens; <code>eth-account</code> for EIP-191; ruff, <code>mypy --strict</code> and pytest. The NEAR contract is Rust with <code>near-sdk</code>, built with <code>cargo-near</code>. The receipt verifier page uses <code>@noble/curves</code> 2.4.0 and <code>@noble/hashes</code> 2.0.1, bundled with <code>esbuild</code> (<code>site/vendor/</code>).</p>
         <h3>Repository layout</h3>
 <pre><code>hushmark/        scan, excerpt, infer, nonce, receipt, config,
                  pipeline, report, github, service, near, anchor, action,
