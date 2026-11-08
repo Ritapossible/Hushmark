@@ -51,6 +51,9 @@ Built and live; see the [README](README.md) for how to try each one.
 
 ## v0.3: from pull request reviewer to agent input firewall (Q1 2027)
 
+- Fewer false alarms, found by the [public rules-file scan](docs/findings/public-rules-scan.md):
+  skip comments and hidden HTML inside fenced code blocks (visible when rendered; 58% of
+  comment hits there), and zero-width joiners inside emoji.
 - More hidden forms, each added with a fixture of the attack it catches: Markdown comments
   written as link definitions (`[//]: # (...)`), text smuggled in variation selectors, and
   more invisible and direction characters.

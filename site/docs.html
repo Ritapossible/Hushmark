@@ -481,6 +481,7 @@ docs/            architecture, plan, fixtures, decision records</code></pre>
           <li>
             <p class="rm-phase">v0.3 · From pull request reviewer to agent input firewall · Q1 2027</p>
             <ul>
+              <li>Fewer false alarms, found by the <a href="https://github.com/Ritapossible/Hushmark/blob/main/docs/findings/public-rules-scan.md">public rules-file scan</a>: skip comments inside fenced code blocks and emoji joiners.</li>
               <li>More hidden forms, each with a fixture: Markdown comments written as link definitions, text smuggled in variation selectors, more invisible characters.</li>
               <li>More files agents treat as instructions: <code>.claude/</code>, <code>.mcp.json</code>, <code>.github/instructions/</code>, <code>.clinerules</code> and others.</li>
               <li>Scan more of what agents read: issues and comments, linked docs, dependency READMEs.</li>

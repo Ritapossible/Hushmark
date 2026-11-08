@@ -1,0 +1,7274 @@
+[
+ {
+  "root": "cursorrules",
+  "files": 257,
+  "files_flagged": 5,
+  "detectors": {
+   "html_comment": 27
+  },
+  "flagged": [
+   {
+    "file": "beefreeSDK-nocode-content-editor-cursorrules-prompt-file.mdc",
+    "regions": [
+     {
+      "lines": [
+       514,
+       514
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     }
+    ]
+   },
+   {
+    "file": "beefreeSDK.mdc",
+    "regions": [
+     {
+      "lines": [
+       518,
+       518
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     }
+    ]
+   },
+   {
+    "file": "netlify-official-cursorrules-prompt-file.mdc",
+    "regions": [
+     {
+      "lines": [
+       686,
+       686
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       689,
+       689
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     }
+    ]
+   },
+   {
+    "file": "pr-template-cursorrules-prompt-file.mdc",
+    "regions": [
+     {
+      "lines": [
+       35,
+       35
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       39,
+       39
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       43,
+       43
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       47,
+       47
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       55,
+       55
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       59,
+       59
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       71,
+       71
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       81,
+       81
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       85,
+       85
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       89,
+       89
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       93,
+       93
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       97,
+       97
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       101,
+       101
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       105,
+       105
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       112,
+       112
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       129,
+       129
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       133,
+       133
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       139,
+       139
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       143,
+       143
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       150,
+       150
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     }
+    ]
+   },
+   {
+    "file": "svelte-5-vs-svelte-4-cursorrules-prompt-file.mdc",
+    "regions": [
+     {
+      "lines": [
+       48,
+       48
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       53,
+       53
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       54,
+       56
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "root": "copilot",
+  "files": 1819,
+  "files_flagged": 140,
+  "detectors": {
+   "hidden_html": 96,
+   "html_comment": 586,
+   "zero_width": 16
+  },
+  "flagged": [
+   {
+    "file": "agents/accessibility.agent.md",
+    "regions": [
+     {
+      "lines": [
+       242,
+       242
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     }
+    ]
+   },
+   {
+    "file": "agents/aem-frontend-specialist.agent.md",
+    "regions": [
+     {
+      "lines": [
+       140,
+       140
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       146,
+       146
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       156,
+       156
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       178,
+       178
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       182,
+       182
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       186,
+       186
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       204,
+       204
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       306,
+       306
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     }
+    ]
+   },
+   {
+    "file": "agents/azure-verified-modules-owner-triage.agent.md",
+    "regions": [
+     {
+      "lines": [
+       506,
+       506
+      ],
+      "detectors": [
+       "zero_width"
+      ]
+     },
+     {
+      "lines": [
+       511,
+       511
+      ],
+      "detectors": [
+       "zero_width"
+      ]
+     }
+    ]
+   },
+   {
+    "file": "agents/bicep-plan.agent.md",
+    "regions": [
+     {
+      "lines": [
+       54,
+       54
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       101,
+       101
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     }
+    ]
+   },
+   {
+    "file": "agents/dotnet-maui.agent.md",
+    "regions": [
+     {
+      "lines": [
+       75,
+       75
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       78,
+       78
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       81,
+       81
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       82,
+       82
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       87,
+       87
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     }
+    ]
+   },
+   {
+    "file": "agents/expert-react-frontend-engineer.agent.md",
+    "regions": [
+     {
+      "lines": [
+       484,
+       484
+      ],
+      "detectors": [
+       "hidden_html"
+      ]
+     }
+    ]
+   },
+   {
+    "file": "agents/hlbpa.agent.md",
+    "regions": [
+     {
+      "lines": [
+       233,
+       233
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     }
+    ]
+   },
+   {
+    "file": "agents/markdown-accessibility-assistant.agent.md",
+    "regions": [
+     {
+      "lines": [
+       49,
+       49
+      ],
+      "detectors": [
+       "hidden_html"
+      ]
+     },
+     {
+      "lines": [
+       58,
+       58
+      ],
+      "detectors": [
+       "hidden_html"
+      ]
+     }
+    ]
+   },
+   {
+    "file": "agents/project-architecture-planner.agent.md",
+    "regions": [
+     {
+      "lines": [
+       302,
+       302
+      ],
+      "detectors": [
+       "hidden_html"
+      ]
+     },
+     {
+      "lines": [
+       316,
+       316
+      ],
+      "detectors": [
+       "hidden_html"
+      ]
+     },
+     {
+      "lines": [
+       330,
+       330
+      ],
+      "detectors": [
+       "hidden_html"
+      ]
+     },
+     {
+      "lines": [
+       340,
+       340
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       349,
+       349
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       353,
+       353
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       356,
+       356
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       360,
+       360
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       396,
+       396
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       402,
+       402
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       403,
+       403
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       407,
+       407
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     }
+    ]
+   },
+   {
+    "file": "agents/project-documenter.agent.md",
+    "regions": [
+     {
+      "lines": [
+       167,
+       167
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       170,
+       170
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       173,
+       173
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       176,
+       176
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     }
+    ]
+   },
+   {
+    "file": "agents/prompt-builder.agent.md",
+    "regions": [
+     {
+      "lines": [
+       20,
+       20
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       86,
+       86
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       92,
+       92
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       96,
+       96
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       142,
+       142
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       146,
+       146
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       178,
+       178
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       182,
+       182
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       223,
+       223
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       227,
+       227
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       232,
+       232
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       239,
+       239
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       301,
+       301
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       305,
+       305
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       339,
+       339
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       343,
+       343
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       353,
+       353
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     }
+    ]
+   },
+   {
+    "file": "agents/salesforce-apex-triggers.agent.md",
+    "regions": [
+     {
+      "lines": [
+       148,
+       148
+      ],
+      "detectors": [
+       "zero_width"
+      ]
+     }
+    ]
+   },
+   {
+    "file": "agents/salesforce-aura-lwc.agent.md",
+    "regions": [
+     {
+      "lines": [
+       127,
+       127
+      ],
+      "detectors": [
+       "zero_width"
+      ]
+     }
+    ]
+   },
+   {
+    "file": "agents/salesforce-flow.agent.md",
+    "regions": [
+     {
+      "lines": [
+       102,
+       102
+      ],
+      "detectors": [
+       "zero_width"
+      ]
+     }
+    ]
+   },
+   {
+    "file": "agents/salesforce-visualforce.agent.md",
+    "regions": [
+     {
+      "lines": [
+       101,
+       101
+      ],
+      "detectors": [
+       "zero_width"
+      ]
+     }
+    ]
+   },
+   {
+    "file": "agents/se-responsible-ai-code.agent.md",
+    "regions": [
+     {
+      "lines": [
+       59,
+       59
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       60,
+       60
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       61,
+       61
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       66,
+       66
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       67,
+       67
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       68,
+       68
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       69,
+       69
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       70,
+       70
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       80,
+       80
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       84,
+       84
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       87,
+       87
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       88,
+       88
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       89,
+       89
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       115,
+       115
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       121,
+       121
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     }
+    ]
+   },
+   {
+    "file": "agents/simple-app-idea-generator.agent.md",
+    "regions": [
+     {
+      "lines": [
+       25,
+       25
+      ],
+      "detectors": [
+       "zero_width"
+      ]
+     },
+     {
+      "lines": [
+       29,
+       29
+      ],
+      "detectors": [
+       "zero_width"
+      ]
+     }
+    ]
+   },
+   {
+    "file": "agents/task-planner.agent.md",
+    "regions": [
+     {
+      "lines": [
+       87,
+       87
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       99,
+       99
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       110,
+       110
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       121,
+       121
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       128,
+       128
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       185,
+       185
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       189,
+       189
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       192,
+       192
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       257,
+       257
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       261,
+       261
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       269,
+       269
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       310,
+       310
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     }
+    ]
+   },
+   {
+    "file": "agents/task-researcher.agent.md",
+    "regions": [
+     {
+      "lines": [
+       90,
+       90
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       93,
+       93
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       165,
+       165
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     }
+    ]
+   },
+   {
+    "file": "agents/terraform-azure-planning.agent.md",
+    "regions": [
+     {
+      "lines": [
+       104,
+       104
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       161,
+       161
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     }
+    ]
+   },
+   {
+    "file": "agents/trojan-skill-hunter.agent.md",
+    "regions": [
+     {
+      "lines": [
+       51,
+       51
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       52,
+       52
+      ],
+      "detectors": [
+       "hidden_html"
+      ]
+     },
+     {
+      "lines": [
+       53,
+       53
+      ],
+      "detectors": [
+       "hidden_html"
+      ]
+     }
+    ]
+   },
+   {
+    "file": "instructions/a11y.instructions.md",
+    "regions": [
+     {
+      "lines": [
+       121,
+       121
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       124,
+       124
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       153,
+       153
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       175,
+       175
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       194,
+       194
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       197,
+       197
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       258,
+       258
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       261,
+       261
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       272,
+       272
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       291,
+       291
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       293,
+       293
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       380,
+       380
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     }
+    ]
+   },
+   {
+    "file": "instructions/ai-prompt-engineering-safety-best-practices.instructions.md",
+    "regions": [
+     {
+      "lines": [
+       867,
+       867
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     }
+    ]
+   },
+   {
+    "file": "instructions/ansible.instructions.md",
+    "regions": [
+     {
+      "lines": [
+       83,
+       88
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     }
+    ]
+   },
+   {
+    "file": "instructions/azure-apim-ai-gateway.instructions.md",
+    "regions": [
+     {
+      "lines": [
+       26,
+       26
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       46,
+       46
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       69,
+       69
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       161,
+       161
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       168,
+       173
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       179,
+       179
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       191,
+       191
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       210,
+       211
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       228,
+       230
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       232,
+       233
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     }
+    ]
+   },
+   {
+    "file": "instructions/azure-logic-apps-power-automate.instructions.md",
+    "regions": [
+     {
+      "lines": [
+       1543,
+       1543
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       1546,
+       1546
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       1556,
+       1556
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       1559,
+       1559
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       1564,
+       1564
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       1581,
+       1581
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     }
+    ]
+   },
+   {
+    "file": "instructions/containerization-docker-best-practices.instructions.md",
+    "regions": [
+     {
+      "lines": [
+       681,
+       681
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     }
+    ]
+   },
+   {
+    "file": "instructions/convert-cassandra-to-spring-data-cosmos.instructions.md",
+    "regions": [
+     {
+      "lines": [
+       459,
+       459
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       472,
+       472
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       479,
+       479
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       493,
+       493
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       510,
+       510
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       517,
+       517
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       526,
+       526
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     }
+    ]
+   },
+   {
+    "file": "instructions/devops-core-principles.instructions.md",
+    "regions": [
+     {
+      "lines": [
+       167,
+       167
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     }
+    ]
+   },
+   {
+    "file": "instructions/dotnet-maui-9-to-dotnet-maui-10-upgrade.instructions.md",
+    "regions": [
+     {
+      "lines": [
+       76,
+       76
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       79,
+       79
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       82,
+       82
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       606,
+       606
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       616,
+       616
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       626,
+       626
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       635,
+       635
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       642,
+       642
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       648,
+       648
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       667,
+       667
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       676,
+       676
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       685,
+       685
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       687,
+       687
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       690,
+       690
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       692,
+       692
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       970,
+       970
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       977,
+       977
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       980,
+       980
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       985,
+       985
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       997,
+       997
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       1000,
+       1000
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       1007,
+       1007
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       1582,
+       1582
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       1830,
+       1830
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       1837,
+       1837
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       1859,
+       1859
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     }
+    ]
+   },
+   {
+    "file": "instructions/draw-io.instructions.md",
+    "regions": [
+     {
+      "lines": [
+       28,
+       28
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       33,
+       33
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       34,
+       34
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       35,
+       35
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     }
+    ]
+   },
+   {
+    "file": "instructions/gilfoyle-code-review.instructions.md",
+    "regions": [
+     {
+      "lines": [
+       114,
+       114
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     }
+    ]
+   },
+   {
+    "file": "instructions/github-actions-ci-cd-best-practices.instructions.md",
+    "regions": [
+     {
+      "lines": [
+       607,
+       607
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     }
+    ]
+   },
+   {
+    "file": "instructions/kubernetes-deployment-best-practices.instructions.md",
+    "regions": [
+     {
+      "lines": [
+       307,
+       307
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     }
+    ]
+   },
+   {
+    "file": "instructions/lwc.instructions.md",
+    "regions": [
+     {
+      "lines": [
+       26,
+       26
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       35,
+       35
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       63,
+       63
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       68,
+       68
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       71,
+       71
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       75,
+       75
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       82,
+       82
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       88,
+       88
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       91,
+       91
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       95,
+       95
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       107,
+       107
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       359,
+       359
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       378,
+       378
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       402,
+       402
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     }
+    ]
+   },
+   {
+    "file": "instructions/markdown-accessibility.instructions.md",
+    "regions": [
+     {
+      "lines": [
+       26,
+       26
+      ],
+      "detectors": [
+       "hidden_html"
+      ]
+     }
+    ]
+   },
+   {
+    "file": "instructions/markdown-gfm.instructions.md",
+    "regions": [
+     {
+      "lines": [
+       25,
+       25
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       54,
+       54
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     }
+    ]
+   },
+   {
+    "file": "instructions/markdown.instructions.md",
+    "regions": [
+     {
+      "lines": [
+       43,
+       43
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     }
+    ]
+   },
+   {
+    "file": "instructions/nestjs.instructions.md",
+    "regions": [
+     {
+      "lines": [
+       406,
+       406
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     }
+    ]
+   },
+   {
+    "file": "instructions/pcf-alm.instructions.md",
+    "regions": [
+     {
+      "lines": [
+       37,
+       37
+      ],
+      "detectors": [
+       "hidden_html"
+      ]
+     },
+     {
+      "lines": [
+       75,
+       75
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     }
+    ]
+   },
+   {
+    "file": "instructions/pcf-dependent-libraries.instructions.md",
+    "regions": [
+     {
+      "lines": [
+       17,
+       17
+      ],
+      "detectors": [
+       "hidden_html"
+      ]
+     },
+     {
+      "lines": [
+       20,
+       20
+      ],
+      "detectors": [
+       "hidden_html"
+      ]
+     },
+     {
+      "lines": [
+       105,
+       105
+      ],
+      "detectors": [
+       "hidden_html"
+      ]
+     }
+    ]
+   },
+   {
+    "file": "instructions/pcf-events.instructions.md",
+    "regions": [
+     {
+      "lines": [
+       16,
+       16
+      ],
+      "detectors": [
+       "hidden_html"
+      ]
+     },
+     {
+      "lines": [
+       53,
+       53
+      ],
+      "detectors": [
+       "hidden_html"
+      ]
+     },
+     {
+      "lines": [
+       77,
+       77
+      ],
+      "detectors": [
+       "hidden_html"
+      ]
+     }
+    ]
+   },
+   {
+    "file": "instructions/pcf-fluent-modern-theming.instructions.md",
+    "regions": [
+     {
+      "lines": [
+       30,
+       30
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     }
+    ]
+   },
+   {
+    "file": "instructions/pcf-manifest-schema.instructions.md",
+    "regions": [
+     {
+      "lines": [
+       208,
+       208
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       216,
+       216
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       229,
+       229
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       234,
+       234
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       239,
+       239
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       247,
+       247
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       253,
+       253
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     }
+    ]
+   },
+   {
+    "file": "instructions/pcf-power-pages.instructions.md",
+    "regions": [
+     {
+      "lines": [
+       10,
+       10
+      ],
+      "detectors": [
+       "hidden_html"
+      ]
+     },
+     {
+      "lines": [
+       94,
+       94
+      ],
+      "detectors": [
+       "hidden_html"
+      ]
+     }
+    ]
+   },
+   {
+    "file": "instructions/performance-optimization.instructions.md",
+    "regions": [
+     {
+      "lines": [
+       64,
+       64
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       67,
+       67
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       82,
+       82
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       85,
+       85
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       249,
+       249
+      ],
+      "detectors": [
+       "hidden_html"
+      ]
+     },
+     {
+      "lines": [
+       469,
+       469
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     }
+    ]
+   },
+   {
+    "file": "instructions/tailwind-v4-vite.instructions.md",
+    "regions": [
+     {
+      "lines": [
+       161,
+       161
+      ],
+      "detectors": [
+       "hidden_html"
+      ]
+     }
+    ]
+   },
+   {
+    "file": "instructions/task-implementation.instructions.md",
+    "regions": [
+     {
+      "lines": [
+       135,
+       135
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       137,
+       137
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       139,
+       139
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       190,
+       190
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     }
+    ]
+   },
+   {
+    "file": "instructions/update-docs-on-code-change.instructions.md",
+    "regions": [
+     {
+      "lines": [
+       83,
+       95
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     }
+    ]
+   },
+   {
+    "file": "instructions/vsixtoolkit.instructions.md",
+    "regions": [
+     {
+      "lines": [
+       286,
+       286
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       306,
+       306
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     }
+    ]
+   },
+   {
+    "file": "instructions/wordpress.instructions.md",
+    "regions": [
+     {
+      "lines": [
+       42,
+       42
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       151,
+       151
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       180,
+       180
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       236,
+       236
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     }
+    ]
+   },
+   {
+    "file": "plugins/context-matic/README.md",
+    "regions": [
+     {
+      "lines": [
+       102,
+       102
+      ],
+      "detectors": [
+       "hidden_html"
+      ]
+     },
+     {
+      "lines": [
+       163,
+       163
+      ],
+      "detectors": [
+       "hidden_html"
+      ]
+     },
+     {
+      "lines": [
+       227,
+       227
+      ],
+      "detectors": [
+       "hidden_html"
+      ]
+     },
+     {
+      "lines": [
+       295,
+       295
+      ],
+      "detectors": [
+       "hidden_html"
+      ]
+     },
+     {
+      "lines": [
+       325,
+       325
+      ],
+      "detectors": [
+       "hidden_html"
+      ]
+     },
+     {
+      "lines": [
+       357,
+       357
+      ],
+      "detectors": [
+       "hidden_html"
+      ]
+     },
+     {
+      "lines": [
+       394,
+       394
+      ],
+      "detectors": [
+       "hidden_html"
+      ]
+     }
+    ]
+   },
+   {
+    "file": "plugins/github-security/README.md",
+    "regions": [
+     {
+      "lines": [
+       8,
+       8
+      ],
+      "detectors": [
+       "hidden_html"
+      ]
+     }
+    ]
+   },
+   {
+    "file": "plugins/visual-pr/README.md",
+    "regions": [
+     {
+      "lines": [
+       29,
+       29
+      ],
+      "detectors": [
+       "hidden_html"
+      ]
+     },
+     {
+      "lines": [
+       37,
+       37
+      ],
+      "detectors": [
+       "hidden_html"
+      ]
+     }
+    ]
+   },
+   {
+    "file": "skills/adobe-illustrator-integrations/references/cep-extensions.md",
+    "regions": [
+     {
+      "lines": [
+       39,
+       39
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     }
+    ]
+   },
+   {
+    "file": "skills/architecture-blueprint-generator/SKILL.md",
+    "regions": [
+     {
+      "lines": [
+       9,
+       9
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       10,
+       10
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       11,
+       11
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       12,
+       12
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       13,
+       13
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       14,
+       14
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       15,
+       15
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       16,
+       16
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     }
+    ]
+   },
+   {
+    "file": "skills/aspire/references/testing.md",
+    "regions": [
+     {
+      "lines": [
+       263,
+       263
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     }
+    ]
+   },
+   {
+    "file": "skills/aspire/references/troubleshooting.md",
+    "regions": [
+     {
+      "lines": [
+       36,
+       36
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     }
+    ]
+   },
+   {
+    "file": "skills/code-exemplars-blueprint-generator/SKILL.md",
+    "regions": [
+     {
+      "lines": [
+       9,
+       9
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       10,
+       10
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       11,
+       11
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       12,
+       12
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       13,
+       13
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       14,
+       14
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     }
+    ]
+   },
+   {
+    "file": "skills/containerize-aspnet-framework/SKILL.md",
+    "regions": [
+     {
+      "lines": [
+       135,
+       135
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       138,
+       138
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     }
+    ]
+   },
+   {
+    "file": "skills/copilot-cli-quickstart/SKILL.md",
+    "regions": [
+     {
+      "lines": [
+       49,
+       49
+      ],
+      "detectors": [
+       "zero_width"
+      ]
+     },
+     {
+      "lines": [
+       114,
+       114
+      ],
+      "detectors": [
+       "zero_width"
+      ]
+     },
+     {
+      "lines": [
+       205,
+       205
+      ],
+      "detectors": [
+       "zero_width"
+      ]
+     },
+     {
+      "lines": [
+       310,
+       310
+      ],
+      "detectors": [
+       "zero_width"
+      ]
+     },
+     {
+      "lines": [
+       314,
+       314
+      ],
+      "detectors": [
+       "zero_width"
+      ]
+     },
+     {
+      "lines": [
+       639,
+       639
+      ],
+      "detectors": [
+       "zero_width"
+      ]
+     }
+    ]
+   },
+   {
+    "file": "skills/copilot-instructions-blueprint-generator/SKILL.md",
+    "regions": [
+     {
+      "lines": [
+       9,
+       9
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       10,
+       10
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       11,
+       11
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       12,
+       12
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       13,
+       13
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       14,
+       14
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     }
+    ]
+   },
+   {
+    "file": "skills/cypress-flake-fixer/references/anti-patterns.md",
+    "regions": [
+     {
+      "lines": [
+       93,
+       93
+      ],
+      "detectors": [
+       "hidden_html"
+      ]
+     }
+    ]
+   },
+   {
+    "file": "skills/draw-io-diagram-generator/SKILL.md",
+    "regions": [
+     {
+      "lines": [
+       72,
+       72
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       82,
+       82
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       197,
+       197
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       204,
+       204
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       211,
+       211
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       218,
+       218
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       231,
+       231
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       238,
+       238
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       260,
+       260
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       267,
+       267
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       274,
+       274
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       284,
+       284
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       291,
+       291
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       298,
+       298
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       342,
+       342
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       345,
+       345
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     }
+    ]
+   },
+   {
+    "file": "skills/draw-io-diagram-generator/references/drawio-xml-schema.md",
+    "regions": [
+     {
+      "lines": [
+       12,
+       12
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       20,
+       20
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       80,
+       80
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       81,
+       81
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       203,
+       203
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       204,
+       204
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       205,
+       205
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       207,
+       207
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       224,
+       224
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       230,
+       230
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       236,
+       236
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       251,
+       251
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       256,
+       256
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     }
+    ]
+   },
+   {
+    "file": "skills/draw-io-diagram-generator/references/shape-libraries.md",
+    "regions": [
+     {
+      "lines": [
+       94,
+       94
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       101,
+       101
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       108,
+       108
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       113,
+       113
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       173,
+       173
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       180,
+       180
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       187,
+       187
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       193,
+       193
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       199,
+       199
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     }
+    ]
+   },
+   {
+    "file": "skills/drawio/SKILL.md",
+    "regions": [
+     {
+      "lines": [
+       60,
+       60
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       63,
+       63
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       66,
+       66
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       69,
+       69
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       72,
+       72
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       75,
+       75
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       78,
+       78
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     }
+    ]
+   },
+   {
+    "file": "skills/editorconfig/SKILL.md",
+    "regions": [
+     {
+      "lines": [
+       21,
+       21
+      ],
+      "detectors": [
+       "zero_width"
+      ]
+     }
+    ]
+   },
+   {
+    "file": "skills/folder-structure-blueprint-generator/SKILL.md",
+    "regions": [
+     {
+      "lines": [
+       11,
+       11
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       14,
+       14
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       17,
+       17
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       20,
+       20
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       23,
+       23
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       26,
+       26
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       29,
+       29
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       32,
+       32
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       35,
+       35
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       38,
+       38
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     }
+    ]
+   },
+   {
+    "file": "skills/foundry-agentic-loop/assets/agents-md-rapid.md",
+    "regions": [
+     {
+      "lines": [
+       1,
+       1
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       17,
+       17
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     }
+    ]
+   },
+   {
+    "file": "skills/foundry-agentic-loop/assets/agents-md-sdd.md",
+    "regions": [
+     {
+      "lines": [
+       1,
+       1
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       17,
+       17
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     }
+    ]
+   },
+   {
+    "file": "skills/foundry-agentic-loop/assets/loop-template.md",
+    "regions": [
+     {
+      "lines": [
+       5,
+       13
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     }
+    ]
+   },
+   {
+    "file": "skills/foundry-agentic-loop/evals/fixtures/improve-history/AGENTS.md",
+    "regions": [
+     {
+      "lines": [
+       1,
+       1
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       17,
+       17
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     }
+    ]
+   },
+   {
+    "file": "skills/foundry-agentic-loop/evals/fixtures/rapid-locked/AGENTS.md",
+    "regions": [
+     {
+      "lines": [
+       5,
+       5
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       21,
+       21
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     }
+    ]
+   },
+   {
+    "file": "skills/foundry-agentic-loop/evals/fixtures/sdd-deployed/AGENTS.md",
+    "regions": [
+     {
+      "lines": [
+       1,
+       1
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       17,
+       17
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     }
+    ]
+   },
+   {
+    "file": "skills/foundry-agentic-loop/evals/fixtures/sdd-paused/AGENTS.md",
+    "regions": [
+     {
+      "lines": [
+       1,
+       1
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       17,
+       17
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     }
+    ]
+   },
+   {
+    "file": "skills/game-engine/references/3d-web-games.md",
+    "regions": [
+     {
+      "lines": [
+       96,
+       96
+      ],
+      "detectors": [
+       "hidden_html"
+      ]
+     },
+     {
+      "lines": [
+       295,
+       295
+      ],
+      "detectors": [
+       "hidden_html"
+      ]
+     },
+     {
+      "lines": [
+       300,
+       300
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       311,
+       311
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       315,
+       315
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     }
+    ]
+   },
+   {
+    "file": "skills/game-engine/references/techniques.md",
+    "regions": [
+     {
+      "lines": [
+       44,
+       44
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       826,
+       826
+      ],
+      "detectors": [
+       "hidden_html"
+      ]
+     }
+    ]
+   },
+   {
+    "file": "skills/game-engine/references/web-apis.md",
+    "regions": [
+     {
+      "lines": [
+       595,
+       595
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       603,
+       603
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       605,
+       605
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     }
+    ]
+   },
+   {
+    "file": "skills/generate-custom-instructions-from-codebase/SKILL.md",
+    "regions": [
+     {
+      "lines": [
+       12,
+       12
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       15,
+       15
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       18,
+       18
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       21,
+       21
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       24,
+       24
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       27,
+       27
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       30,
+       30
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       33,
+       33
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     }
+    ]
+   },
+   {
+    "file": "skills/github-copilot-starter/SKILL.md",
+    "regions": [
+     {
+      "lines": [
+       80,
+       80
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       113,
+       113
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       118,
+       118
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       128,
+       128
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       129,
+       129
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       238,
+       238
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     }
+    ]
+   },
+   {
+    "file": "skills/github-release/SKILL.md",
+    "regions": [
+     {
+      "lines": [
+       338,
+       338
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     }
+    ]
+   },
+   {
+    "file": "skills/gitmoji/references/gitmoji-reference.md",
+    "regions": [
+     {
+      "lines": [
+       76,
+       76
+      ],
+      "detectors": [
+       "zero_width"
+      ]
+     }
+    ]
+   },
+   {
+    "file": "skills/gsap-framer-scroll-animation/references/gsap.md",
+    "regions": [
+     {
+      "lines": [
+       431,
+       431
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       432,
+       432
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     }
+    ]
+   },
+   {
+    "file": "skills/java-add-graalvm-native-image-support/references/reachability-metadata.md",
+    "regions": [
+     {
+      "lines": [
+       39,
+       39
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       42,
+       42
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     }
+    ]
+   },
+   {
+    "file": "skills/java-development/references/quality-and-packaging.md",
+    "regions": [
+     {
+      "lines": [
+       76,
+       76
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     }
+    ]
+   },
+   {
+    "file": "skills/java-junit/references/build-setup.md",
+    "regions": [
+     {
+      "lines": [
+       9,
+       9
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       64,
+       64
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     }
+    ]
+   },
+   {
+    "file": "skills/java-upgrade/references/java-11-to-17.md",
+    "regions": [
+     {
+      "lines": [
+       513,
+       513
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       520,
+       520
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     }
+    ]
+   },
+   {
+    "file": "skills/javax-to-jakarta-migration/SKILL.md",
+    "regions": [
+     {
+      "lines": [
+       67,
+       67
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       70,
+       70
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     }
+    ]
+   },
+   {
+    "file": "skills/make-blog-post/assets/voice-profile-template.md",
+    "regions": [
+     {
+      "lines": [
+       3,
+       3
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     }
+    ]
+   },
+   {
+    "file": "skills/make-blog-post/references/blog-platforms.md",
+    "regions": [
+     {
+      "lines": [
+       21,
+       21
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       22,
+       22
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     }
+    ]
+   },
+   {
+    "file": "skills/make-repo-contribution/assets/issue-template.md",
+    "regions": [
+     {
+      "lines": [
+       1,
+       1
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       5,
+       5
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       9,
+       13
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       17,
+       21
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       25,
+       28
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       32,
+       37
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     }
+    ]
+   },
+   {
+    "file": "skills/make-repo-contribution/assets/pr-template.md",
+    "regions": [
+     {
+      "lines": [
+       1,
+       1
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       5,
+       5
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       9,
+       13
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       17,
+       21
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       25,
+       29
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       33,
+       36
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     }
+    ]
+   },
+   {
+    "file": "skills/markdown-to-html/SKILL.md",
+    "regions": [
+     {
+      "lines": [
+       156,
+       156
+      ],
+      "detectors": [
+       "hidden_html"
+      ]
+     },
+     {
+      "lines": [
+       173,
+       173
+      ],
+      "detectors": [
+       "hidden_html"
+      ]
+     }
+    ]
+   },
+   {
+    "file": "skills/markdown-to-html/references/basic-markdown-to-html.md",
+    "regions": [
+     {
+      "lines": [
+       387,
+       387
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       391,
+       391
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     }
+    ]
+   },
+   {
+    "file": "skills/markdown-to-html/references/basic-markdown.md",
+    "regions": [
+     {
+      "lines": [
+       15,
+       15
+      ],
+      "detectors": [
+       "hidden_html"
+      ]
+     },
+     {
+      "lines": [
+       19,
+       19
+      ],
+      "detectors": [
+       "hidden_html"
+      ]
+     },
+     {
+      "lines": [
+       31,
+       31
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       48,
+       48
+      ],
+      "detectors": [
+       "hidden_html"
+      ]
+     },
+     {
+      "lines": [
+       61,
+       61
+      ],
+      "detectors": [
+       "hidden_html"
+      ]
+     },
+     {
+      "lines": [
+       74,
+       74
+      ],
+      "detectors": [
+       "hidden_html"
+      ]
+     },
+     {
+      "lines": [
+       88,
+       88
+      ],
+      "detectors": [
+       "hidden_html"
+      ]
+     },
+     {
+      "lines": [
+       94,
+       94
+      ],
+      "detectors": [
+       "hidden_html"
+      ]
+     },
+     {
+      "lines": [
+       95,
+       95
+      ],
+      "detectors": [
+       "hidden_html"
+      ]
+     },
+     {
+      "lines": [
+       96,
+       96
+      ],
+      "detectors": [
+       "hidden_html"
+      ]
+     },
+     {
+      "lines": [
+       111,
+       111
+      ],
+      "detectors": [
+       "hidden_html"
+      ]
+     },
+     {
+      "lines": [
+       120,
+       120
+      ],
+      "detectors": [
+       "hidden_html"
+      ]
+     },
+     {
+      "lines": [
+       255,
+       255
+      ],
+      "detectors": [
+       "hidden_html"
+      ]
+     },
+     {
+      "lines": [
+       257,
+       257
+      ],
+      "detectors": [
+       "hidden_html"
+      ]
+     },
+     {
+      "lines": [
+       293,
+       293
+      ],
+      "detectors": [
+       "hidden_html"
+      ]
+     },
+     {
+      "lines": [
+       303,
+       303
+      ],
+      "detectors": [
+       "hidden_html"
+      ]
+     },
+     {
+      "lines": [
+       320,
+       320
+      ],
+      "detectors": [
+       "hidden_html"
+      ]
+     },
+     {
+      "lines": [
+       322,
+       322
+      ],
+      "detectors": [
+       "hidden_html"
+      ]
+     },
+     {
+      "lines": [
+       333,
+       333
+      ],
+      "detectors": [
+       "hidden_html"
+      ]
+     },
+     {
+      "lines": [
+       343,
+       343
+      ],
+      "detectors": [
+       "hidden_html"
+      ]
+     },
+     {
+      "lines": [
+       357,
+       357
+      ],
+      "detectors": [
+       "hidden_html"
+      ]
+     },
+     {
+      "lines": [
+       374,
+       374
+      ],
+      "detectors": [
+       "hidden_html"
+      ]
+     },
+     {
+      "lines": [
+       402,
+       402
+      ],
+      "detectors": [
+       "hidden_html"
+      ]
+     },
+     {
+      "lines": [
+       428,
+       428
+      ],
+      "detectors": [
+       "hidden_html"
+      ]
+     },
+     {
+      "lines": [
+       460,
+       460
+      ],
+      "detectors": [
+       "hidden_html"
+      ]
+     },
+     {
+      "lines": [
+       467,
+       467
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       476,
+       476
+      ],
+      "detectors": [
+       "hidden_html"
+      ]
+     },
+     {
+      "lines": [
+       487,
+       487
+      ],
+      "detectors": [
+       "hidden_html"
+      ]
+     }
+    ]
+   },
+   {
+    "file": "skills/markdown-to-html/references/code-blocks-to-html.md",
+    "regions": [
+     {
+      "lines": [
+       105,
+       105
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       109,
+       109
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     }
+    ]
+   },
+   {
+    "file": "skills/markdown-to-html/references/code-blocks.md",
+    "regions": [
+     {
+      "lines": [
+       17,
+       17
+      ],
+      "detectors": [
+       "hidden_html"
+      ]
+     },
+     {
+      "lines": [
+       32,
+       32
+      ],
+      "detectors": [
+       "hidden_html"
+      ]
+     },
+     {
+      "lines": [
+       38,
+       38
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       56,
+       56
+      ],
+      "detectors": [
+       "hidden_html"
+      ]
+     }
+    ]
+   },
+   {
+    "file": "skills/markdown-to-html/references/collapsed-sections-to-html.md",
+    "regions": [
+     {
+      "lines": [
+       3,
+       3
+      ],
+      "detectors": [
+       "hidden_html"
+      ]
+     },
+     {
+      "lines": [
+       8,
+       8
+      ],
+      "detectors": [
+       "hidden_html"
+      ]
+     },
+     {
+      "lines": [
+       30,
+       30
+      ],
+      "detectors": [
+       "hidden_html"
+      ]
+     },
+     {
+      "lines": [
+       47,
+       47
+      ],
+      "detectors": [
+       "hidden_html"
+      ]
+     },
+     {
+      "lines": [
+       57,
+       57
+      ],
+      "detectors": [
+       "hidden_html"
+      ]
+     },
+     {
+      "lines": [
+       77,
+       77
+      ],
+      "detectors": [
+       "hidden_html"
+      ]
+     },
+     {
+      "lines": [
+       94,
+       94
+      ],
+      "detectors": [
+       "hidden_html"
+      ]
+     },
+     {
+      "lines": [
+       95,
+       95
+      ],
+      "detectors": [
+       "hidden_html"
+      ]
+     },
+     {
+      "lines": [
+       104,
+       104
+      ],
+      "detectors": [
+       "hidden_html"
+      ]
+     },
+     {
+      "lines": [
+       120,
+       120
+      ],
+      "detectors": [
+       "hidden_html"
+      ]
+     }
+    ]
+   },
+   {
+    "file": "skills/markdown-to-html/references/collapsed-sections.md",
+    "regions": [
+     {
+      "lines": [
+       3,
+       3
+      ],
+      "detectors": [
+       "hidden_html"
+      ]
+     },
+     {
+      "lines": [
+       9,
+       9
+      ],
+      "detectors": [
+       "hidden_html"
+      ]
+     },
+     {
+      "lines": [
+       11,
+       11
+      ],
+      "detectors": [
+       "hidden_html"
+      ]
+     },
+     {
+      "lines": [
+       14,
+       14
+      ],
+      "detectors": [
+       "hidden_html"
+      ]
+     },
+     {
+      "lines": [
+       33,
+       33
+      ],
+      "detectors": [
+       "hidden_html"
+      ]
+     },
+     {
+      "lines": [
+       37,
+       37
+      ],
+      "detectors": [
+       "hidden_html"
+      ]
+     },
+     {
+      "lines": [
+       39,
+       39
+      ],
+      "detectors": [
+       "hidden_html"
+      ]
+     },
+     {
+      "lines": [
+       42,
+       42
+      ],
+      "detectors": [
+       "hidden_html"
+      ]
+     }
+    ]
+   },
+   {
+    "file": "skills/markdown-to-html/references/tables.md",
+    "regions": [
+     {
+      "lines": [
+       17,
+       17
+      ],
+      "detectors": [
+       "hidden_html"
+      ]
+     },
+     {
+      "lines": [
+       30,
+       30
+      ],
+      "detectors": [
+       "hidden_html"
+      ]
+     },
+     {
+      "lines": [
+       45,
+       45
+      ],
+      "detectors": [
+       "hidden_html"
+      ]
+     },
+     {
+      "lines": [
+       56,
+       56
+      ],
+      "detectors": [
+       "hidden_html"
+      ]
+     },
+     {
+      "lines": [
+       67,
+       67
+      ],
+      "detectors": [
+       "hidden_html"
+      ]
+     }
+    ]
+   },
+   {
+    "file": "skills/markdown-to-html/references/writing-mathematical-expressions.md",
+    "regions": [
+     {
+      "lines": [
+       21,
+       21
+      ],
+      "detectors": [
+       "hidden_html"
+      ]
+     },
+     {
+      "lines": [
+       27,
+       27
+      ],
+      "detectors": [
+       "hidden_html"
+      ]
+     },
+     {
+      "lines": [
+       40,
+       40
+      ],
+      "detectors": [
+       "hidden_html"
+      ]
+     },
+     {
+      "lines": [
+       62,
+       62
+      ],
+      "detectors": [
+       "hidden_html"
+      ]
+     },
+     {
+      "lines": [
+       70,
+       70
+      ],
+      "detectors": [
+       "hidden_html"
+      ]
+     }
+    ]
+   },
+   {
+    "file": "skills/msgraph-sdk/references/dotnet.md",
+    "regions": [
+     {
+      "lines": [
+       14,
+       14
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       17,
+       17
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     }
+    ]
+   },
+   {
+    "file": "skills/openapi-to-application-java-spring-boot/SKILL.md",
+    "regions": [
+     {
+      "lines": [
+       30,
+       30
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     }
+    ]
+   },
+   {
+    "file": "skills/penpot-uiux-design/references/accessibility.md",
+    "regions": [
+     {
+      "lines": [
+       151,
+       151
+      ],
+      "detectors": [
+       "hidden_html"
+      ]
+     },
+     {
+      "lines": [
+       202,
+       202
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     }
+    ]
+   },
+   {
+    "file": "skills/pr-screenshots/SKILL.md",
+    "regions": [
+     {
+      "lines": [
+       21,
+       21
+      ],
+      "detectors": [
+       "hidden_html"
+      ]
+     },
+     {
+      "lines": [
+       122,
+       122
+      ],
+      "detectors": [
+       "hidden_html"
+      ]
+     }
+    ]
+   },
+   {
+    "file": "skills/project-workflow-analysis-blueprint-generator/SKILL.md",
+    "regions": [
+     {
+      "lines": [
+       12,
+       12
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       15,
+       15
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       18,
+       18
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       21,
+       21
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       24,
+       24
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       27,
+       27
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       30,
+       30
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       33,
+       33
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     }
+    ]
+   },
+   {
+    "file": "skills/qdrant-performance-optimization/memory-usage-optimization/SKILL.md",
+    "regions": [
+     {
+      "lines": [
+       20,
+       20
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     }
+    ]
+   },
+   {
+    "file": "skills/quality-playbook/SKILL.md",
+    "regions": [
+     {
+      "lines": [
+       616,
+       616
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       1089,
+       1091
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       1095,
+       1102
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       1106,
+       1106
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       1740,
+       1740
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     }
+    ]
+   },
+   {
+    "file": "skills/quality-playbook/phase_prompts/phase1.md",
+    "regions": [
+     {
+      "lines": [
+       161,
+       161
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       203,
+       203
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     }
+    ]
+   },
+   {
+    "file": "skills/quality-playbook/references/spec_audit.md",
+    "regions": [
+     {
+      "lines": [
+       193,
+       195
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     }
+    ]
+   },
+   {
+    "file": "skills/quasi-coder/SKILL.md",
+    "regions": [
+     {
+      "lines": [
+       233,
+       233
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       238,
+       238
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     }
+    ]
+   },
+   {
+    "file": "skills/repo-standardizer/templates/PR_TEMPLATE.md",
+    "regions": [
+     {
+      "lines": [
+       3,
+       3
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       7,
+       7
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       18,
+       18
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       22,
+       22
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     }
+    ]
+   },
+   {
+    "file": "skills/roslyn-analyzers/SKILL.md",
+    "regions": [
+     {
+      "lines": [
+       255,
+       255
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       272,
+       272
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       275,
+       275
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       358,
+       358
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     }
+    ]
+   },
+   {
+    "file": "skills/salesforce-component-standards/SKILL.md",
+    "regions": [
+     {
+      "lines": [
+       117,
+       117
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       120,
+       120
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       122,
+       122
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     }
+    ]
+   },
+   {
+    "file": "skills/setup-my-iq/SKILL.md",
+    "regions": [
+     {
+      "lines": [
+       95,
+       95
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       96,
+       96
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       97,
+       97
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     }
+    ]
+   },
+   {
+    "file": "skills/setup-my-iq/assets/templates/AGENTS.md",
+    "regions": [
+     {
+      "lines": [
+       53,
+       53
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     }
+    ]
+   },
+   {
+    "file": "skills/setup-my-iq/assets/templates/communication-style.md",
+    "regions": [
+     {
+      "lines": [
+       5,
+       5
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       7,
+       7
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       8,
+       8
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       9,
+       9
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       10,
+       10
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       11,
+       11
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       15,
+       15
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       17,
+       17
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       18,
+       18
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       19,
+       19
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       23,
+       23
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       25,
+       25
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       26,
+       26
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       27,
+       27
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       28,
+       28
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       34,
+       34
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       38,
+       38
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       42,
+       42
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       46,
+       46
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       48,
+       48
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       49,
+       49
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     }
+    ]
+   },
+   {
+    "file": "skills/setup-my-iq/assets/templates/identity.md",
+    "regions": [
+     {
+      "lines": [
+       3,
+       3
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       4,
+       4
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       5,
+       5
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       6,
+       6
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       7,
+       7
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       11,
+       11
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       15,
+       15
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     }
+    ]
+   },
+   {
+    "file": "skills/setup-my-iq/assets/templates/preferences-and-constraints.md",
+    "regions": [
+     {
+      "lines": [
+       7,
+       7
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       9,
+       9
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       10,
+       10
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       11,
+       11
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       15,
+       15
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       17,
+       17
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       18,
+       18
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       22,
+       22
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       24,
+       24
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       25,
+       25
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       26,
+       26
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       27,
+       27
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       28,
+       28
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       34,
+       34
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       36,
+       36
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       40,
+       40
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       42,
+       42
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       43,
+       43
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       47,
+       47
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       49,
+       49
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       50,
+       50
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       54,
+       54
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       58,
+       58
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       59,
+       59
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       63,
+       63
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       64,
+       64
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       68,
+       68
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       69,
+       69
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       70,
+       70
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     }
+    ]
+   },
+   {
+    "file": "skills/setup-my-iq/assets/templates/role-and-responsibilities.md",
+    "regions": [
+     {
+      "lines": [
+       5,
+       5
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       6,
+       6
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       10,
+       10
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       13,
+       13
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       14,
+       14
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       20,
+       20
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       21,
+       21
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       22,
+       22
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       23,
+       23
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       24,
+       24
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       27,
+       27
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       28,
+       28
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       32,
+       32
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       35,
+       35
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       41,
+       41
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       44,
+       44
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       48,
+       48
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     }
+    ]
+   },
+   {
+    "file": "skills/setup-my-iq/assets/templates/team.md",
+    "regions": [
+     {
+      "lines": [
+       3,
+       3
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       5,
+       5
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       9,
+       9
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       13,
+       13
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       15,
+       15
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       17,
+       17
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       21,
+       21
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       25,
+       25
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       27,
+       27
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       29,
+       29
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       33,
+       33
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       37,
+       37
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     }
+    ]
+   },
+   {
+    "file": "skills/setup-my-iq/assets/templates/tools-systems-and-config.md",
+    "regions": [
+     {
+      "lines": [
+       5,
+       5
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       6,
+       6
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       7,
+       7
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       8,
+       8
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       9,
+       9
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       10,
+       10
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       12,
+       12
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       16,
+       16
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       17,
+       17
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       23,
+       23
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       24,
+       24
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       25,
+       25
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       33,
+       33
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       34,
+       34
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       38,
+       38
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       42,
+       42
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       46,
+       46
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       47,
+       47
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       48,
+       48
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       49,
+       49
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       55,
+       55
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       61,
+       61
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       62,
+       62
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       63,
+       63
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       64,
+       64
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       69,
+       71
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       75,
+       75
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       79,
+       79
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       83,
+       83
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       87,
+       87
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       88,
+       88
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       89,
+       89
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       90,
+       90
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       96,
+       96
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       97,
+       97
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       103,
+       103
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       107,
+       109
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     }
+    ]
+   },
+   {
+    "file": "skills/spring-boot-4-migration/references/02-starters-and-removed-features.md",
+    "regions": [
+     {
+      "lines": [
+       230,
+       230
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     }
+    ]
+   },
+   {
+    "file": "skills/spring-boot-4-migration/references/04-core-framework.md",
+    "regions": [
+     {
+      "lines": [
+       102,
+       102
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     }
+    ]
+   },
+   {
+    "file": "skills/spring-boot-testing/SKILL.md",
+    "regions": [
+     {
+      "lines": [
+       195,
+       195
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       202,
+       202
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     }
+    ]
+   },
+   {
+    "file": "skills/spring-boot-testing/references/test-slices-overview.md",
+    "regions": [
+     {
+      "lines": [
+       178,
+       178
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       185,
+       185
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       191,
+       191
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       198,
+       198
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     }
+    ]
+   },
+   {
+    "file": "skills/technology-stack-blueprint-generator/SKILL.md",
+    "regions": [
+     {
+      "lines": [
+       9,
+       9
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       10,
+       10
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       11,
+       11
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       12,
+       12
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       13,
+       13
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       14,
+       14
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       15,
+       15
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       16,
+       16
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       17,
+       17
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     }
+    ]
+   },
+   {
+    "file": "skills/threat-model-analyst/references/incremental-orchestrator.md",
+    "regions": [
+     {
+      "lines": [
+       264,
+       264
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       307,
+       313
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       354,
+       358
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       525,
+       525
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       551,
+       551
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       560,
+       560
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       562,
+       562
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       563,
+       563
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       564,
+       564
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       565,
+       565
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       568,
+       568
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       570,
+       570
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       573,
+       573
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       575,
+       575
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       576,
+       576
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       579,
+       579
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       580,
+       580
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       592,
+       592
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       593,
+       593
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       597,
+       597
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       599,
+       599
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       602,
+       602
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     }
+    ]
+   },
+   {
+    "file": "skills/threat-model-analyst/references/output-formats.md",
+    "regions": [
+     {
+      "lines": [
+       67,
+       67
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       75,
+       75
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       78,
+       78
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       82,
+       82
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       97,
+       97
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       146,
+       146
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       165,
+       165
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       538,
+       538
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       601,
+       601
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     }
+    ]
+   },
+   {
+    "file": "skills/threat-model-analyst/references/skeletons/skeleton-architecture.md",
+    "regions": [
+     {
+      "lines": [
+       25,
+       29
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       52,
+       56
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       68,
+       68
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       76,
+       82
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       92,
+       116
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     }
+    ]
+   },
+   {
+    "file": "skills/threat-model-analyst/references/skeletons/skeleton-assessment.md",
+    "regions": [
+     {
+      "lines": [
+       30,
+       34
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       50,
+       54
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       67,
+       73
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       83,
+       89
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       93,
+       95
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       234,
+       240
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       246,
+       246
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     }
+    ]
+   },
+   {
+    "file": "skills/threat-model-analyst/references/skeletons/skeleton-dfd.md",
+    "regions": [
+     {
+      "lines": [
+       61,
+       68
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     }
+    ]
+   },
+   {
+    "file": "skills/threat-model-analyst/references/skeletons/skeleton-findings.md",
+    "regions": [
+     {
+      "lines": [
+       34,
+       41
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       61,
+       67
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       176,
+       185
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     }
+    ]
+   },
+   {
+    "file": "skills/threat-model-analyst/references/skeletons/skeleton-incremental-html.md",
+    "regions": [
+     {
+      "lines": [
+       36,
+       36
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       53,
+       53
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       54,
+       54
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       55,
+       55
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       56,
+       56
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       59,
+       66
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     }
+    ]
+   },
+   {
+    "file": "skills/threat-model-analyst/references/skeletons/skeleton-stride-analysis.md",
+    "regions": [
+     {
+      "lines": [
+       25,
+       25
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       36,
+       43
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       90,
+       96
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     }
+    ]
+   },
+   {
+    "file": "skills/threat-model-analyst/references/verification-checklist.md",
+    "regions": [
+     {
+      "lines": [
+       483,
+       483
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     }
+    ]
+   },
+   {
+    "file": "skills/tm7-threat-model/SKILL.md",
+    "regions": [
+     {
+      "lines": [
+       90,
+       90
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       93,
+       93
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       99,
+       99
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       103,
+       103
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       107,
+       107
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     },
+     {
+      "lines": [
+       142,
+       142
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     }
+    ]
+   },
+   {
+    "file": "skills/vardoger-analyze/SKILL.md",
+    "regions": [
+     {
+      "lines": [
+       13,
+       13
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     }
+    ]
+   },
+   {
+    "file": "skills/webmcpify/references/integrate.md",
+    "regions": [
+     {
+      "lines": [
+       22,
+       22
+      ],
+      "detectors": [
+       "html_comment"
+      ]
+     }
+    ]
+   }
+  ]
+ }
+]
