@@ -213,8 +213,8 @@ cd Hushmark</code></pre></li>
         </ol>
         <p>Three ways to do it, all running the same checks <span class="tag tag-live">built</span>:</p>
         <ul>
-          <li><strong>In your browser:</strong> paste a receipt (or a check's whole details text) at <a href="verify.html">tryhushmark.vercel.app/verify</a>. It checks the receipt ID, the nonce, the TEE signature and the NEAR anchor; nothing you paste leaves the page.</li>
-          <li><strong>From the command line:</strong> <code>hushmark-verify receipt.json attestation.json</code> also checks Intel's quote and NVIDIA's GPU verdict, as of now. Exit status 0 means verified.</li>
+          <li><strong>In your browser:</strong> paste a receipt (or a check's whole details text) at <a href="verify.html">tryhushmark.vercel.app/verify</a>. It checks the receipt ID, the nonce, the signature and the NEAR anchor; nothing you paste leaves the page. It cannot check the TEE, so it never says <em>Verified</em>.</li>
+          <li><strong>From the command line:</strong> <code>hushmark-verify receipt.json attestation.json</code> also checks Intel's quote and NVIDIA's GPU verdict, as of now. Exit status 0 means verified, TEE included; 3 means the signature matches but the TEE was not checked (no attestation report); 1 means a check failed or another receipt is the anchored one.</li>
           <li><strong>From an AI agent:</strong> the <a href="#mcp">MCP server</a>'s <code>verify_receipt</code> tool.</li>
         </ul>
         <p>Every <code>Hushmark</code> check shows its receipt in the check's details. Full specification: <a href="https://github.com/Ritapossible/Hushmark/blob/main/RECEIPT.md">RECEIPT.md</a>.</p>
@@ -332,7 +332,7 @@ ignore:           # optional: files not to scan (at most 50 patterns)
             <tr><td>No hidden regions</td><td>success</td><td>success</td></tr>
             <tr><td>Hidden regions, none aimed at agents</td><td>success, with the receipt ID</td><td>success</td></tr>
             <tr><td>Verified findings</td><td>neutral, one annotation per finding</td><td>failure</td></tr>
-            <tr><td>Refused</td><td>neutral, reason code, scanner hits marked <em>unconfirmed</em></td><td>neutral</td></tr>
+            <tr><td>Refused</td><td>neutral, reason code, scanner hits marked <em>unconfirmed</em></td><td>failure</td></tr>
           </tbody>
         </table>
         <p>Findings in the PR title or body cannot be line annotations, so they appear in the check summary.</p>

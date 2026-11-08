@@ -13,7 +13,7 @@ is hosted. Decision: [ADR-0010](../adr/0010-github-app-and-mcp-server.md).
 |---|---|---|
 | `scan` | Finds text a human would not see but an agent would read: HTML comments, invisible and bidi characters, hidden HTML, agent rules files. Returns where each region is and which detector fired | Nothing. Offline, free, instant |
 | `review` | Sends only those regions to the model in a NEAR AI Cloud TEE, runs checks a–g, and returns verified findings and a receipt (saved to `~/.hushmark/receipts/<id>/`) | `NEARAI_API_KEY`. Text with nothing hidden makes no model call |
-| `verify_receipt` | Checks a Hushmark receipt without trusting Hushmark: its ID, nonce and the TEE's signature; with the attestation report, Intel's and NVIDIA's evidence; and the NEAR testnet anchor. Each check is pass, fail or skipped, with why | Network for the Intel, NVIDIA and NEAR checks (`"online": false` skips them) |
+| `verify_receipt` | Checks a Hushmark receipt without trusting Hushmark: its ID, nonce and signature; with the attestation report, Intel's and NVIDIA's evidence; and the NEAR testnet anchor. Each check is pass, fail or skipped, with why. The `verdict` is `verified` only when the attestation report was checked too; otherwise `tee_not_checked` | Network for the Intel, NVIDIA and NEAR checks (`"online": false` skips them) |
 
 `scan` and `review` take `text` (with an optional `path`, so that, for example, `AGENTS.md` is
 treated as a rules file) or a unified `diff`.

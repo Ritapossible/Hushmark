@@ -29,7 +29,7 @@ receipt and Check Run needs idempotency storage, which the v0.1 Action does not 
 | 01 | `injection` | R1 | Two verified findings: an annotation at the exact file and line, and one in the summary for the PR body. Audit hook never fires. | Real (R1) |
 | 02 | `rerun-not-maintainer` | `/hushmark` from a `write`-role commenter | `refused: not_maintainer`. No model call. Check Run unchanged. | No model call |
 | 03 | `replay` | Same idempotency key twice | Same `receipt_id`. Check Run updated, not duplicated. Second anchor panics. | R1 |
-| 04 | `no-attestation` | R1 with the report removed | `refused: no_attestation`. Check `neutral`, scanner hits shown as *unconfirmed*. | R1, report removed |
+| 04 | `no-attestation` | R1 with the report removed | `refused: no_attestation`. Check `neutral` in warn mode (`failure` in block mode), scanner hits shown as *unconfirmed*. | R1, report removed |
 | 05 | `tampered-response` | R1 with one response byte changed | `refused: signature_mismatch` | R1, one byte changed |
 | 06 | `nonce-swap` | R1 checked against A2 | `refused: nonce_mismatch` | R1 + A2 |
 | 07 | `clean-control` | R2 | Zero findings. Check `success`, "1 hidden region reviewed, none aimed at agents". | Real (R2) |

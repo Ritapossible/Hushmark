@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Verify a receipt · Hushmark</title>
-  <meta name="description" content="Check a Hushmark receipt yourself, in your browser, without trusting Hushmark: its ID, nonce, the TEE signature and the NEAR testnet anchor.">
+  <meta name="description" content="Check a Hushmark receipt yourself, in your browser, without trusting Hushmark: its ID, nonce, signature and the NEAR testnet anchor. The TEE itself is checked with hushmark-verify and the attestation report.">
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -64,9 +64,9 @@
       <ul>
         <li><strong>Receipt ID:</strong> the SHA-256 of the receipt's exact canonical bytes. Any edit changes it.</li>
         <li><strong>Nonce:</strong> recomputed from the review's key and salt, so the TEE evidence was made for this review and cannot be replayed from another.</li>
-        <li><strong>TEE signature:</strong> the signed text must be <code>model:sha256(request):sha256(response)</code>, and the signature must recover to the TEE's signing address.</li>
-        <li><strong>NEAR anchor:</strong> the contract <code>anchor.hushmark.testnet</code> must hold this receipt's hash for this review's key. It accepts one receipt per key, so an anchored verdict cannot be swapped later.</li>
-        <li><strong>Not in the browser:</strong> Intel's TDX quote and NVIDIA's GPU verdict, which prove the signing key lives in genuine hardware. Run <code>hushmark-verify receipt.json attestation.json</code> (from the repository) with the attestation report to check those too.</li>
+        <li><strong>Signature:</strong> the signed text must be <code>model:sha256(request):sha256(response)</code>, and the signature must recover to the signing address written in the receipt. Any key can sign, so this alone does not prove a TEE.</li>
+        <li><strong>NEAR anchor:</strong> the contract <code>anchor.hushmark.testnet</code> must hold this receipt's hash for this review's key. It accepts one receipt per key, so an anchored verdict cannot be swapped later. A <code>/hushmark</code> re-run makes a new receipt for the same key, which reads <em>Not the anchored receipt</em>.</li>
+        <li><strong>Not in the browser:</strong> Intel's TDX quote and NVIDIA's GPU verdict, which prove the signing key lives in genuine hardware. That is why this page never says <em>Verified</em>: its best verdict is <em>Signature matches; TEE not checked</em>. Run <code>hushmark-verify receipt.json attestation.json</code> (from the repository) with the attestation report for the full verdict.</li>
       </ul>
       <p>Same checks, same code path as the command and the MCP server's <code>verify_receipt</code>: <a href="https://github.com/Ritapossible/Hushmark/blob/main/hushmark/receipt_check.py">receipt_check.py</a>. Format: <a href="https://github.com/Ritapossible/Hushmark/blob/main/RECEIPT.md">RECEIPT.md</a>.</p>
     </section>

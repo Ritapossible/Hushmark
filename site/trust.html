@@ -63,7 +63,9 @@
     <h2>What is not proved</h2>
     <ul class="trust-list">
           <li><strong>The host is not in a TEE.</strong> In v0.1 Hushmark runs on a GitHub Actions runner (or the App's server). It sees the full diff, as GitHub already does, and someone who compromised it could skip verification. The claim covers Hushmark's code, not the machine it runs on. Moving the service into a confidential VM is the first item on the roadmap.</li>
-          <li><strong>TEE trust is hardware trust.</strong> It holds only if Intel TDX and NVIDIA confidential computing are sound and NEAR AI Cloud's measurements match what it publishes.</li>
+          <li><strong>TEE trust is hardware trust.</strong> It holds only if Intel TDX and NVIDIA confidential computing are sound.</li>
+          <li><strong>Which software runs in the TEE is not pinned.</strong> The checks prove a genuine, up-to-date TDX machine with NVIDIA GPUs that holds the signing key and our nonce, with consistent measurements. They are not compared against values NEAR AI Cloud publishes, so "a NEAR AI Cloud TEE" rests on reaching its API over TLS. Pinning them is on the roadmap.</li>
+          <li><strong>A receipt alone does not prove a TEE.</strong> Its signature only shows the key named in it signed it. Only <code>hushmark-verify</code> with the attestation report says <em>Verified</em>; the browser verifier never does.</li>
           <li><strong>Detection is not complete.</strong> Hidden instructions in forms the detectors do not know are missed, and plain visible instructions outside agent rules files are not flagged.</li>
           <li><strong>The model sees excerpts, not the whole change.</strong> It judges whether a hidden region is aimed at an agent, not what the pull request does.</li>
           <li><strong>Files in <code>ignore</code> are not reviewed.</strong> The check names every file it skipped.</li>

@@ -90,7 +90,8 @@ Each hit becomes a candidate `{id, source, file, line, span, detector}`, where `
 - `temperature: 0`, no `tools`, no streaming, `Accept-Encoding: identity`.
 - Keep the **exact** request and response bytes for the signature check.
 - **Budget:** at most N model calls per installation per day (default 200). Over budget:
-  refuse with `budget_exceeded`, Check Run `neutral` with unconfirmed annotations.
+  refuse with `budget_exceeded`, Check Run not verified with unconfirmed annotations
+  (`neutral` in warn mode, `failure` in block mode).
 
 Required output (validated in step 5g):
 ```json
@@ -137,7 +138,7 @@ One Check Run named `Hushmark` per head SHA, updated in place (its ID is stored)
 | No candidates | `success` | `success` |
 | Candidates, no verified findings | `success`, summary "N hidden regions reviewed in a NEAR TEE, none aimed at agents", receipt ID | same |
 | Verified findings | `neutral`, one annotation per finding at its file and line | `failure` |
-| Refused (`too_many_candidates`, `budget_exceeded`, verification failure, ...) | `neutral`, reason code, scanner hits as *unconfirmed* annotations | `neutral` |
+| Refused (`too_many_candidates`, `budget_exceeded`, verification failure, ...) | `neutral`, reason code, scanner hits as *unconfirmed* annotations | `failure` (GitHub counts a neutral required check as passing; an unreadable config is treated as block) |
 
 - Findings in the PR title or body cannot be line annotations; they go in the summary.
 - Summary always ends with `receipt: <id>` when there is a receipt.

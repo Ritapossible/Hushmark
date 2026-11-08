@@ -48,7 +48,17 @@ Scope: v0.1, the hackathon build (ADR-0007).
   it can read code and could skip verification. The claim covers the review code, not its
   host. Moving the service into a confidential VM is ROADMAP v0.2.
 - **TEE trust is hardware trust.** It holds only if Intel TDX and NVIDIA confidential
-  computing are sound and NEAR AI Cloud's measurements match what it publishes.
+  computing are sound.
+- **Which software runs in the TEE is not pinned.** The checks prove a genuine, up-to-date
+  TDX machine with NVIDIA GPUs that holds the signing key and our nonce, and that its
+  configuration (MRCONFIGID) and runtime log (RTMR3) are consistent with what the report
+  states. Hushmark does not compare those measurements, or the firmware and kernel
+  measurements (MRTD, RTMR0–2), against values NEAR AI Cloud publishes. So "a NEAR AI Cloud
+  TEE" rests on reaching NEAR AI Cloud's API over TLS, not on the measurements. Pinning them
+  is on the roadmap.
+- **A receipt alone does not prove a TEE.** Its signature only shows that the key named in it
+  signed it. The attestation report proves the key is in a TEE, so only `hushmark-verify`
+  with that report says `VERIFIED`; the browser verifier never does.
 - **Detection is not complete.** Hidden instructions in forms the detectors do not know are
   missed, and plain visible instructions outside rules files are not flagged. The design
   trades recall for few false positives.

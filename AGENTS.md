@@ -187,10 +187,15 @@ make verify-live   # (planned) re-verify recorded evidence online
   needs **Issues: Read-only** or GitHub never sends `/hushmark` comments.
 - **App live (2026-11-07):** App "Hushmark Check" (ID 5657630) on Render (`hushmark-app.onrender.com`),
   installed on `Ritapossible/hushmark-demo` (block mode). PR #1 there: check failed with 1
-  verified finding, receipt `144b8d26…` anchored at block 276,657,517 (verified with
-  `hushmark-verify`); Rita's `/hushmark` re-ran it (contract refused a second anchor); a bot's
+  verified finding, receipt `144b8d26…` anchored at block 276,657,517 (signature and anchor
+  checked with `hushmark-verify`); Rita's `/hushmark` re-ran it (contract refused a second anchor); a bot's
   `/hushmark` was refused. Gap vs Grok's ask: the demo repo is Rita's own, not a stranger's.
   Keep Render up until 25 November (UptimeRobot on `/healthz`).
+- **Audit fixes (2026-11-08, Grok's go):** a self-audit found three breaks in the claim, all
+  fixed with failing tests first: block mode passed refusals (`neutral`), one line separator
+  hid the rest of a hunk, and the verifier said "Verified" for any self-signed receipt. Also
+  whole HTML comments are one candidate, a global App cap, and the threat model no longer
+  implies measurements are pinned. 279 tests.
 - **Next week (all need Rita):** mainnet payout account, demo video, X post, make the repo
   public, submit before 14 November 23:59 UTC.
 
@@ -198,6 +203,10 @@ make verify-live   # (planned) re-verify recorded evidence online
 
 Newest first. One line each, with a link when there is an ADR.
 
+- 2026-11-08: Grok review of the self-audit: in block mode any refusal fails (a review that
+  could not finish is not a clean review); split diffs on `\n` only; "Verified" only when the
+  attestation passed; flag whole HTML comments; keep one anchor per key and say so for
+  re-runs; reword, not pin, the measurements this week; the longer detector list waits.
 - 2026-11-07: PR #21's check refused with `gpu_evidence_invalid: NRAS token outside its
   validity window`: NVIDIA stamps `nbf` just after our verification time. 120 s leeway on `nbf`
   only (`verify/nras.py`); expired verdicts are still refused. A fix, allowed in the freeze.
