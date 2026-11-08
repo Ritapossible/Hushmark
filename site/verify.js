@@ -45,7 +45,7 @@ export async function verify(text, { online = true } = {}) {
     if (!receipt || typeof receipt !== "object" || !receipt.key) throw new Error("no key");
   } catch {
     add("Receipt ID", "fail", "This is not a Hushmark receipt (it is not the expected JSON).");
-    return { receiptId, checks, ok: false };
+    return { receiptId, checks, ok: false, verdict: "Not verified" };
   }
 
   if (canonical(receipt) === raw) {
@@ -74,9 +74,13 @@ export async function verify(text, { online = true } = {}) {
     if (sig.text !== text) throw new Error("text");
     const signer = recoverAddress(text, String(sig.sig));
     if (signer.toLowerCase() !== String(sig.signing_address).toLowerCase()) throw new Error("signer");
-    add("TEE signature", "pass", `The model's request and answer hashes were signed inside the TEE by ${sig.signing_address}.`);
+    add(
+      "Signature",
+      "pass",
+      `The signature over the model's request and answer hashes matches the address named in this receipt (${sig.signing_address}). Any key can sign; whether this one is inside a TEE needs the check below.`,
+    );
   } catch {
-    add("TEE signature", "fail", "The signature does not cover these hashes, or was not made by the TEE's key.");
+    add("Signature", "fail", "The signature does not cover these hashes, or does not match the address in this receipt.");
   }
 
   add(
@@ -108,18 +112,28 @@ export async function verify(text, { online = true } = {}) {
       } else if (found.receipt_hash === receiptId) {
         add("NEAR anchor", "pass", `Anchored on ${ANCHOR} at block ${found.block_height}; it can never be replaced.`);
       } else {
-        add("NEAR anchor", "fail", "A different receipt is anchored for this exact review.");
+        add(
+          "NEAR anchor",
+          "fail",
+          "A different receipt is the anchored one for this review key. A re-run makes a new receipt and only the first is anchored.",
+        );
       }
     } catch {
       add("NEAR anchor", "skipped", "The NEAR testnet RPC could not be reached.");
     }
   }
 
+  // This page cannot check Intel's or NVIDIA's evidence, so it never says "verified": a
+  // receipt's own signature only proves that the key named inside it signed it (audit
+  // 2026-11-08). hushmark-verify with the attestation report gives the full verdict.
   const status = Object.fromEntries(checks.map((c) => [c.name, c.status]));
-  const ok =
-    ["Receipt ID", "Nonce", "TEE signature"].every((n) => status[n] === "pass") &&
-    checks.every((c) => c.status !== "fail");
-  return { receiptId, checks, ok, receipt };
+  let verdict = "Signature matches; TEE not checked";
+  if (!["Receipt ID", "Nonce", "Signature"].every((n) => status[n] === "pass")) {
+    verdict = "Not verified";
+  } else if (status["NEAR anchor"] === "fail") {
+    verdict = "Not the anchored receipt";
+  }
+  return { receiptId, checks, ok: false, verdict, receipt };
 }
 
 // --- page wiring (skipped when imported outside a browser page) ---------------------------
@@ -133,8 +147,8 @@ if (typeof document !== "undefined" && document.getElementById("verify-form")) {
   function show(result) {
     out.replaceChildren();
     const head = document.createElement("p");
-    head.className = "verify-verdict " + (result.ok ? "is-ok" : "is-bad");
-    head.textContent = result.ok ? "Verified" : "Not verified";
+    head.className = "verify-verdict " + (result.verdict === "Not verified" ? "is-bad" : "is-partial");
+    head.textContent = result.verdict;
     out.append(head);
     if (result.receipt) {
       const facts = document.createElement("p");

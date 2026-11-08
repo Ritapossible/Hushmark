@@ -46,7 +46,7 @@ from hushmark.pipeline import (
 )
 from hushmark.receipt_check import check_receipt
 from hushmark.report import REFUSAL_TEXT, no_links
-from hushmark.scan import Candidate, ScanResult, scan
+from hushmark.scan import Candidate, ScanResult, scan, split_lines
 
 PROTOCOL_VERSIONS = ("2025-06-18", "2025-03-26", "2024-11-05")
 NO_COMMIT = "0" * 40
@@ -143,7 +143,7 @@ def _input(args: Mapping[str, Any]) -> tuple[str, str]:
     if diff is not None:
         return str(diff), ""
     if path:
-        lines = str(text).splitlines() or [""]
+        lines = split_lines(str(text)) or [""]
         header = f"diff --git a/{path} b/{path}\n--- /dev/null\n+++ b/{path}\n"
         hunk = f"@@ -0,0 +1,{len(lines)} @@\n" + "".join(f"+{ln}\n" for ln in lines)
         return header + hunk, ""
@@ -159,7 +159,7 @@ def _region_lines(result: ScanResult, body: str, c: Candidate) -> list[str]:
     if c.source == "diff":
         lines = {ln.number: ln.text for f in result.files if f.path == c.file for ln in f.lines}
     else:
-        lines = dict(enumerate(body.splitlines(), start=1))
+        lines = dict(enumerate(split_lines(body), start=1))
     return [visible(lines.get(n, "")) for n in range(c.line, c.end_line + 1)]
 
 
@@ -321,6 +321,8 @@ class Server:
             return {"jsonrpc": "2.0", "id": msg_id, "error": {"code": code, "message": text}}
 
         params = message.get("params") or {}
+        if not isinstance(params, dict):
+            return error(-32602, "`params` must be an object")
         if method == "initialize":
             asked = str(params.get("protocolVersion", ""))
             return ok(
@@ -345,8 +347,11 @@ class Server:
             tool = self.tools.get(str(name))
             if tool is None:
                 return error(-32602, f"unknown tool {name!r}")
+            args = params.get("arguments") or {}
             try:
-                result, failed = tool(params.get("arguments") or {}), False
+                if not isinstance(args, dict):
+                    raise ToolError("`arguments` must be an object")
+                result, failed = tool(args), False
             except (ToolError, OSError) as e:
                 result, failed = {"error": str(e)}, True
             text = json.dumps(result, indent=2, ensure_ascii=False)

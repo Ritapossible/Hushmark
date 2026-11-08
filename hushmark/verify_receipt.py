@@ -8,8 +8,9 @@ artifact together with its attestation report. Use `-` to read the receipt from 
 
 Each check prints pass, fail or skipped with why (see `receipt_check.py`). With the attestation
 report and network access, Intel's quote and NVIDIA's GPU verdict are checked as of now, and
-the NEAR testnet anchor is looked up. Exit status: 0 if the receipt verifies, 1 if any check
-fails, 2 on bad usage.
+the NEAR testnet anchor is looked up. Exit status: 0 if the receipt verifies (the TEE checks
+included), 1 if any check fails, 2 on bad usage, 3 if nothing failed but the TEE was not
+checked: the signature then only matches the address written in the receipt.
 """
 
 from __future__ import annotations
@@ -23,6 +24,13 @@ from hushmark.near import LiveEvidence
 from hushmark.receipt_check import DEFAULT_ANCHOR_ACCOUNT, ReceiptReport, check_receipt
 
 MARK = {"pass": "PASS", "fail": "FAIL", "skipped": "skip"}
+LAST_LINE = {
+    "verified": "VERIFIED",
+    "not_verified": "NOT VERIFIED",
+    "tee_not_checked": "SIGNATURE ONLY: the TEE was not checked",
+    "not_anchored_receipt": "NOT THE ANCHORED RECEIPT: a different receipt is anchored",
+}
+EXIT = {"verified": 0, "not_verified": 1, "not_anchored_receipt": 1, "tee_not_checked": 3}
 
 
 def extract(text: str) -> bytes:
@@ -36,7 +44,7 @@ def show(report: ReceiptReport, out: TextIO) -> None:
     out.write(f"receipt {report.receipt_id}\n")
     for c in report.checks:
         out.write(f"  {MARK[c.status]}  {c.name:<16} {c.detail}\n")
-    out.write("VERIFIED\n" if report.ok else "NOT VERIFIED\n")
+    out.write(LAST_LINE[report.verdict] + "\n")
 
 
 def main(argv: list[str] | None = None, out: TextIO = sys.stdout) -> int:
@@ -56,7 +64,7 @@ def main(argv: list[str] | None = None, out: TextIO = sys.stdout) -> int:
         anchor_account=None if args.offline else args.anchor_account,
     )
     show(report, out)
-    return 0 if report.ok else 1
+    return EXIT[report.verdict]
 
 
 if __name__ == "__main__":

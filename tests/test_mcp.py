@@ -155,7 +155,9 @@ def test_verify_receipt_from_files(tmp_path: Path) -> None:
     receipt = tmp_path / "receipt.json"
     receipt.write_bytes(outcome.receipt.body)
     out = tool_verify_receipt({"receipt_path": str(receipt), "online": False})
-    assert out["ok"] and out["receipt_id"] == outcome.receipt.receipt_id
+    # Without the attestation report the TEE is not checked, so this is never "ok".
+    assert not out["ok"] and out["verdict"] == "tee_not_checked"
+    assert out["receipt_id"] == outcome.receipt.receipt_id
     checks = {c["name"]: c["status"] for c in out["checks"]}
     assert checks["signature"] == "pass" and checks["anchor"] == "skipped"
 
@@ -165,3 +167,12 @@ def test_verify_receipt_catches_a_changed_receipt() -> None:
     changed = outcome.receipt.body.replace(b'"provider_tee"', b'"gateway"')
     out = tool_verify_receipt({"receipt": changed.decode(), "online": False})
     assert not out["ok"]
+
+
+def test_bad_arguments_never_stop_the_server() -> None:
+    """Audit 2026-11-08: a list instead of an object crashed the whole server."""
+    server = build({})
+    for args in (["x"], "text", 5):
+        reply = call(server, "tools/call", {"name": "scan", "arguments": args})
+        assert reply["result"]["isError"]
+    assert call(server, "ping") == {"jsonrpc": "2.0", "id": 1, "result": {}}

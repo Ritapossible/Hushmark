@@ -256,7 +256,7 @@ pre code { background: none; padding: 0; color: inherit; font-size: inherit; }
 .verify-actions { display: flex; gap: 12px; flex-wrap: wrap; }
 .verify-result { margin-top: 28px; background: var(--card); border: 1px solid var(--line); border-radius: 18px; padding: 24px 26px; }
 .verify-verdict { font: 500 1.5rem var(--serif); margin: 0 0 6px; }
-.verify-verdict.is-ok { color: var(--ok); }
+.verify-verdict.is-partial { color: #8a5a20; }
 .verify-verdict.is-bad { color: #9a3b2e; }
 .verify-facts { color: var(--muted); margin: 0 0 16px; font-size: 0.95rem; }
 .verify-checks { list-style: none; padding: 0; margin: 0; display: grid; gap: 12px; }
