@@ -26,7 +26,7 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 a { color: inherit; }
-code { font-variant-ligatures: none; font: 0.86em var(--mono); background: var(--navy-soft); padding: 0.1em 0.35em; border-radius: 6px; }
+code { font: 0.86em var(--mono); font-variant-ligatures: none; background: var(--navy-soft); padding: 0.1em 0.35em; border-radius: 6px; }
 .wrap { width: min(1120px, 100% - 40px); margin-inline: auto; }
 .skip { position: absolute; left: -999px; }
 .skip:focus { left: 16px; top: 16px; z-index: 10; background: var(--card); padding: 8px 12px; border-radius: 8px; }
@@ -109,6 +109,13 @@ section[id] { scroll-margin-top: 76px; }
 .grid { display: grid; gap: 22px; margin-top: 48px; padding: 0; }
 .grid.two { grid-template-columns: repeat(2, 1fr); }
 .grid.steps { grid-template-columns: repeat(5, 1fr); list-style: none; }
+.grid.three { grid-template-columns: repeat(3, 1fr); }
+.product { display: flex; flex-direction: column; }
+.product h3 { font-size: 1.5rem; }
+.product .tag { margin-left: 6px; }
+.product p:not(.card-tag) { flex: 1; }
+.product .product-link { margin-top: 20px; font: 500 0.92rem var(--sans); color: var(--navy); text-decoration: none; }
+.product .product-link:hover { text-decoration: underline; }
 .card { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 30px; }
 .card p { color: var(--muted); margin: 0; }
 /* Show "<!-- -->" literally: Inter would draw "->" as an arrow. */
@@ -169,7 +176,7 @@ section[id] { scroll-margin-top: 76px; }
 @media (max-width: 860px) {
   .nav { display: none; }
   .hero { padding: 64px 0 48px; }
-  .hero-inner, .grid.two, .footer-grid { grid-template-columns: 1fr; }
+  .hero-inner, .grid.two, .grid.three, .footer-grid { grid-template-columns: 1fr; }
   .hero-art { order: 2; }
   .section { padding: 76px 0; }
   .specs div { grid-template-columns: 1fr; gap: 6px; }
