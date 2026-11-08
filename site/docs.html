@@ -227,7 +227,8 @@ cd Hushmark</code></pre></li>
         <ul>
           <li>The contract lives on its own sub-account.</li>
           <li>The GitHub Action calls it with a function-call access key limited to <code>anchor</code>, with zero deposit. A stolen key can add anchors but cannot move funds.</li>
-          <li>Only hashes go on chain: no repository names or usernames.</li>
+          <li>Only hashes go on chain: no code, file or repository names, usernames or findings. This is deliberate: Hushmark's first promise is privacy, and two SHA-256 hashes reveal nothing about the code, yet prove which receipt was anchored at that block.</li>
+          <li>The anchor proves the record has not changed; the TEE attestation, checked on every review, proves the review ran in the enclave.</li>
           <li>A failed anchor never blocks the report: the check says it was not recorded this time, and the receipt stays valid. It is not retried.</li>
         </ul>
       </section>
