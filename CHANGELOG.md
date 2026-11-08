@@ -13,6 +13,8 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versions follo
   `verify_receipt`; no hidden text returned by default.
 - `ignore:` path patterns in `.hushmark.yml` (ADR-0011); agent rules files, title and body
   are never ignored, and skipped files are named in the check.
+- Site: a Products section on the landing page (GitHub Action, GitHub App, MCP server), and
+  the GitHub App and MCP server each have their own docs section and sidebar entry.
 - "How to trust a result" page for security reviewers, linked from every check.
 - Receipt verifier: `hushmark-verify` command and a verify page on the website; every check's
   details say where to verify its receipt.
@@ -41,6 +43,8 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versions follo
 - Refusal code `internal_error`.
 
 ### Fixed
+- Site: inline code showed `<!--` as an arrow ligature; the `font` shorthand had reset
+  `font-variant-ligatures`.
 - The App server answered HEAD requests with 501, so uptime monitors reported it down and
   stopped keeping Render's free instance awake. `/` now says what the server is.
 - A fresh NVIDIA verdict stamped a few seconds after Hushmark's verification time was refused
