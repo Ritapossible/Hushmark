@@ -84,9 +84,14 @@ still give those agents instructions. Once merged, it affects every agent sessio
 
 > **No NEAR AI key?** Start with [Try it offline](#try-it-offline): after `make install`,
 > `make verify` replays real NEAR AI Cloud TEE evidence (signature, Intel quote, NVIDIA
-> verdict) and runs all 279 tests in seconds, with no account and no network. To see it live
+> verdict) and runs all 281 tests in seconds, with no account and no network. To see it live
 > without installing anything, open [demo PR #8](https://github.com/Ritapossible/Hushmark/pull/8)
 > and its failed `Hushmark` check.
+
+![How to use Hushmark, drawn as a merge gate on a bench: three docks (a card reader for the GitHub Action, a socket with a plugged-in cable for the GitHub App, a hand probe on a coiled cord for the MCP server) feed one junction box; pull requests ride a belt under a scanner; one with a hidden instruction lights up, a receipt prints, and a key switch set to block keeps the barrier arm down.](site/img/hushmark-how-to-use.png)
+
+*Three ways in, one check: pick the GitHub Action, the GitHub App or the MCP server; add the
+key; set `mode` to warn or block; open pull requests.*
 
 Two ways, with the same review. Use one per repository: both post a check named `Hushmark`.
 

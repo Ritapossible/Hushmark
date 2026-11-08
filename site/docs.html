@@ -235,6 +235,10 @@ cd Hushmark</code></pre></li>
 
       <section id="install" class="doc">
         <h2>Install: GitHub Action <span class="tag tag-live">built</span></h2>
+        <figure class="doc-figure">
+          <img src="img/hushmark-how-to-use.png" width="2360" height="1836" loading="lazy" alt="How to use Hushmark, drawn as a merge gate on a bench: three docks (a card reader for the GitHub Action, a socket with a plugged-in cable for the GitHub App, a hand probe on a coiled cord for the MCP server) feed one junction box; pull requests ride a belt under a scanner; one with a hidden instruction lights up, a receipt prints, and a key switch set to block keeps the barrier arm down.">
+          <figcaption>Three ways in, one check: pick the Action, the App or MCP; add the key; set <code>mode</code> to warn or block; open pull requests.</figcaption>
+        </figure>
         <p>Three ways to run Hushmark, all with the same review: the <strong>GitHub Action</strong> below (one repository, no server), the <a href="#github-app">GitHub App</a> (one-click installs across repositories) and the <a href="#mcp">MCP server</a> (for AI agents, on your machine). Use the Action or the App on a repository, not both, since each posts a check named <code>Hushmark</code>.</p>
         <ol>
           <li>Copy <a href="https://github.com/Ritapossible/Hushmark/blob/main/.github/workflows/hushmark.yml"><code>.github/workflows/hushmark.yml</code></a> into your repository's default branch.</li>
