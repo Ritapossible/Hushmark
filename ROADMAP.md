@@ -18,6 +18,9 @@ of v0.3 forward.
 
 - Run the Hushmark service inside a confidential VM, so the diff never sits on a host
   outside a TEE. **This is the most important item on this roadmap.**
+- Pin the TEE's measurements (MRTD, RTMR0–3, the app compose) to the values NEAR AI Cloud
+  publishes, so the attestation names the software, not only genuine hardware
+  (`THREAT_MODEL.md`).
 - Public verifier: a CLI and a web page where anyone pastes a receipt and sees each check.
 - Anchors on NEAR mainnet.
 - **Free open-source CLI and pre-commit hook** with the same detectors, offline, no account.

@@ -43,6 +43,24 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versions follo
 - Refusal code `internal_error`.
 
 ### Fixed
+- Audit 2026-11-08, block mode: a refusal ended `neutral`, which GitHub counts as passing, so an
+  author could merge by provoking one (twenty harmless comments gave `too_many_candidates`).
+  In block mode every refusal now fails, and an unreadable config is treated as block.
+- Audit 2026-11-08, scanner: the diff was split with `splitlines()`, which also breaks on
+  U+2028, `\r`, form feed and others; one such character hid the rest of its hunk. Lines are
+  now split on `\n` only, and those characters are a new `line_separator` detector.
+- Audit 2026-11-08, scanner: only the `<!--` line of an HTML comment was flagged, so an
+  instruction further down never reached the model. The whole comment, through `-->`, is now
+  one candidate, including lines added inside a comment that opened on an unchanged line.
+- Audit 2026-11-08, receipt verifier: a receipt signed with any key showed "Verified". Without
+  the attestation report the verdict is now "signature only; TEE not checked"
+  (`hushmark-verify` exits 3), and the browser verifier never says "Verified". A re-run's
+  receipt says a different receipt is the anchored one.
+- The GitHub App caps model-calling reviews across all repositories
+  (`HUSHMARK_TOTAL_DAILY_REVIEWS`, default 100), since every installation spends one key.
+- The MCP server answers malformed `arguments` with a tool error instead of exiting.
+- `THREAT_MODEL.md` and the trust page no longer imply the TEE's measurements are compared
+  with NEAR AI Cloud's published values; they are not, yet (roadmap v0.2).
 - Site: inline code showed `<!--` as an arrow ligature; the `font` shorthand had reset
   `font-variant-ligatures`.
 - The App server answered HEAD requests with 501, so uptime monitors reported it down and

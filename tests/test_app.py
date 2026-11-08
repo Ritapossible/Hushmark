@@ -270,3 +270,15 @@ def test_home_page_says_what_this_is(server: tuple[str, Worker]) -> None:
     with httpx.Client(trust_env=False) as c:
         r = c.get(f"{url}/")
     assert r.status_code == 200 and "Hushmark GitHub App webhook server" in r.text
+
+
+def test_one_cap_covers_every_repository() -> None:
+    """Audit 2026-11-08: the App's NEAR AI key is shared, so a per-repository cap alone let
+    many repositories spend without limit."""
+    budget = DailyBudget(10, today=lambda: "2026-11-08", total_limit=3)
+    budget.spend(1)
+    budget.spend(2)
+    budget.spend(3)
+    with pytest.raises(Refused) as e:
+        budget.spend(4)
+    assert e.value.code == "budget_exceeded"

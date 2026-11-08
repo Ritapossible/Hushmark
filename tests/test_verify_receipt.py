@@ -20,11 +20,16 @@ def run(*argv: str) -> tuple[int, str]:
     return main(list(argv), out), out.getvalue()
 
 
-def test_verifies_a_receipt_file_offline(tmp_path: Path) -> None:
+SIGNATURE_ONLY = "SIGNATURE ONLY: the TEE was not checked\n"
+
+
+def test_offline_without_the_attestation_is_signature_only(tmp_path: Path) -> None:
+    """Audit 2026-11-08: a receipt's own signature is not proof of a TEE, so this is never
+    printed as VERIFIED and exits 3, not 0."""
     receipt = tmp_path / "receipt.json"
     receipt.write_bytes(OUTCOME.receipt.body)
     code, out = run(str(receipt), "--offline")
-    assert code == 0 and out.endswith("VERIFIED\n")
+    assert code == 3 and out.endswith(SIGNATURE_ONLY) and "VERIFIED" not in out
     assert f"receipt {OUTCOME.receipt.receipt_id}" in out
     assert "PASS  signature" in out and "skip  anchor" in out
 
@@ -41,23 +46,23 @@ def test_the_check_details_can_be_pasted_as_they_are(tmp_path: Path) -> None:
     assert extract(details) == OUTCOME.receipt.body
     pasted = tmp_path / "details.txt"
     pasted.write_text(details)
-    assert run(str(pasted), "--offline")[0] == 0
+    assert run(str(pasted), "--offline")[0] == 3
 
 
 def test_stdin(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setattr("sys.stdin", io.StringIO(OUTCOME.receipt.body.decode()))
-    assert run("-", "--offline")[0] == 0
+    assert run("-", "--offline")[0] == 3
 
 
 LIVE = Path(__file__).resolve().parent.parent / "fixtures" / "receipts" / "pr17.json"
 
 
-def test_a_real_live_receipt_verifies_offline() -> None:
+def test_a_real_live_receipt_checks_offline() -> None:
     """The receipt PR #17's live check published (fixtures/receipts/FIXTURE.md)."""
     code, out = run(str(LIVE), "--offline")
-    assert code == 0, out
+    assert code == 3 and out.endswith(SIGNATURE_ONLY), out
     assert "receipt 8baa04a2aac0786efb1b3a204db09ddbd4cdd775897c543e2aa261c42547ce36" in out
-    assert "signed in the TEE by 0x3b753b4406613c5e70ae640508632b600424fa0c" in out
+    assert "address named in the receipt (0x3b753b4406613c5e70ae640508632b600424fa0c)" in out
 
 
 def test_the_website_example_is_the_same_receipt() -> None:

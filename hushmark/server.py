@@ -18,6 +18,7 @@ Environment:
     NEARAI_API_KEY             NEAR AI Cloud key (without it: `tee_unavailable`)
     NEAR_ANCHOR_ACCOUNT, NEAR_ANCHOR_KEY   optional NEAR testnet anchor
     HUSHMARK_DAILY_REVIEWS     model-calling reviews per repository per day (default 50)
+    HUSHMARK_TOTAL_DAILY_REVIEWS   the same across all repositories (default 100)
     PORT, HOST                 default 8000 on every interface
 """
 

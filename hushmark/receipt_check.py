@@ -17,6 +17,10 @@ attested TEE made it.
 7. `anchor`: the NEAR contract holds this receipt's hash for this key. A different receipt
    anchored for the same key fails (one input, one anchored verdict); no anchor, or no
    network, is skipped.
+
+The verdict is `verified` only when checks 1–6 all pass. A receipt's own signature proves only
+that the key named inside it signed it, which any laptop key can do, so without the TEE checks
+the verdict is `tee_not_checked`, never `verified` (audit 2026-11-08).
 """
 
 from __future__ import annotations
@@ -39,6 +43,17 @@ from hushmark.verify.attestation import select_model_attestation, verify_attesta
 from hushmark.verify.nras import verify_nras
 
 DEFAULT_ANCHOR_ACCOUNT = "anchor.hushmark.testnet"
+RECEIPT_CHECKS = ("receipt_id", "nonce", "signature")
+TEE_CHECKS = ("attestation_file", "attestation", "gpu")
+VERDICTS = {
+    "verified": "Signed inside an attested NEAR AI Cloud TEE for this exact review.",
+    "not_verified": "A check failed: do not trust this receipt.",
+    "tee_not_checked": "The signature matches the address in this receipt, but the TEE was "
+    "not checked. Give the attestation report, with network access, to check it.",
+    "not_anchored_receipt": "A different receipt is the anchored one for this review key. A "
+    "re-run makes a new receipt and only the first is anchored; the checks above say whether "
+    "this one was signed in the TEE.",
+}
 
 
 @dataclass(frozen=True)
@@ -54,16 +69,30 @@ class ReceiptReport:
     checks: tuple[Check, ...]
 
     @property
-    def ok(self) -> bool:
-        """True when nothing failed and the receipt's own checks (1–3) passed."""
+    def verdict(self) -> str:
+        """`verified`, `not_verified`, `tee_not_checked` or `not_anchored_receipt`."""
         by_name = {c.name: c.status for c in self.checks}
-        core = all(by_name.get(n) == "pass" for n in ("receipt_id", "nonce", "signature"))
-        return core and all(c.status != "fail" for c in self.checks)
+        if any(by_name.get(n) != "pass" for n in RECEIPT_CHECKS) or any(
+            by_name.get(n) == "fail" for n in TEE_CHECKS
+        ):
+            return "not_verified"
+        if by_name.get("anchor") == "fail":
+            return "not_anchored_receipt"
+        if any(by_name.get(n) != "pass" for n in TEE_CHECKS):
+            return "tee_not_checked"
+        return "verified"
+
+    @property
+    def ok(self) -> bool:
+        """True only when the TEE checks passed too: a signature alone is not a TEE."""
+        return self.verdict == "verified"
 
     def as_dict(self) -> dict[str, Any]:
         return {
             "receipt_id": self.receipt_id,
             "ok": self.ok,
+            "verdict": self.verdict,
+            "meaning": VERDICTS[self.verdict],
             "checks": [
                 {"name": c.name, "status": c.status, "detail": c.detail} for c in self.checks
             ],
@@ -118,7 +147,7 @@ def check_receipt(
         signer = Account.recover_message(encode_defunct(text=text), signature=str(sig["sig"]))
         if signer.lower() != str(sig["signing_address"]).lower():
             raise Refused("signature_mismatch", "")
-        return f"signed in the TEE by {sig['signing_address']}"
+        return f"signature matches the address named in the receipt ({sig['signing_address']})"
 
     checks += [_run("receipt_id", canonical), _run("nonce", nonce), _run("signature", signature)]
 
@@ -144,7 +173,10 @@ def check_receipt(
             quote_hex = str(select_model_attestation(report, signer)["intel_quote"])
             collateral = sources.collateral(bytes.fromhex(quote_hex))
             quote = verify_attestation(report, receipt["nonce"], collateral, now(), signer)
-            return f"Intel TDX quote {quote.tcb_status}; signer and nonce bound; measurements match"
+            return (
+                f"Intel TDX quote {quote.tcb_status}; the TEE holds {signer} and our nonce; "
+                "measurements replay"
+            )
 
         def gpu() -> str:
             payload = json.loads(str(select_model_attestation(report, signer)["nvidia_payload"]))
@@ -165,7 +197,14 @@ def check_receipt(
                 checks.append(Check("anchor", "skipped", "no anchor for this review key"))
             elif found.get("receipt_hash") != receipt_id:
                 # One input, one anchored verdict: a re-run's receipt is not the anchored one.
-                checks.append(Check("anchor", "fail", "anchor_mismatch"))
+                checks.append(
+                    Check(
+                        "anchor",
+                        "fail",
+                        f"a different receipt is the anchored one for this review key "
+                        f"({found.get('receipt_hash')}); a re-run is never anchored",
+                    )
+                )
             else:
                 block = found.get("block_height")
                 checks.append(

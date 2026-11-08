@@ -23,6 +23,7 @@ from hushmark.refusal import Refused
 from hushmark.report import CheckOutput, render
 
 MAINTAINER_ROLES = frozenset({"admin", "maintain"})
+UNKNOWN_MODE = Config(mode="block")
 
 
 @dataclass(frozen=True)
@@ -67,6 +68,9 @@ def run_check(
     pull = gh.pull(owner, repo, number)
     base_sha, head_sha = str(pull["base"]["sha"]), str(pull["head"]["sha"])
     check_id = gh.start_check(owner, repo, head_sha)
+    # Until the base branch's config is read, the mode is unknown: fail closed as block, so a
+    # refusal before the review never passes a repository that blocks.
+    config = UNKNOWN_MODE
     try:
         config = load_config(gh, owner, repo, base_sha)
         pr = PullRequestInput(
@@ -90,13 +94,13 @@ def run_check(
             max_tokens=max_tokens,
         )
     except Refused as e:  # before review: config or diff
-        outcome, config = Refusal(e.code, e.detail, ()), Config()
+        outcome = Refusal(e.code, e.detail, ())
     except httpx.HTTPError as e:  # GitHub failed mid-fetch: nothing was reviewed
-        outcome, config = Refusal("diff_unavailable", type(e).__name__, ()), Config()
+        outcome = Refusal("diff_unavailable", type(e).__name__, ())
     except Exception:
         # Never leave the Check Run stuck "in progress": close it as not verified, then let
         # the job fail so the error is visible in the Actions log.
-        gh.finish_check(owner, repo, check_id, render(Refusal("internal_error", "", ()), Config()))
+        gh.finish_check(owner, repo, check_id, render(Refusal("internal_error", "", ()), config))
         raise
     out = render(outcome, config)
     if anchor is not None and isinstance(outcome, Reviewed):

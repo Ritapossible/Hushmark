@@ -79,4 +79,8 @@ name, or any username.
 3. Check `signature.text` has the stated form and recover the EIP-191 signer. It must equal
    `signing_address`.
 4. Optional: look up `key_hash` on the NEAR contract and compare its `receipt_hash` with
-   `receipt_id`.
+   `receipt_id`. A re-run makes a new receipt for the same key; only the first is anchored.
+
+Step 2 is what proves a TEE. Step 3 alone only shows that the key named in the receipt signed
+it, which any key can do, so a receipt checked without its attestation report is never
+"verified" (`hushmark-verify` ends `SIGNATURE ONLY` and exits 3).
