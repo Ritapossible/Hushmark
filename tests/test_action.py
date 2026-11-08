@@ -175,9 +175,10 @@ def test_github_error_while_fetching_closes_the_check_as_not_verified() -> None:
     finish = respx.patch(f"{BASE}/check-runs/9").respond(200, json={})
     result = run(event(), {}, gh=gh())
     sent = json.loads(finish.calls.last.request.content)
-    assert sent["status"] == "completed" and sent["conclusion"] == "neutral"
+    # The config could not be read, so the mode is unknown and the check fails closed.
+    assert sent["status"] == "completed" and sent["conclusion"] == "failure"
     assert "`diff_unavailable`" in sent["output"]["summary"]
-    assert result.output.conclusion == "neutral"
+    assert result.output.conclusion == "failure"
 
 
 @respx.mock
@@ -192,5 +193,5 @@ def test_unexpected_error_never_leaves_the_check_in_progress() -> None:
     with pytest.raises(RuntimeError):
         run(event(), {}, gh=gh())
     sent = json.loads(finish.calls.last.request.content)
-    assert sent["status"] == "completed" and sent["conclusion"] == "neutral"
+    assert sent["status"] == "completed" and sent["conclusion"] == "failure"  # block mode
     assert "`internal_error`" in sent["output"]["summary"]

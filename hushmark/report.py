@@ -4,10 +4,12 @@
 | no candidates                   | success    | success     |
 | reviewed, no verified findings  | success    | success     |
 | verified findings               | neutral    | failure     |
-| refused                         | neutral    | neutral     |
+| refused                         | neutral    | failure     |
 
 A refusal never shows a model finding. It shows the scanner's own hits as *unconfirmed*, so a
-reviewer still knows where to look.
+reviewer still knows where to look. In block mode it fails: GitHub counts a neutral required
+check as passing, and an author can provoke a refusal (twenty harmless comments, a spent
+budget), so a review that could not finish must not let the pull request merge.
 """
 
 from __future__ import annotations
@@ -146,8 +148,9 @@ def _render(outcome: Outcome, config: Config) -> CheckOutput:
             f"No model finding is shown. The scanner found {len(outcome.candidates)} hidden "
             "region(s); they are marked below as unconfirmed."
         )
+        conclusion = "failure" if config.mode == "block" else "neutral"
         return CheckOutput(
-            "neutral", "Review not verified", summary, _unconfirmed(outcome.candidates)
+            conclusion, "Review not verified", summary, _unconfirmed(outcome.candidates)
         )
 
     assert isinstance(outcome, Reviewed)

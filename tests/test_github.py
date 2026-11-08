@@ -176,3 +176,46 @@ def test_anchor_note_is_added_and_never_blocks(anchor_result: object, expected: 
     ).output  # fmt: skip
     assert out.conclusion == "success"
     assert expected in json.loads(finish.calls.last.request.content)["output"]["summary"]
+
+
+def _check_run(config: httpx.Response, compare: httpx.Response) -> str:
+    """Run one check with the given config and compare answers; return the conclusion."""
+    respx.get(f"{BASE}/pulls/3").respond(
+        200, json={"base": {"sha": "b" * 40}, "head": {"sha": "h" * 40}, "title": "t", "body": ""}
+    )
+    respx.post(f"{BASE}/check-runs").respond(201, json={"id": 8})
+    respx.get(f"{BASE}/contents/.hushmark.yml").mock(return_value=config)
+    respx.get(f"{BASE}/compare/{'b' * 40}...{'h' * 40}").mock(return_value=compare)
+    finish = respx.patch(f"{BASE}/check-runs/8").respond(200, json={})
+    run_check(
+        client(),
+        owner=OWNER,
+        repo=REPO,
+        repo_id=1,
+        number=3,
+        model="m",
+        tee=RecordedTee(Recording("r1")),
+        sources=RecordedEvidence(Recording("r1")),
+        now=lambda: 0,
+    )
+    return str(json.loads(finish.calls.last.request.content)["conclusion"])
+
+
+@respx.mock
+def test_diff_unavailable_fails_a_block_mode_repository() -> None:
+    """A refusal before the review keeps the base branch's mode, not the warn default."""
+    block = httpx.Response(200, text="mode: block\n")
+    assert _check_run(block, httpx.Response(406)) == "failure"
+
+
+@respx.mock
+def test_unknown_mode_fails_closed() -> None:
+    """If the config cannot be read or parsed, the mode is unknown: treat it as block."""
+    assert _check_run(httpx.Response(200, text="mode: [\n"), httpx.Response(200)) == "failure"
+    respx.reset()
+    assert _check_run(httpx.Response(500), httpx.Response(200)) == "failure"
+
+
+@respx.mock
+def test_warn_mode_refusal_stays_neutral() -> None:
+    assert _check_run(httpx.Response(404), httpx.Response(406)) == "neutral"
