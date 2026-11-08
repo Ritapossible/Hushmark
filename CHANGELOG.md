@@ -43,6 +43,9 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versions follo
 - Refusal code `internal_error`.
 
 ### Fixed
+- Roadmap: v0.1 lists what shipped; the public verifier (already built) left v0.2; the
+  audit's deferred detectors, `make verify-live` and durable App state are planned; the docs
+  page mirrors `ROADMAP.md`.
 - README: every library, service and tool is listed (HACKATHON.md Q-005), and Quick start
   points judges without a NEAR AI key to the offline path.
 - Audit 2026-11-08, block mode: a refusal ended `neutral`, which GitHub counts as passing, so an
