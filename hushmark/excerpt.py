@@ -9,7 +9,15 @@ from __future__ import annotations
 from dataclasses import dataclass
 
 from hushmark.refusal import Refused
-from hushmark.scan import BIDI, ZERO_WIDTH, Candidate, FileDiff, ScanResult
+from hushmark.scan import (
+    BIDI,
+    LINE_SEPARATORS,
+    ZERO_WIDTH,
+    Candidate,
+    FileDiff,
+    ScanResult,
+    split_lines,
+)
 
 CONTEXT_LINES = 10
 MAX_EXCERPT_LINES = 200
@@ -25,7 +33,7 @@ def visible(text: str) -> str:
     out = []
     for ch in text:
         code = ord(ch)
-        if ch in ZERO_WIDTH or ch in BIDI or 0xE0000 <= code <= 0xE007F:
+        if ch in ZERO_WIDTH or ch in BIDI or ch in LINE_SEPARATORS or 0xE0000 <= code <= 0xE007F:
             out.append(f"⟦U+{code:04X}⟧")
         else:
             out.append(ch)
@@ -47,7 +55,7 @@ def build_excerpts(result: ScanResult, title: str, body: str) -> tuple[Excerpt, 
         if c.source == "pr_title":
             numbered = [(1, title)]
         elif c.source == "pr_body":
-            numbered = list(enumerate(body.splitlines(), start=1))
+            numbered = list(enumerate(split_lines(body), start=1))
         else:
             assert c.file is not None
             numbered = [(ln.number, ln.text) for ln in files[c.file].lines]
