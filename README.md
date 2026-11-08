@@ -72,6 +72,12 @@ still give those agents instructions. Once merged, it affects every agent sessio
 
 ## Quick start
 
+> **No NEAR AI key?** Start with [Try it offline](#try-it-offline): after `make install`,
+> `make verify` replays real NEAR AI Cloud TEE evidence (signature, Intel quote, NVIDIA
+> verdict) and runs all 279 tests in seconds, with no account and no network. To see it live
+> without installing anything, open [demo PR #8](https://github.com/Ritapossible/Hushmark/pull/8)
+> and its failed `Hushmark` check.
+
 Two ways, with the same review. Use one per repository: both post a check named `Hushmark`.
 
 ### GitHub Action (no server)
@@ -340,11 +346,22 @@ docs/              architecture, plan, fixtures, decision records
 The repository was created on 1 November 2026; every line was written during the hackathon.
 Tracks: Privacy & Private AI (primary), AI Security & Defense.
 
-- [`dcap-qvl`](https://pypi.org/project/dcap-qvl/) for Intel TDX quote verification
-- NVIDIA NRAS for GPU attestation, its tokens verified with PyJWT against pinned keys
+Libraries, services and tools, all third-party and unmodified:
+
+- [`dcap-qvl`](https://pypi.org/project/dcap-qvl/) 0.7.0 for Intel TDX quote verification
+- NVIDIA NRAS for GPU attestation, its tokens verified with `PyJWT` against pinned keys
 - Checks ported from [`nearai-cloud-verifier`](https://github.com/nearai/nearai-cloud-verifier) (MIT)
-- `eth-account` (EIP-191 signatures), `httpx`, `pydantic`, `cryptography`, `pyyaml`
+- Python: `eth-account` (EIP-191 signatures), `httpx`, `pydantic`, `PyJWT` with
+  `cryptography`, `pyyaml`, and `cffi` (pinned so no process starts at import)
+- Development: `uv`, `ruff`, `mypy`, `pytest`, `respx`
 - Rust `near-sdk` 5.30 and `cargo-near` for the contract
+- Website: [`@noble/curves`](https://github.com/paulmillr/noble-curves) 2.4.0 and
+  [`@noble/hashes`](https://github.com/paulmillr/noble-hashes) 2.0.1 (MIT), bundled with
+  `esbuild` 0.28.2 into `site/vendor/hushmark-crypto.js` for the receipt verifier
+  ([`site/vendor/README.md`](site/vendor/README.md)); fonts EB Garamond, Inter and JetBrains
+  Mono from Google Fonts
+- Hosting: Vercel (website), Render's free plan (GitHub App server), UptimeRobot (keeps the
+  App awake)
 - **AI-generated code:** much of this repository is written with Claude Code, under human
   direction and review. Commits carry a `Co-Authored-By` line.
 
