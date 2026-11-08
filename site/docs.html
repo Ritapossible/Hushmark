@@ -453,18 +453,25 @@ docs/            architecture, plan, fixtures, decision records</code></pre>
 
       <section id="roadmap" class="doc">
         <h2>Roadmap</h2>
-        <p>Each phase has a gate: something true in the real world before the next phase starts.</p>
+        <p><strong>Where Hushmark is today:</strong> v0.1 is live. It reviews pull requests as a GitHub Action and as a GitHub App, agents can call it over MCP, and anyone can check a receipt. Everything after v0.1 is planned. Each later phase has a gate: something true in the real world before the next phase starts. The full roadmap is <a href="https://github.com/Ritapossible/Hushmark/blob/main/ROADMAP.md">ROADMAP.md</a>.</p>
         <ol class="roadmap">
           <li>
-            <p class="rm-phase">v0.1 · NEAR HACKATHON · November 2026</p>
-            <p>Automatic check on every pull request; diff, title, body and rules files scanned; excerpts only to the model; warn or block mode; NEAR testnet anchor; offline evidence.</p>
+            <p class="rm-phase">v0.1 · Shipped · NEAR HACKATHON · November 2026</p>
+            <ul>
+              <li>The check: diff, title, body and rules files scanned; excerpts only to a NEAR AI Cloud TEE; findings only when the attestation and signature verify; warn or block mode. <span class="tag tag-live">built</span></li>
+              <li>GitHub Action, GitHub App (live on <a href="https://github.com/Ritapossible/hushmark-demo/pull/1">hushmark-demo</a>) and the <a href="#mcp">MCP server</a>. <span class="tag tag-live">built</span></li>
+              <li>Receipts anchored on NEAR testnet, with <code>hushmark-verify</code> and the <a href="verify.html">browser verifier</a>. <span class="tag tag-live">built</span></li>
+              <li>Path ignores, the <a href="trust.html">trust page</a>, and the fixes from the 8 November self-audit. <span class="tag tag-live">built</span></li>
+            </ul>
           </li>
           <li>
             <p class="rm-phase">v0.2 · Complete the trust claim · December 2026 – January 2027</p>
             <ul>
               <li>Run the Hushmark service inside a confidential VM, so the diff never sits on a host outside a TEE. The most important item.</li>
-              <li>Public receipt verifier: a CLI and a web page.</li>
+              <li>Pin the TEE's measurements to the values NEAR AI Cloud publishes, so the attestation names the software, not only genuine hardware.</li>
+              <li>Check the TEE in the browser verifier too, and <code>make verify-live</code> for the recorded evidence.</li>
               <li>Anchors on NEAR mainnet.</li>
+              <li>Durable state for the GitHub App: budgets that survive a restart, and a bounded queue per installation.</li>
               <li>Free open-source CLI and pre-commit hook with the same detectors, offline, no account.</li>
               <li>GitHub Marketplace listing with a free tier for public repositories.</li>
             </ul>
@@ -473,9 +480,11 @@ docs/            architecture, plan, fixtures, decision records</code></pre>
           <li>
             <p class="rm-phase">v0.3 · From pull request reviewer to agent input firewall · Q1 2027</p>
             <ul>
+              <li>More hidden forms, each with a fixture: Markdown comments written as link definitions, text smuggled in variation selectors, more invisible characters.</li>
+              <li>More files agents treat as instructions: <code>.claude/</code>, <code>.mcp.json</code>, <code>.github/instructions/</code>, <code>.clinerules</code> and others.</li>
               <li>Scan more of what agents read: issues and comments, linked docs, dependency READMEs.</li>
-              <li>An API and middleware that check MCP tool results before an agent reads them.</li>
-              <li>Per-path modes in <code>.hushmark.yml</code> (path ignores are built).</li>
+              <li>Middleware that checks MCP tool results automatically before an agent reads them, including plainly visible injections.</li>
+              <li>Per-path modes in <code>.hushmark.yml</code>.</li>
             </ul>
             <p class="rm-gate">Gate: one design partner with an internal AI agent rollout, using it weekly.</p>
           </li>
