@@ -5,6 +5,7 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versions follo
 ## [Unreleased]
 
 ### Added
+- README links the demo video (the NEAR HACKATHON post on X).
 - Fig 2, "How to use Hushmark" (`site/img/hushmark-how-to-use.png`): the three ways in, the
   mode switch and the result, in the README's Quick start and on the docs page.
 - `docs/findings/public-rules-scan.md`: Hushmark's scanner over 2,076 public agent rules

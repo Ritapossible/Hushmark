@@ -207,13 +207,18 @@ make verify-live   # (planned) re-verify recorded evidence online
 - **Public rules-file scan (2026-11-08):** 2,076 files from awesome-cursorrules and
   github/awesome-copilot, 145 with hidden text, 0 attacks; false-positive classes (code-fenced
   comments, emoji joiners) are on the roadmap. `docs/findings/public-rules-scan.md`. 281 tests.
-- **Next (all need Rita):** mainnet payout account, demo video, X post, then the submission
-  before 14 November 23:59 UTC.
+- **Submitted (2026-11-09, by Rita):** tracks `privacy` and `security`, team size 1. Demo
+  post: https://x.com/RitaCryptoTips/status/2119672847073186168 (video attached). Never submit again; fixes go through
+  https://nearhackathon.com/request-changes.
+- **Until results (by 18 November) and the demo end (25 November):** keep both repositories
+  public, keep the site and the App up (UptimeRobot), keep `HUSHMARK_DAILY_REVIEWS` at 20, and do
+  not merge demo PRs #6, #8 or hushmark-demo #1.
 
 ## Decision log
 
 Newest first. One line each, with a link when there is an ADR.
 
+- 2026-11-09: Rita submitted Hushmark to NEAR HACKATHON. The demo post's link is in the README.
 - 2026-11-08: Re-read HACKATHON.md against the repo: completed the README's library list
   (`@noble/*`, `esbuild`, `cffi`, fonts, hosting), linked the offline path from Quick start.
   Suggested lowering `HUSHMARK_DAILY_REVIEWS` to 20 now that the repo is public.

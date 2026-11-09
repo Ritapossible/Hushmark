@@ -13,7 +13,8 @@ is shown only if the TEE's attestation and signature verify; and every review le
 **[Docs](https://tryhushmark.vercel.app/docs)** ·
 **[Verify a receipt](https://tryhushmark.vercel.app/verify)** ·
 **[How to trust a result](https://tryhushmark.vercel.app/trust)** ·
-**[Live demo: PR #8](https://github.com/Ritapossible/Hushmark/pull/8)**
+**[Live demo: PR #8](https://github.com/Ritapossible/Hushmark/pull/8)** ·
+**[Demo video](https://x.com/RitaCryptoTips/status/2119672847073186168)**
 
 > **Try it in two minutes, nothing to install:**
 > 1. Open [demo PR #8](https://github.com/Ritapossible/Hushmark/pull/8) → its `Hushmark` check
@@ -407,7 +408,8 @@ docs/              architecture, plan, fixtures, decision records
 ## Built at NEAR HACKATHON
 
 The repository was created on 1 November 2026; every line was written during the hackathon.
-Tracks: Privacy & Private AI (primary), AI Security & Defense.
+Tracks: Privacy & Private AI (primary), AI Security & Defense. Submitted on 9 November 2026;
+demo video: [the post on X](https://x.com/RitaCryptoTips/status/2119672847073186168).
 
 Libraries, services and tools, all third-party and unmodified:
 
